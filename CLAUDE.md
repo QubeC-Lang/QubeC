@@ -39,7 +39,8 @@ authority on design progress: status, task log, exactly one next action, and a h
    handoff), roadmap, and the README status block.
 7. **Verify:** links, glossary coverage, Provisional marks pointing to OQs, examples against the grammar, and
    milestone exit criteria.
-8. **Close:** report the decisions, files, new OQs, and the next task. Ask about the commit, then STOP.
+8. **Close:** report the decisions, files, new OQs, and the next task. Ask about the commit. End by saying how to
+   start the next task (`continue` here, or a new session + `continue`), recommending one. Then STOP.
 
 Voice: human-oriented docs say "we" (the QubeC developers) and never quote chat verbatim. Only agent-oriented docs
 (this file, `docs/agent/`, the tracker, templates) say "the designer" or "the agent".

@@ -138,7 +138,9 @@ candidate proof assistant), run small pilots where they are cheap, and let the d
    Provisional mark points to an open question. Check the examples against the grammar where tooling exists. If the
    milestone is finishing, report each exit criterion as met or not met.
 8. **Close.** Report the decisions (IDs), the files changed, the new open questions, and the next task. Ask about the
-   commit as the final question. Then STOP.
+   commit as the final question. End by telling the designer how to start the next task: type `continue` in this
+   session, or start a new session and type `continue` (or paste [`prompts/continue.md`](prompts/continue.md)).
+   Recommend one; prefer a new session once the current one is long. Then STOP.
 
 ### Keywords
 
