@@ -26,3 +26,11 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0018](D0018-diagnosis-and-rule-ids.md) | Every violation is diagnosed; rejection rules have stable mnemonic IDs that must be reported | Accepted | M00 / T0004 | 2026-11-16 |
 | [D0019](D0019-extensions-by-source-opt-in.md) | Extensions only with an opt-in in the source file | Accepted | M00 / T0004 | 2026-11-16 |
 | [D0020](D0020-us-english-spelling.md) | US English spelling everywhere | Accepted | M00 / T0004 | 2026-11-16 |
+| [D0021](D0021-formal-target-sequential-language.md) | The formal target is the whole sequential language | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0022](D0022-typed-elaboration-into-core.md) | Static rules on the surface elaborate into an explicitly typed core; dynamic rules are over the core | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0023](D0023-claimed-meta-properties.md) | Claimed meta-properties: soundness, purity with a frame property, tail-call space, determinism, decidable checking | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0024](D0024-mechanize-the-core.md) | The core is mechanized; the elaboration and inference proofs are on paper | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0025](D0025-lean-4.md) | Lean 4 is the proof assistant | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0026](D0026-lean-governs-core-rules.md) | For core rules, the Lean definition governs; the Markdown rule mirrors it | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0027](D0027-executable-reference.md) | An executable reference: a verified core evaluator and a verified core checker | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0028](D0028-mechanization-starts-in-m03.md) | The mechanization starts in M03, as a Lean package in docs/spec/formal/lean/ | Accepted | M00 / T0005 | 2026-11-16 |

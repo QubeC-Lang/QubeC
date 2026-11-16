@@ -22,13 +22,19 @@ Status: **Draft.** Chapter 1 (Introduction) is written. The conventions below su
    verbatim. Until M02 decides the EBNF dialect, the grammar uses W3C-style EBNF (XML 1.0, section 6) and is marked
    provisional.
 8. **Formal rules** live in [`formal/`](formal/README.md), in Markdown with LaTeX math. Chapters name the rules that
-   govern them.
+   govern them. Elaboration rules over the surface define the static semantics and translate programs into an
+   explicitly typed core. Core rules define the core's typing and the dynamic semantics. A core rule is governed by
+   its definition in the Lean 4 mechanization, `formal/lean/`, which its Markdown rendering names
+   ([D0022](../design/decisions/D0022-typed-elaboration-into-core.md),
+   [D0026](../design/decisions/D0026-lean-governs-core-rules.md)).
 9. **Examples** in chapters use decided syntax only. Undecided syntax is labeled *provisional syntax*.
 10. **Audience and scope.** One specification for programmers and implementers, covering the language and its core
     library; it does not teach ([D0015](../design/decisions/D0015-spec-audience-and-scope.md)).
 11. **Status line and authority.** Every chapter starts with `Status: <Draft · Review · Stable> · Formal: static
     <complete · partial · none>, dynamic <complete · partial · none>`. Formal rules govern an aspect only where it is
-    *complete*; elsewhere the prose governs ([D0016](../design/decisions/D0016-authority-per-section.md)).
+    *complete*; elsewhere the prose governs ([D0016](../design/decisions/D0016-authority-per-section.md)). Only the
+    sequential language can be formally complete; concurrency cannot
+    ([D0021](../design/decisions/D0021-formal-target-sequential-language.md)).
 12. **Rule style.** Static rules are declarative; dynamic behavior is written as numbered steps wherever order is
     observable ([D0017](../design/decisions/D0017-rule-style.md)).
 13. **Rejection rules** carry a rule ID in brackets at their start, `[R-subject-problem]`: lowercase ASCII words

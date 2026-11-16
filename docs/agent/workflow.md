@@ -51,6 +51,7 @@ docs/
     NN-<topic>.md             the normative sections
     grammar/qubec.ebnf        the grammar, source of truth
     formal/                   README.md (notation) · static.md · dynamic.md · metatheory.md
+      lean/                   the Lean 4 mechanization of the core, a Lake package (from M03, D0028)
   guide/tour.md               the language tour
   glossary.md                 every defined term
 examples/                     .qbc programs; README.md gives the header convention
@@ -213,8 +214,11 @@ task; step 3 is the loop of explained questions; steps 4–7 turn the answers in
   [spec §1.3](../spec/01-introduction.md#13-notation-and-conventions).
 - **Grammar:** `docs/spec/grammar/qubec.ebnf` is the source of truth. The EBNF dialect is decided in M02; until then,
   use W3C-style EBNF marked provisional.
-- **Formal rules:** Markdown with LaTeX math, unless we decide otherwise. Name every rule, explain its premises in
-  prose, and list the judgment forms and metavariables at the top of each file.
+- **Formal rules:** Markdown with LaTeX math. Name every rule, explain its premises in prose, and list the judgment
+  forms and metavariables at the top of each file. Elaboration rules (surface → core) live only in Markdown. Core
+  rules are governed by their Lean 4 definitions in `docs/spec/formal/lean/`, and each Markdown core rule names its
+  Lean counterpart (D0022, D0026). A milestone that changes core rules updates the mechanization before it exits
+  (D0024).
 - **Open questions:** OQ-nnn, giving the task where it arose, what is blocked on it, and the options. When decided,
   move it to the Decided section with a link to its D record.
 - Keep the **glossary, examples, and tour** current whenever a feature becomes Decided.

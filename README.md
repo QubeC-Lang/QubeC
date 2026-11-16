@@ -11,8 +11,8 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M00 (Vision and principles).
-- **Last task:** T0004, how the specification is written: audience, authority, rule style, and diagnostics.
-- **Decided so far:** 20 decisions.
+- **Last task:** T0005, how far QubeC is formalized, and how.
+- **Decided so far:** 28 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -20,9 +20,12 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
     (`tailcall f(x)`), and a single file runs directly.
   - One specification serves programmers and implementers. Every violation is diagnosed, and every rejection rule
     has a stable ID that compilers report. See the [introduction](docs/spec/01-introduction.md).
+  - The whole sequential language gets formal semantics: surface rules elaborate into an explicitly typed core,
+    which is mechanized in Lean 4, with soundness, purity, determinism, and tail-call space theorems, and a verified
+    reference evaluator and checker. See the [formal rules](docs/spec/formal/README.md).
   - See the [vision](docs/design/vision.md).
-- **Open questions:** 5.
-- **Next:** T0005, how far to formalize, and which proof assistant, if any.
+- **Open questions:** 7.
+- **Next:** T0006, the host language for the first implementation.
 <!-- status:end -->
 
 ## Where to look

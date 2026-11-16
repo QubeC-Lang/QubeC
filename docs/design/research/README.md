@@ -9,3 +9,4 @@ Verified (with a source) or Recalled.
 | [R0001](R0001-vision-prior-art.md) | Prior art cited by the vision decisions | M00 / T0002 | D0002, D0004–D0007 |
 | [R0002](R0002-purity-and-tail-calls.md) | Prior art for purity, local mutation, and tail calls | M00 / T0003 | D0008, D0011, D0012, D0014 |
 | [R0003](R0003-spec-conventions-prior-art.md) | Prior art for specification audience, authority, diagnosis, and extensions | M00 / T0004 | D0015–D0019 |
+| [R0004](R0004-formalization-prior-art-and-pilots.md) | Formalization depth and proof assistants: prior art and pilots | M00 / T0005 | D0021–D0028 |

@@ -108,12 +108,33 @@ only when, they appear in all capitals, as shown here. [D0001]
 4. An aspect becomes formally complete only by a recorded decision (a **promotion**), which requires that every
    normative rule of the aspect has formal rules, that every way to fail them is tagged with a rule ID (§1.3.5), and
    that the meta-properties covering the aspect have at least a proof sketch. [D0016]
+5. The **formal target** is the whole sequential language: every construct except those of concurrency (tasks,
+   channels, and race freedom) and any low-level memory model. Only an aspect within the formal target can be
+   formally complete. A chapter outside it has formal status *partial* or *none*. [D0021]
+6. The formal rules are of two kinds. **Elaboration rules** are stated over the language as written. They define its
+   static semantics, and they translate each accepted program into the **core**, an internal, explicitly typed
+   language. **Core rules** define the core's typing and its dynamic semantics. The dynamic semantics of a program is
+   that of its core. [D0022]
+7. A core rule is given by a definition in the mechanization in [`formal/lean/`](formal/README.md), which governs it.
+   The rendering of the rule in `formal/` names that definition. Elaboration rules are given in `formal/` only.
+   [D0024, D0026, D0028]
+8. In addition to rule 4, a promotion requires that the meta-properties covering the aspect's core rules are proved
+   in the mechanization, and that the reference evaluator and reference checker (see the note below) cover those core
+   rules. [D0024, D0027]
+
+> **Note (non-normative).** The mechanization contains a **reference evaluator** and a **reference checker** for the
+> core, each proved to agree with the core rules. They let conformance tests, and the core produced by an
+> implementation, be checked against the definition itself. The claimed meta-properties are listed in
+> [`formal/metatheory.md`](formal/metatheory.md). No chapter can be promoted before the mechanization exists (M03).
+> [D0023, D0027, D0028]
 
 ### 1.3.4 Rule style
 
 1. Static semantics is stated declaratively, as conditions a program must meet. [D0017]
 2. Dynamic semantics is stated as numbered steps wherever the order of events is observable: effects, panics,
    evaluation order, and cleanup. Where order is not observable, a declarative statement MAY be used. [D0017]
+3. In a chapter whose dynamic semantics is formally complete, the chapter states how its numbered steps correspond,
+   through its elaboration rules, to the core rules (§1.3.3). [D0017, D0022]
 
 > **Example (non-normative).** The two styles, in illustrative section text.
 >

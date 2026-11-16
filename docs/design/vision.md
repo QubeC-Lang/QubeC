@@ -1,7 +1,8 @@
 # Vision
 
-Status: **Vision I and II complete** (T0002, T0003); **how QubeC is specified** decided (T0004). Formalization and
-the host language follow in T0005–T0006. Each part links to the decision record that settles it.
+Status: **Vision I and II complete** (T0002, T0003); **how QubeC is specified** decided (T0004), including **how far
+it is formalized** (T0005). The host language follows in T0006. Each part links to the decision record that settles
+it.
 
 ## Starting point
 
@@ -82,7 +83,7 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | --- | --- |
 | **Easy start:** `qubec run file.qbc` with no project setup, a one-line hello world, and a REPL early. | [D0013](decisions/D0013-easy-start.md) |
 
-## How QubeC is specified (T0004)
+## How QubeC is specified (T0004, T0005)
 
 | Commitment | Record |
 | --- | --- |
@@ -92,6 +93,10 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Every violation is diagnosed,** and every rejection rule has a permanent ID (`R-func-calls-proc`) that a rejecting compiler reports. | [D0018](decisions/D0018-diagnosis-and-rule-ids.md) |
 | **Extensions** take effect only in files that opt into them by name. | [D0019](decisions/D0019-extensions-by-source-opt-in.md) |
 | **US English** spelling everywhere, including library names. | [D0020](decisions/D0020-us-english-spelling.md) |
+| **Formal target:** the whole sequential language has formal rules and theorems; concurrency stays in prose. | [D0021](decisions/D0021-formal-target-sequential-language.md) |
+| **Typed elaboration:** surface legality rules translate programs into an explicitly typed core, over which the dynamics are defined. | [D0022](decisions/D0022-typed-elaboration-into-core.md) |
+| **Claimed theorems:** type soundness, elaboration soundness, purity with a frame property, the tail-call space bound, determinism, decidable checking. | [D0023](decisions/D0023-claimed-meta-properties.md) |
+| **The core is mechanized in Lean 4,** which governs the core rules, and it runs as a verified reference evaluator and checker. Elaboration proofs are on paper. The mechanization starts in M03. | [D0024](decisions/D0024-mechanize-the-core.md)–[D0028](decisions/D0028-mechanization-starts-in-m03.md) |
 
 ## Dream snippet
 

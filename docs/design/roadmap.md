@@ -53,7 +53,7 @@ The dependencies are a first estimate; M00's planning task revisits them.
 | T0002 | Vision I: purpose, users, values, non-goals, inspirations, naming, dream snippet | Done |
 | T0003 | Vision II: functional style (purity, bindings, collections, local mutation, recursion) and further must-haves | Done |
 | T0004 | Spec audience, authority (prose versus formal rules), and formality level | Done |
-| T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Planned |
+| T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Done |
 | T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Planned |
 | T0007 | Confirm or reorder the milestone plan, in light of D0002–D0014; M00 exit review | Planned |
 | T0008 | Revisit: the spelling of explicit tail calls (`tailcall`; part of OQ-005) | Done |
@@ -67,6 +67,13 @@ a dependency of the numeric parts of M05. T0004 added: every violation is diagno
 effects, race freedom) as checkable disciplines; the extension opt-in's syntax
 ([OQ-006](open-questions.md#oq-006-how-is-an-extension-opt-in-written-and-where-may-it-appear)) belongs to M09 or
 M11; M14 draws the core library's list ([D0015](decisions/D0015-spec-audience-and-scope.md)).
+
+T0005 added: the formal target is the whole sequential language, with a revisit trigger if M07's mutation or
+borrow design is not syntactically provable ([D0021](decisions/D0021-formal-target-sequential-language.md)); M03
+starts the Lean mechanization ([D0028](decisions/D0028-mechanization-starts-in-m03.md)), and every later milestone
+that changes core rules keeps it current before exiting ([D0024](decisions/D0024-mechanize-the-core.md)); decidable
+checking constrains M05/M06's inference ([D0023](decisions/D0023-claimed-meta-properties.md)); M16 owns the core
+interchange format ([OQ-008](open-questions.md#oq-008-what-is-the-core-interchange-format-and-how-do-implementations-emit-core)).
 
 ## M01 Execution and compilation model
 
@@ -82,6 +89,12 @@ M11; M14 draws the core library's list ([D0015](decisions/D0015-spec-audience-an
 ## M03 Expressions and statements
 
 - **Scope:** expression orientation, operators and precedence, blocks, control flow, patterns.
+- **Formal work (from T0005):** the first formal rules. M03's first formal task creates the Lean package
+  `docs/spec/formal/lean/`, mechanizes the core's syntax and abstract-machine dynamics so far, proves determinism and
+  the tail-call space bound, and settles the binder representation
+  ([OQ-007](open-questions.md#oq-007-how-does-the-mechanized-core-represent-binders))
+  ([D0023](decisions/D0023-claimed-meta-properties.md), [D0028](decisions/D0028-mechanization-starts-in-m03.md)).
+  An added exit criterion: the mechanization covers M03's core rules, or each gap is an open question.
 - **Tasks:** to be planned.
 
 ## M04 Names, bindings, and scope
@@ -132,7 +145,9 @@ M11; M14 draws the core library's list ([D0015](decisions/D0015-spec-audience-an
 
 ## M13 Formal consolidation
 
-- **Scope:** complete semantics, soundness statements and proof sketches, and mechanized proofs if chosen.
+- **Scope:** consolidates the formal semantics of the sequential language: finishes the mechanized core proofs
+  (Lean 4) and the paper proofs of elaboration soundness and decidable checking, and may add referential
+  transparency ([D0021](decisions/D0021-formal-target-sequential-language.md)–[D0024](decisions/D0024-mechanize-the-core.md)).
 - **Tasks:** to be planned.
 
 ## M14 Standard library and prelude

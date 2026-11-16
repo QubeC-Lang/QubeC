@@ -85,6 +85,37 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Notes:** an opt-in naming an unknown extension is rejected with `R-extension-unknown`. Extension names follow
   [D0007](decisions/D0007-intuitive-names.md) and [D0020](decisions/D0020-us-english-spelling.md).
 
+### OQ-007: How does the mechanized core represent binders?
+
+- **Status:** Open
+- **Arose in:** T0005 (M00), from [D0024](decisions/D0024-mechanize-the-core.md) and
+  [D0028](decisions/D0028-mechanization-starts-in-m03.md) (the core is mechanized in Lean 4 from M03)
+- **To be settled in:** M03, by the first task that writes formal rules
+- **Blocked on it:** the first Lean definitions of the core in `docs/spec/formal/lean/`
+- **Options so far:**
+  1. De Bruijn indices: a variable is the number of binders between it and its binder (used in the T0005 pilot,
+     [R0004](research/R0004-formalization-prior-art-and-pilots.md)).
+  2. Locally nameless: names for free variables, indices for bound ones.
+  3. Intrinsically typed (well-scoped or well-typed by construction) syntax.
+- **Notes:** the choice is internal to the core. Surface scoping is resolved by elaboration
+  ([D0022](decisions/D0022-typed-elaboration-into-core.md)) before the core sees any variable. The core has binders
+  for terms, types, and purities (M05, M06), and the representation must serve all three.
+
+### OQ-008: What is the core interchange format, and how do implementations emit core?
+
+- **Status:** Open
+- **Arose in:** T0005 (M00), from [D0027](decisions/D0027-executable-reference.md) (a verified reference evaluator and
+  checker that read core programs)
+- **To be settled in:** M16, with the conformance harness (M15)
+- **Blocked on it:** the reference tool's name and commands, which are provisional; running implementations against
+  the reference
+- **Options so far:**
+  1. A textual S-expression form of the core, printed by implementations on request.
+  2. A binary serialization.
+  3. Both, with the textual form normative.
+- **Notes:** the format must carry every explicit type and purity instantiation, and enough source locations to map
+  a core rejection back to surface code.
+
 ## Decided
 
 ### OQ-004: What does "functional in style" commit QubeC to?
