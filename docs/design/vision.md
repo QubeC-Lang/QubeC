@@ -74,7 +74,7 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Bindings are immutable by default.** `let` binds once; a mutable variable is a visible, local opt-in; top level has constants only, and no global variables. | [D0009](decisions/D0009-immutable-bindings.md) |
 | **The default collections are mutable.** `List`, `Map`, and `Set` change in place; immutable collections (`ImmutableMap`, …; names provisional) are in the standard library. | [D0010](decisions/D0010-mutable-default-collections.md) |
 | **A function may mutate what it created,** as long as no mutation is observable after it returns. | [D0011](decisions/D0011-local-mutation-in-functions.md) |
-| **Recursion is safe.** Marked tail calls are checked and run in constant stack; stacks are growable. | [D0012](decisions/D0012-tail-calls-and-stacks.md) |
+| **Recursion is safe.** Tail calls marked `tailcall f(x)` are checked and run in constant stack; stacks are growable. | [D0012](decisions/D0012-tail-calls-and-stacks.md), [D0014](decisions/D0014-tailcall-keyword.md) |
 
 ## Must-haves
 
@@ -167,8 +167,8 @@ func count(words: List[Str]) -> Map[Str, Int] = {     // pure: a mutable Map, cr
   counts
 };
 
-func skip_spaces(cs: List[Char], i: Int) -> Int =     // constant stack via a checked tail call (D0012)
-  if i < cs.len() && cs[i] == ' ' then become skip_spaces(cs, i + 1) else i;
+func skip_spaces(cs: List[Char], i: Int) -> Int =     // constant stack via a checked tail call (D0012, D0014)
+  if i < cs.len() && cs[i] == ' ' then tailcall skip_spaces(cs, i + 1) else i;
 
 proc main() {                                          // effects only in procs (D0008)
   let text   = file_system.read_text(Path.of(args()[0])).unwrap_or("");
@@ -194,5 +194,5 @@ These leanings are carried forward to the milestones that decide them:
 | `"${file}"` | String templates; the lexer needs modes | M02 |
 | `ImmutableMap`, `env.insert(…)` returning a new map | Decided: immutable collections in the library, mutable by default ([D0010](decisions/D0010-mutable-default-collections.md)); final names | M14 |
 | `file_system.read_text`, `args()` | Module paths; standard-library names | M09, M14 |
-| `become`, `let mut`, `dbg` | Placeholder spellings under D0007 | M02, M03, M14 ([OQ-005](open-questions.md#oq-005-which-spellings-replace-the-placeholder-keywords-mut-become-and-dbg)) |
+| `let mut`, `dbg` | Placeholder spellings under D0007 (`tailcall` is decided, [D0014](decisions/D0014-tailcall-keyword.md)) | M02, M03, M14 ([OQ-005](open-questions.md#oq-005-which-spellings-replace-the-placeholder-keywords-mut-become-and-dbg)) |
 | `&[u32]`, `wrapping_add` | The explicit layer's marking and the numeric model | M05, M07 ([OQ-003](open-questions.md#oq-003-how-is-the-explicit-layer-marked-and-how-do-default-integers-relate-to-sized-ones)) |

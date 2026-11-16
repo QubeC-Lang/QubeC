@@ -34,7 +34,7 @@ defined. A term is added in the same change that defines it.
 | Research note | A file `docs/design/research/Rnnnn-<slug>.md` recording verified findings that a decision relies on. | [research/README.md](design/research/README.md) |
 | Self-hosting yardstick | The tie-breaking test "could QubeC's own compiler be written comfortably in this?". | [D0002](design/decisions/D0002-purpose-and-domain.md) |
 | Strict evaluation | Call-by-value: arguments are evaluated before a call, not on demand. | [D0005](design/decisions/D0005-non-goals.md) |
-| Tail call | A call that is the last action of a function; a marked tail call replaces the caller's frame and runs in constant stack. | [D0012](design/decisions/D0012-tail-calls-and-stacks.md) |
+| Tail call | A call that is the last action of a function; a call marked `tailcall` replaces the caller's frame and runs in constant stack. | [D0012](design/decisions/D0012-tail-calls-and-stacks.md), [D0014](design/decisions/D0014-tailcall-keyword.md) |
 | Task | One bounded sub-topic of one milestone (T0001, …), normally one session. | [workflow.md §3](agent/workflow.md#milestones-and-tasks) |
 | Tie-breaking domain | The kind of program whose needs win when design goals conflict; for QubeC, tooling. | [D0002](design/decisions/D0002-purpose-and-domain.md) |
 | Undefined behaviour (UB) | An operation the language gives no meaning, so that anything may happen; QubeC excludes it from safe code. | [D0004](design/decisions/D0004-ranked-design-values.md) |

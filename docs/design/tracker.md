@@ -8,9 +8,9 @@ follows the next action. Agent-oriented: "the designer" makes every decision; "t
 | Field | Value |
 | --- | --- |
 | Active milestone | M00 Vision and principles |
-| Active task | none (T0003 closed; T0004 is next) |
-| Last closed task | T0003 Vision II |
-| Decisions | D0001–D0013 |
+| Active task | none (T0008 closed; T0004 is next) |
+| Last closed task | T0008 Revisit: tail-call spelling |
+| Decisions | D0001–D0014 |
 | Open questions | OQ-001, OQ-002, OQ-003, OQ-005 (OQ-004 decided) |
 | Research notes | R0001, R0002 |
 | Spec status | Not started: conventions only ([spec README](../spec/README.md)) |
@@ -40,13 +40,18 @@ Then write the introduction's scope section (§1), which is waiting on this.
   - Tail calls are marked and checked, and stacks are growable (D0012).
   - Easy start is a must-have (D0013): `qubec run file.qbc` and a REPL. The designer declined to make diagnostics,
     compile speed, or early C interop obligations.
-- **OQ-004** is decided. **OQ-005** (new) asks whether the placeholder spellings `mut`, `become`, and `dbg` pass
-  D0007. The designer had to ask what `become` means, so treat its spelling as genuinely open.
+- **OQ-004** is decided. **OQ-005** asks whether the placeholder spellings pass D0007. Its `become` item was settled
+  in T0008: the designer chose `tailcall f(x)` (D0014), with no Scala-style function-level marker. `mut` and `dbg`
+  remain open.
+- **T0008 (a revisit, between T0003 and T0004):** D0014 also records two constraints. Cleanup runs before the jump,
+  for M01 and M07. No reference into the frame may be live across a `tailcall`, for M07. The designer asked for a
+  memory-level explanation (stack frames, jumps, loop rewrites, trampolines); keep that level of detail for
+  runtime-related questions.
 - **Settled now, refined later:** several T0003 decisions are normally owned by later milestones (M01, M03, M04,
   M08). Those milestones now refine them rather than decide them. The roadmap notes this for T0007.
 - **Dream snippet:** in [vision.md](vision.md). It now uses `ImmutableMap`, and a combined word-count sample was
   added.
-- No uncommitted design work is pending once T0003 is committed.
+- No uncommitted design work is pending once T0008 is committed.
 
 ## Task log
 
@@ -54,4 +59,5 @@ Then write the introduction's scope section (§1), which is waiting on this.
 | --- | --- | --- | --- | --- | --- | --- |
 | T0001 | 2026-11-15 | M00 | Repository setup and design workflow | D0001 | — | 76b0a8f |
 | T0002 | 2026-11-16 | M00 | Vision I: purpose, users, values, non-goals, inspirations, naming, dream snippet | D0002–D0007 | OQ-001–OQ-004 (opened) | 1014639 |
-| T0003 | 2026-11-16 | M00 | Vision II: functional style (purity, bindings, collections, local mutation, recursion), must-haves | D0008–D0013 | OQ-004 (decided), OQ-005 (opened) | (pending) |
+| T0003 | 2026-11-16 | M00 | Vision II: functional style (purity, bindings, collections, local mutation, recursion), must-haves | D0008–D0013 | OQ-004 (decided), OQ-005 (opened) | 762ce8a |
+| T0008 | 2026-11-16 | M00 | Revisit: the spelling of explicit tail calls | D0014 | OQ-005 (`become` item decided) | (pending) |

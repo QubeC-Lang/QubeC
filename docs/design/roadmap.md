@@ -55,7 +55,8 @@ The dependencies are a first estimate; M00's planning task revisits them.
 | T0004 | Spec audience, authority (prose versus formal rules), and formality level | Planned |
 | T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Planned |
 | T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Planned |
-| T0007 | Confirm or reorder the milestone plan, in light of D0002–D0007; M00 exit review | Planned |
+| T0007 | Confirm or reorder the milestone plan, in light of D0002–D0014; M00 exit review | Planned |
+| T0008 | Revisit: the spelling of explicit tail calls (`tailcall`; part of OQ-005) | Done |
 
 Notes for T0007: T0003 decided several matters normally owned by later milestones (purity, D0008, from M08;
 bindings, D0009, from M04; tail calls, D0012, from M01/M03), at the vision level; those milestones now refine

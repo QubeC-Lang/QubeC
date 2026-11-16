@@ -60,11 +60,11 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Arose in:** T0003 (M00), from [D0007](decisions/D0007-intuitive-names.md) (intuitive names) applied to
   [D0008](decisions/D0008-purity.md) (`dbg`), [D0009](decisions/D0009-immutable-bindings.md) (`let mut`), and
   [D0012](decisions/D0012-tail-calls-and-stacks.md) (`become`)
-- **To be settled in:** M02 (keywords), M03 (`become`), M14 (`dbg`, a built-in rather than a keyword)
+- **To be settled in:** M02 (keywords), M14 (`dbg`, a built-in rather than a keyword); the `become` item is decided
 - **Blocked on it:** every example using these spellings, which are provisional
 - **Options so far:**
   1. `mut`: keep it, or spell it out as `mutable`.
-  2. `become`: keep it (a whole word, but its meaning is not self-evident), or `tail return f(x)`, `return tail f(x)`.
+  2. `become`: **decided** by [D0014](decisions/D0014-tailcall-keyword.md) on 2026-11-16 (T0008): `tailcall f(x)`.
   3. `dbg`: keep it (common tool vocabulary), or `debug`.
 - **Notes:** each spelling must pass the test in D0007: a reader understands it without knowing a particular source
   language.

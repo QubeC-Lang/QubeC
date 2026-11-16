@@ -90,6 +90,10 @@ and the compiler checks it.
 - **M10:** lightweight tasks share the growable-stack machinery.
 - **M13:** the dynamic semantics states the constant-space property for marked calls.
 
+> **Later note (T0008).** The marker is spelled `tailcall f(x)` ([D0014](D0014-tailcall-keyword.md)), replacing the
+> placeholder `become`. D0014 also records that cleanup runs before the jump and that no reference into the frame may
+> be live across a `tailcall`.
+
 ## Affected artifacts
 
 - Spec: none yet (M01, M03)
