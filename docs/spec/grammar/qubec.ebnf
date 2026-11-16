@@ -1,0 +1,10 @@
+/* QubeC grammar: the source of truth for the lexical and syntactic grammar.
+ *
+ * Status: PROVISIONAL. The EBNF dialect is decided in M02. Until then this file uses
+ * W3C-style EBNF (XML 1.0, Fifth Edition, section 6, "Notation").
+ *
+ * Each production will cite the decision that introduces it, in a comment: [Dnnnn].
+ * The specification quotes productions from this file verbatim.
+ *
+ * No productions yet.
+ */
