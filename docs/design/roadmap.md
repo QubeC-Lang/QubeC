@@ -50,14 +50,16 @@ The dependencies are a first estimate; M00's planning task revisits them.
 | Task | Sub-topic | Status |
 | --- | --- | --- |
 | T0001 | Repository setup and design workflow | Done |
-| T0002 | Vision I: purpose, users, values, non-goals, inspirations, dream snippet | Planned |
-| T0003 | Vision II: further must-haves, and anything T0002 defers | Planned |
-| T0004 | Spec audience, authority, and formality level | Planned |
+| T0002 | Vision I: purpose, users, values, non-goals, inspirations, naming, dream snippet | Done |
+| T0003 | Vision II: what "functional in style" commits us to (frames OQ-004: purity, immutability by default, first-class functions), and any further must-haves | Planned |
+| T0004 | Spec audience, authority (prose versus formal rules), and formality level | Planned |
 | T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Planned |
 | T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Planned |
-| T0007 | Confirm or reorder the milestone plan; M00 exit review | Planned |
+| T0007 | Confirm or reorder the milestone plan, in light of D0002–D0007; M00 exit review | Planned |
 
-T0003–T0007 are a first plan; T0002 refines it.
+Notes for T0007: Go-style concurrency ([D0006](decisions/D0006-inspirations.md), OQ-001) makes M01's runtime
+decision constrain M10, and the explicit layer ([D0004](decisions/D0004-ranked-design-values.md), OQ-003) makes M07
+a dependency of the numeric parts of M05.
 
 ## M01 Execution and compilation model
 

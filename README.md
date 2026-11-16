@@ -11,9 +11,12 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M00 (Vision and principles).
-- **Last task:** T0001, repository setup and design workflow.
-- **Decided so far:** 1 decision (repository layout). Nothing about the language itself yet.
-- **Next:** T0002, the first vision task.
+- **Last task:** T0002, the first vision task.
+- **Decided so far:** 7 decisions. QubeC is general-purpose and tooling-first. It has a safe default layer and an
+  opt-in explicit layer for low-level work, eleven non-goals, inspirations from ML, Rust, Kotlin/Scala, and Go, and
+  intuitive names. See the [vision](docs/design/vision.md).
+- **Open questions:** 4.
+- **Next:** T0003, what "functional in style" commits us to.
 <!-- status:end -->
 
 ## Where to look

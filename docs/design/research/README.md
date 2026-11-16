@@ -6,4 +6,4 @@ Verified (with a source) or Recalled.
 
 | ID | Topic | Milestone / task | Used by |
 | --- | --- | --- | --- |
-| — | none yet | | |
+| [R0001](R0001-vision-prior-art.md) | Prior art cited by the vision decisions | M00 / T0002 | D0002, D0004–D0007 |
