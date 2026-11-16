@@ -11,12 +11,16 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M00 (Vision and principles).
-- **Last task:** T0002, the first vision task.
-- **Decided so far:** 7 decisions. QubeC is general-purpose and tooling-first. It has a safe default layer and an
-  opt-in explicit layer for low-level work, eleven non-goals, inspirations from ML, Rust, Kotlin/Scala, and Go, and
-  intuitive names. See the [vision](docs/design/vision.md).
+- **Last task:** T0003, the second vision task.
+- **Decided so far:** 13 decisions.
+  - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
+    low-level work.
+  - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
+  - Bindings are immutable by default, the default collections are mutable, tail calls are explicit, and a single
+    file runs directly.
+  - See the [vision](docs/design/vision.md).
 - **Open questions:** 4.
-- **Next:** T0003, what "functional in style" commits us to.
+- **Next:** T0004, the specification's audience and formality.
 <!-- status:end -->
 
 ## Where to look

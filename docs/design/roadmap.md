@@ -51,13 +51,15 @@ The dependencies are a first estimate; M00's planning task revisits them.
 | --- | --- | --- |
 | T0001 | Repository setup and design workflow | Done |
 | T0002 | Vision I: purpose, users, values, non-goals, inspirations, naming, dream snippet | Done |
-| T0003 | Vision II: what "functional in style" commits us to (frames OQ-004: purity, immutability by default, first-class functions), and any further must-haves | Planned |
+| T0003 | Vision II: functional style (purity, bindings, collections, local mutation, recursion) and further must-haves | Done |
 | T0004 | Spec audience, authority (prose versus formal rules), and formality level | Planned |
 | T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Planned |
 | T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Planned |
 | T0007 | Confirm or reorder the milestone plan, in light of D0002–D0007; M00 exit review | Planned |
 
-Notes for T0007: Go-style concurrency ([D0006](decisions/D0006-inspirations.md), OQ-001) makes M01's runtime
+Notes for T0007: T0003 decided several matters normally owned by later milestones (purity, D0008, from M08;
+bindings, D0009, from M04; tail calls, D0012, from M01/M03), at the vision level; those milestones now refine
+rather than decide them. Go-style concurrency ([D0006](decisions/D0006-inspirations.md), OQ-001) makes M01's runtime
 decision constrain M10, and the explicit layer ([D0004](decisions/D0004-ranked-design-values.md), OQ-003) makes M07
 a dependency of the numeric parts of M05.
 

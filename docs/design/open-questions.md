@@ -24,6 +24,9 @@ examples points to one of these. When a question is decided, it moves to **Decid
     must return an `Option`, block, or panic, or closing must be designed differently.
   - Directional channel types, if any, cannot convert implicitly (NG-9).
   - `<-` as one token makes `x<-1` a send; M02 must accept or avoid that.
+  - Default collections are mutable ([D0010](decisions/D0010-mutable-default-collections.md)), so a mutable
+    collection sent over a channel or captured by `spawn` must be moved (the sender loses access) or forbidden.
+  - Lightweight tasks share the growable-stack machinery of [D0012](decisions/D0012-tail-calls-and-stacks.md).
 
 ### OQ-002: Is absence written `Option[T]`, `T?`, or both?
 
@@ -51,20 +54,37 @@ examples points to one of these. When a question is decided, it moves to **Decid
   3. `Int` is an alias for one sized type, or a separate checked type with explicit conversions.
 - **Notes:** the explicit layer must stay safe; unchecked operations are a separate escape hatch (M07).
 
-### OQ-004: What does "functional in style" commit QubeC to?
+### OQ-005: Which spellings replace the placeholder keywords `mut`, `become`, and `dbg`?
 
 - **Status:** Open
+- **Arose in:** T0003 (M00), from [D0007](decisions/D0007-intuitive-names.md) (intuitive names) applied to
+  [D0008](decisions/D0008-purity.md) (`dbg`), [D0009](decisions/D0009-immutable-bindings.md) (`let mut`), and
+  [D0012](decisions/D0012-tail-calls-and-stacks.md) (`become`)
+- **To be settled in:** M02 (keywords), M03 (`become`), M14 (`dbg`, a built-in rather than a keyword)
+- **Blocked on it:** every example using these spellings, which are provisional
+- **Options so far:**
+  1. `mut`: keep it, or spell it out as `mutable`.
+  2. `become`: keep it (a whole word, but its meaning is not self-evident), or `tail return f(x)`, `return tail f(x)`.
+  3. `dbg`: keep it (common tool vocabulary), or `debug`.
+- **Notes:** each spelling must pass the test in D0007: a reader understands it without knowing a particular source
+  language.
+
+## Decided
+
+### OQ-004: What does "functional in style" commit QubeC to?
+
+- **Status:** Decided by [D0008](decisions/D0008-purity.md) on 2026-11-16 (T0003)
 - **Arose in:** T0002 (M00), from the initial idea and the dream snippet in [vision.md](vision.md), which assumes a
   pure `func` and an effectful `proc`
 - **To be settled in:** framed in T0003 (M00); decided in M04 (mutability) and M08 (purity and effects)
-- **Blocked on it:** `func` and `proc` in the dream snippet (their spelling is settled by
-  [D0007](decisions/D0007-intuitive-names.md), their meaning is not)
+- **Was blocking:** the meaning of `func` and `proc` in the dream snippet (their spelling was already settled by
+  [D0007](decisions/D0007-intuitive-names.md))
 - **Options so far:**
   1. A declaration-level split: pure `func`, effectful `proc`.
   2. Effect tracking in types (for example effect rows), with no separate keyword.
   3. Immutability by default and first-class functions, but no tracked purity.
 - **Notes:** NG-5 ([D0005](decisions/D0005-non-goals.md)) rules out monad-encoded effects, not effect tracking.
-
-## Decided
-
-None yet.
+- **Resolution:** purity is tracked by a declaration-level split, a pure `func` and an effectful `proc`
+  ([D0008](decisions/D0008-purity.md)), with immutable bindings by default
+  ([D0009](decisions/D0009-immutable-bindings.md)) and local mutation of created values allowed in functions
+  ([D0011](decisions/D0011-local-mutation-in-functions.md)). The mechanics of effects remain M08's.

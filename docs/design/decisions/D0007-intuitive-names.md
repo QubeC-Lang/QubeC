@@ -117,6 +117,10 @@ and cryptic truncations impose.
 - The spelling of `func` and `proc` is settled; whether the language has that pure/effectful split is not
   ([OQ-004](../open-questions.md#oq-004-what-does-functional-in-style-commit-qubec-to)).
 
+> **Later note (T0003).** The pure/effectful split itself is now decided by [D0008](D0008-purity.md), which
+> also resolves OQ-004. The spellings `mut`, `become`, and `dbg` are tested against this record in
+> [OQ-005](../open-questions.md#oq-005-which-spellings-replace-the-placeholder-keywords-mut-become-and-dbg).
+
 ## Affected artifacts
 
 - Spec: none yet (the keyword list in M02)
