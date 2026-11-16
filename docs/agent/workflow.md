@@ -80,7 +80,7 @@ Milestone plan (a proposal; confirmed or reordered with the designer during M00)
 | M04 | Names, bindings, and scope | declarations, mutability, shadowing, name resolution |
 | M05 | Core type system | primitives, the numeric model, products and sums, inference, subtyping, the core typing judgments |
 | M06 | Abstraction and polymorphism | functions and closures, generics, traits or typeclasses, coherence, dispatch |
-| M07 | Memory and resources | values vs references; ownership, GC, reference counting, or regions; an unsafe escape hatch; the undefined-behaviour policy |
+| M07 | Memory and resources | values vs references; ownership, GC, reference counting, or regions; an unsafe escape hatch; the undefined-behavior policy |
 | M08 | Errors and effects | results, exceptions, panics, effect tracking, purity |
 | M09 | Modules and packages | units, imports, visibility, versioning, the build model |
 | M10 | Concurrency | threads, tasks, async, actors; data-race freedom; the memory model |
@@ -197,7 +197,7 @@ task; step 3 is the loop of explained questions; steps 4–7 turn the answers in
   if it forces a later milestone's hand.
 - Keep three states apart: **Decided** (has a D record), **Provisional** (depends on an open question, and is marked
   as such), and **Open**. Never present a guess as decided, and never guess the designer's preferences; ask.
-- Examples use the decided syntax. Undecided syntax is labelled "provisional syntax".
+- Examples use the decided syntax. Undecided syntax is labeled "provisional syntax".
 
 ### Recording rules
 
@@ -207,7 +207,10 @@ task; step 3 is the loop of explained questions; steps 4–7 turn the answers in
   the rationale, in the designer's words where they gave them; the consequences; and the affected spec sections,
   grammar rules, and formal rules. Keep the [index](../design/decisions/README.md) current.
 - **Spec:** normative text with RFC 2119 keywords and numbered sections, each rule citing its decision IDs. Order
-  sections by dependency. Label non-normative notes.
+  sections by dependency. Label non-normative notes. Every chapter's status line carries its formal status (D0016);
+  every rejection rule starts with its rule ID (D0018); static rules are declarative and dynamic behavior is
+  numbered steps where order is observable (D0017); spelling is US English (D0020). The full conventions are in
+  [spec §1.3](../spec/01-introduction.md#13-notation-and-conventions).
 - **Grammar:** `docs/spec/grammar/qubec.ebnf` is the source of truth. The EBNF dialect is decided in M02; until then,
   use W3C-style EBNF marked provisional.
 - **Formal rules:** Markdown with LaTeX math, unless we decide otherwise. Name every rule, explain its premises in

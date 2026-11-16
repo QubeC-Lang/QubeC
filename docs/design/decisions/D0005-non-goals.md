@@ -109,7 +109,7 @@ while leaving room for light refinements.
 | NG-6 | Class-based implementation inheritance | candidate C |
 | NG-7 | Dependent types and in-program proofs | candidate D |
 | NG-8 | `null` as a value of ordinary types | anti-inspiration, [D0006](D0006-inspirations.md) |
-| NG-9 | Implicit conversions between types, especially lossy ones, and undefined behaviour in safe code | anti-inspiration, D0006 |
+| NG-9 | Implicit conversions between types, especially lossy ones, and undefined behavior in safe code | anti-inspiration, D0006 |
 | NG-10 | Errors that can be silently ignored, and error-handling noise (repeated checks, checked-exception lists) | anti-inspiration, D0006 |
 | NG-11 | Invisible inserted code: implicit conversions, resolutions that cannot be explained in one diagnostic, hidden control flow | anti-inspiration, D0006 |
 

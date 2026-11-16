@@ -52,7 +52,7 @@ The dependencies are a first estimate; M00's planning task revisits them.
 | T0001 | Repository setup and design workflow | Done |
 | T0002 | Vision I: purpose, users, values, non-goals, inspirations, naming, dream snippet | Done |
 | T0003 | Vision II: functional style (purity, bindings, collections, local mutation, recursion) and further must-haves | Done |
-| T0004 | Spec audience, authority (prose versus formal rules), and formality level | Planned |
+| T0004 | Spec audience, authority (prose versus formal rules), and formality level | Done |
 | T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Planned |
 | T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Planned |
 | T0007 | Confirm or reorder the milestone plan, in light of D0002–D0014; M00 exit review | Planned |
@@ -62,7 +62,11 @@ Notes for T0007: T0003 decided several matters normally owned by later milestone
 bindings, D0009, from M04; tail calls, D0012, from M01/M03), at the vision level; those milestones now refine
 rather than decide them. Go-style concurrency ([D0006](decisions/D0006-inspirations.md), OQ-001) makes M01's runtime
 decision constrain M10, and the explicit layer ([D0004](decisions/D0004-ranked-design-values.md), OQ-003) makes M07
-a dependency of the numeric parts of M05.
+a dependency of the numeric parts of M05. T0004 added: every violation is diagnosed
+([D0018](decisions/D0018-diagnosis-and-rule-ids.md)), so M07, M08, and M10 must state their rules (local mutation,
+effects, race freedom) as checkable disciplines; the extension opt-in's syntax
+([OQ-006](open-questions.md#oq-006-how-is-an-extension-opt-in-written-and-where-may-it-appear)) belongs to M09 or
+M11; M14 draws the core library's list ([D0015](decisions/D0015-spec-audience-and-scope.md)).
 
 ## M01 Execution and compilation model
 
@@ -98,7 +102,7 @@ a dependency of the numeric parts of M05.
 ## M07 Memory and resources
 
 - **Scope:** values vs references; ownership, GC, reference counting, or regions; an unsafe escape hatch; the
-  undefined-behaviour policy.
+  undefined-behavior policy.
 - **Tasks:** to be planned.
 
 ## M08 Errors and effects

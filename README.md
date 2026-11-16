@@ -11,16 +11,18 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M00 (Vision and principles).
-- **Last task:** T0008, the spelling of explicit tail calls (`tailcall`).
-- **Decided so far:** 14 decisions.
+- **Last task:** T0004, how the specification is written: audience, authority, rule style, and diagnostics.
+- **Decided so far:** 20 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
-  - Bindings are immutable by default, the default collections are mutable, tail calls are explicit (`tailcall f(x)`), and a single
-    file runs directly.
+  - Bindings are immutable by default, the default collections are mutable, tail calls are explicit
+    (`tailcall f(x)`), and a single file runs directly.
+  - One specification serves programmers and implementers. Every violation is diagnosed, and every rejection rule
+    has a stable ID that compilers report. See the [introduction](docs/spec/01-introduction.md).
   - See the [vision](docs/design/vision.md).
-- **Open questions:** 4.
-- **Next:** T0004, the specification's audience and formality.
+- **Open questions:** 5.
+- **Next:** T0005, how far to formalize, and which proof assistant, if any.
 <!-- status:end -->
 
 ## Where to look

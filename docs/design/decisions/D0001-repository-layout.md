@@ -52,7 +52,7 @@ design decision about the language.
 
 **B.** The layout is recorded in [workflow.md, section 2](../../agent/workflow.md#2-repository-layout).
 `tools/` is created when the grammar checker is decided (M02), and `tests/conformance/` when conformance tests
-start. No licence file yet.
+start. No license file yet.
 
 ## Rationale
 

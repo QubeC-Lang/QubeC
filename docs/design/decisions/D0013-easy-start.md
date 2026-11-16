@@ -64,7 +64,7 @@ proc main() { let color = unsafe { isatty(1) } == 1; … }
 ```
 
 Recommendation at the time: **A and B**. C is already weighed by the self-hosting yardstick as a tie-breaker, and D
-conflicts in timing with uncoloured concurrency (OQ-001).
+conflicts in timing with uncolored concurrency (OQ-001).
 
 ## Choice
 

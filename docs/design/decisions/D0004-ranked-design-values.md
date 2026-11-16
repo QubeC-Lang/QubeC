@@ -19,7 +19,7 @@ ranking may not serve them both.
 
 | Value | Meaning |
 | --- | --- |
-| Safety | Well-typed code cannot corrupt memory or hit undefined behaviour (UB). Failures are defined: an error or a panic, never silent garbage. |
+| Safety | Well-typed code cannot corrupt memory or hit undefined behavior (UB). Failures are defined: an error or a panic, never silent garbage. |
 | Rigor | A precise spec, a sound type system, and provable properties. Features that resist formalization lose ties. |
 | Simplicity | Few concepts that compose well; a small spec; one obvious way to do common things. |
 | Expressiveness | Abstraction power: generics, traits, higher-order functions, effects, metaprogramming. |

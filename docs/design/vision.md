@@ -1,7 +1,7 @@
 # Vision
 
-Status: **Vision I and II complete** (T0002, T0003). Spec audience, formalization, and the host language follow in
-T0004–T0006. Each part links to the decision record that settles it.
+Status: **Vision I and II complete** (T0002, T0003); **how QubeC is specified** decided (T0004). Formalization and
+the host language follow in T0005–T0006. Each part links to the decision record that settles it.
 
 ## Starting point
 
@@ -45,7 +45,7 @@ decided in M07.
 | NG-6 | Class-based implementation inheritance |
 | NG-7 | Dependent types and in-program proofs |
 | NG-8 | `null` as a value of ordinary types |
-| NG-9 | Implicit conversions, and undefined behaviour in safe code |
+| NG-9 | Implicit conversions, and undefined behavior in safe code |
 | NG-10 | Silently ignorable errors, and error-handling noise |
 | NG-11 | Invisible inserted code that a reader cannot find or a diagnostic cannot explain |
 
@@ -54,9 +54,9 @@ decided in M07.
 - **ML:** ADTs and exhaustive `match`, inference, expression orientation, persistent data.
 - **Rust:** `Result` and `?`, expression blocks, traits, ownership for the explicit layer, Cargo-grade tooling.
 - **Kotlin and Scala 3:** null-safety, trailing lambdas, extension functions, string templates, data and enum types.
-- **Go:** lightweight tasks, channels, and `select`, without `async` colouring.
+- **Go:** lightweight tasks, channels, and `select`, without `async` coloring.
 
-We guard against undefined behaviour and implicit conversions (C, C++), `null` and boilerplate (classic Java),
+We guard against undefined behavior and implicit conversions (C, C++), `null` and boilerplate (classic Java),
 ignorable errors and error-handling noise, and invisible magic (implicit conversions and resolutions).
 
 ## Names ([D0007](decisions/D0007-intuitive-names.md))
@@ -81,6 +81,17 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | Must-have | Record |
 | --- | --- |
 | **Easy start:** `qubec run file.qbc` with no project setup, a one-line hello world, and a REPL early. | [D0013](decisions/D0013-easy-start.md) |
+
+## How QubeC is specified (T0004)
+
+| Commitment | Record |
+| --- | --- |
+| **One specification** for programmers and implementers, covering the language and its **core library**; it does not teach, the tour does. | [D0015](decisions/D0015-spec-audience-and-scope.md) |
+| **Authority per chapter:** formal rules govern an aspect only once it is promoted to formally complete; elsewhere the prose governs. | [D0016](decisions/D0016-authority-per-section.md) |
+| **Rule style:** legality rules are declarative; run-time behavior is numbered steps wherever order is observable. | [D0017](decisions/D0017-rule-style.md) |
+| **Every violation is diagnosed,** and every rejection rule has a permanent ID (`R-func-calls-proc`) that a rejecting compiler reports. | [D0018](decisions/D0018-diagnosis-and-rule-ids.md) |
+| **Extensions** take effect only in files that opt into them by name. | [D0019](decisions/D0019-extensions-by-source-opt-in.md) |
+| **US English** spelling everywhere, including library names. | [D0020](decisions/D0020-us-english-spelling.md) |
 
 ## Dream snippet
 
@@ -122,7 +133,7 @@ proc compile(path: Path) -> Result[Int, CompileError] {          // effectful: r
 proc main() {
   let files   = args().take(MAX_FILES).map(Path.of);
   let results = channel (Path, Result[Int, CompileError]);
-  for file in files { spawn { results <- (file, compile(file)); } }   // no async colouring
+  for file in files { spawn { results <- (file, compile(file)); } }   // no async coloring
   for _ in files {
     match <-results {
       (file, Ok(value)) -> println("${file} = ${value}"),
@@ -184,7 +195,7 @@ These leanings are carried forward to the milestones that decide them:
 
 | Construct | Implies | Decided in |
 | --- | --- | --- |
-| `spawn`, `channel`, `<-` | Uncoloured concurrency; race freedom; closed-channel receive without zero values; `<-` as one token | M10, M01, M02 ([OQ-001](open-questions.md#oq-001-how-does-go-style-concurrency-become-data-race-free-and-what-does-it-require-of-the-runtime)) |
+| `spawn`, `channel`, `<-` | Uncolored concurrency; race freedom; closed-channel receive without zero values; `<-` as one token | M10, M01, M02 ([OQ-001](open-questions.md#oq-001-how-does-go-style-concurrency-become-data-race-free-and-what-does-it-require-of-the-runtime)) |
 | `func` / `proc` | Decided: the pure/effectful split ([D0008](decisions/D0008-purity.md)); effect mechanics | M08 |
 | `type Expr = … \| Binary(…, lhs: Expr, …)` | Recursive ADTs without explicit boxes: the default layer manages indirection (GC or reference counting) | M05, M07 |
 | `Result`, `?`, `Ok`/`Error` | Errors as values with one-token propagation | M08 |

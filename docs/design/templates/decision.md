@@ -20,7 +20,7 @@ on, with links. -->
 
 ## Options considered
 
-<!-- One subsection per option. All examples use the same scenario. Undecided syntax is labelled
+<!-- One subsection per option. All examples use the same scenario. Undecided syntax is labeled
 "provisional syntax". -->
 
 ### A. <Option name>

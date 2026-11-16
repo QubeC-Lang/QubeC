@@ -69,8 +69,8 @@ reputation for complexity.
 
 ### D. Go's concurrency
 
-Lightweight tasks, channels, and `select`, with no `async` *colouring* (where an async function can only be awaited
-from another async function, so the "colour" spreads through the call graph). A runtime schedules many lightweight
+Lightweight tasks, channels, and `select`, with no `async` *coloring* (where an async function can only be awaited
+from another async function, so the "color" spreads through the call graph). A runtime schedules many lightweight
 tasks onto a few OS threads (M:N scheduling).
 
 ```go
@@ -87,7 +87,7 @@ func port(cfg map[string]string) (int, error) {
 - **Costs:** an M:N scheduler and growable stacks in the runtime, which affect M01, the explicit layer, and M12
   interop (cgo's call overhead is the precedent). Go is not data-race-free, so Safety (#1) requires M10 to add race
   freedom, for example by restricting what crosses a channel, as Rust's `Send` does.
-- **Prior art for uncoloured concurrency (recalled):** Java virtual threads (2023), OCaml 5 effect handlers.
+- **Prior art for uncolored concurrency (recalled):** Java virtual threads (2023), OCaml 5 effect handlers.
 
 Also mentioned, not selected: Zig (comptime, explicit allocators), Gleam and Elm (friendly errors, small languages),
 and Koka (effect rows and handlers, relevant to M08).
@@ -99,7 +99,7 @@ forces M01 (scheduler, growable stacks) and M10 (race freedom) before either is 
 
 The scenario is the same for all: turn user input such as `"42"` into a percentage between 0 and 100.
 
-### A. Undefined behaviour and implicit conversions (C, C++)
+### A. Undefined behavior and implicit conversions (C, C++)
 
 ```c
 int pct = atoi(input);          // "abc" -> 0 silently; overflow is UB
@@ -160,14 +160,14 @@ inspirations; D only constrains how extension functions resolve.
 | Rust | Cargo-grade tooling | Build, test, and dependencies built in (M15). |
 | Kotlin/Scala 3 | Null-safety in types; concise, trailing lambdas | Readable everyday code. |
 | Kotlin/Scala 3 | Extension functions, string templates, data and enum types | Less boilerplate. |
-| Go | Lightweight tasks, channels, `select`; no `async` colouring | Concurrency that stays out of function signatures. |
+| Go | Lightweight tasks, channels, `select`; no `async` coloring | Concurrency that stays out of function signatures. |
 
 **Anti-inspirations: A, B, C, and D**, restated as NG-8 to NG-11 in D0005.
 
 ## Rationale
 
 The ML, Rust, and Kotlin/Scala inspirations match the three user groups of [D0003](D0003-target-users.md) one to
-one. We also chose Go's uncoloured concurrency, accepting its costs knowingly: it requires a runtime scheduler and
+one. We also chose Go's uncolored concurrency, accepting its costs knowingly: it requires a runtime scheduler and
 growable stacks, and Safety requires M10 to add data-race freedom on top of it. The anti-inspirations follow from
 Safety and Predictability.
 

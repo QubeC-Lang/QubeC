@@ -1,7 +1,7 @@
 # Examples
 
 QubeC programs (`.qbc`) that show the language as decided so far. Every file uses decided syntax only; anything
-undecided is labelled *provisional syntax*. Once a grammar checker exists, every example is checked against
+undecided is labeled *provisional syntax*. Once a grammar checker exists, every example is checked against
 [the grammar](../docs/spec/grammar/qubec.ebnf).
 
 ## Header convention

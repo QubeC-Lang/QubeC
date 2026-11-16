@@ -28,7 +28,7 @@ Provisional syntax.
 ### A. Two kinds of callable: a pure `func` and an effectful `proc`
 
 A `func` body is checked for effects; a `proc` may do anything, including calling `func`s. The split is one-way:
-a procedure calls functions freely, so it is not the `async` colouring rejected in
+a procedure calls functions freely, so it is not the `async` coloring rejected in
 [D0006](D0006-inspirations.md). Function types carry a hidden purity, so that a higher-order `func` such as `map`
 accepts both pure and effectful lambdas: an effect variable is to purity what a type variable is to types.
 

@@ -19,7 +19,7 @@ examples points to one of these. When a question is decided, it moves to **Decid
   2. Share nothing mutable between tasks: tasks communicate only by moving or copying values (actor-like).
   3. A dynamic race detector only (as Go's), which does not meet Safety (#1) on its own.
 - **Notes:**
-  - Uncoloured lightweight tasks need an M:N scheduler and growable stacks, which M01 must allow.
+  - Uncolored lightweight tasks need an M:N scheduler and growable stacks, which M01 must allow.
   - A receive from a closed channel cannot return a zero value (NG-8, [D0005](decisions/D0005-non-goals.md)). It
     must return an `Option`, block, or panic, or closing must be designed differently.
   - Directional channel types, if any, cannot convert implicitly (NG-9).
@@ -68,6 +68,22 @@ examples points to one of these. When a question is decided, it moves to **Decid
   3. `dbg`: keep it (common tool vocabulary), or `debug`.
 - **Notes:** each spelling must pass the test in D0007: a reader understands it without knowing a particular source
   language.
+
+### OQ-006: How is an extension opt-in written, and where may it appear?
+
+- **Status:** Open
+- **Arose in:** T0004 (M00), from [D0019](decisions/D0019-extensions-by-source-opt-in.md) (extensions only with an
+  opt-in in the source file)
+- **To be settled in:** M09 (units and the build model) or M11 (attributes), whichever comes first
+- **Blocked on it:** the syntax and placement of the opt-in in spec
+  [§1.2.3](../spec/01-introduction.md#123-extensions), which is provisional
+- **Options so far:**
+  1. A declaration at the top of a file, such as `use feature pipe_operator;` (provisional syntax).
+  2. An attribute on the file or unit, once M11 decides attributes.
+  3. An entry in a unit's manifest, if M09 has manifests. This weakens "meaning visible in the file" unless the file
+     also names the extension.
+- **Notes:** an opt-in naming an unknown extension is rejected with `R-extension-unknown`. Extension names follow
+  [D0007](decisions/D0007-intuitive-names.md) and [D0020](decisions/D0020-us-english-spelling.md).
 
 ## Decided
 
