@@ -62,15 +62,23 @@ tests/conformance/            later
 
 ### Milestones and tasks
 
-- A milestone (M00, M01, …) is one design area with exit criteria: its decisions recorded, its spec sections
+- A design milestone (M00, M01, …) is one design area with exit criteria: its decisions recorded, its spec sections
   written, the grammar and formal rules updated, examples added, and no open question left that it was meant to
   settle.
-- A task (T0001, …, numbered in creation order) is ONE bounded sub-topic of ONE milestone. A session normally runs
-  one task. Revisits and audits are tasks too.
-- The roadmap lists each milestone's tasks with a status (Planned, Active, Done, or Dropped). The tracker names
-  exactly one Active task.
+- An implementation milestone (I1, I2, …) is one stage of the implementation, with a stage target and the common
+  exit criteria P1–P6 listed in the roadmap ([D0039](../design/decisions/D0039-four-implementation-stages.md)). The
+  implementation track starts once M01 and M02 have closed, implements only closed design milestones, and never makes
+  design wait ([D0036](../design/decisions/D0036-trailing-implementation-track.md)).
+- A task (T0001, …, numbered in creation order across both tracks) is ONE bounded sub-topic of ONE milestone. A
+  session normally runs one task. Revisits and audits are tasks too.
+- The roadmap lists each milestone's tasks with a status (Planned, Active, Done, or Dropped). The tracker names at
+  most one Active task per track (design and implementation), and exactly one next action, which is the design
+  track's ([D0037](../design/decisions/D0037-implementation-milestones-and-tasks.md)).
+- The task steps below are for design tasks, including the design tasks that open each implementation milestone. An
+  implementation task states what it builds, the spec sections and decisions it implements, and the tests that must
+  pass; how implementation tasks are run in full is decided by I1's opening task.
 
-Milestone plan (a proposal; confirmed or reordered with the designer during M00):
+Milestone plan (confirmed in T0007, D0036–D0041; the roadmap holds the current statuses and dependencies):
 
 | ID | Milestone | Covers |
 | --- | --- | --- |
@@ -82,7 +90,7 @@ Milestone plan (a proposal; confirmed or reordered with the designer during M00)
 | M05 | Core type system | primitives, the numeric model, products and sums, inference, subtyping, the core typing judgments |
 | M06 | Abstraction and polymorphism | functions and closures, generics, traits or typeclasses, coherence, dispatch |
 | M07 | Memory and resources | values vs references; ownership, GC, reference counting, or regions; an unsafe escape hatch; the undefined-behavior policy |
-| M08 | Errors and effects | results, exceptions, panics, effect tracking, purity |
+| M08 | Errors and effects | results, exceptions, panics; the mechanics of effects, refining the purity of D0008 |
 | M09 | Modules and packages | units, imports, visibility, versioning, the build model |
 | M10 | Concurrency | threads, tasks, async, actors; data-race freedom; the memory model |
 | M11 | Compile-time evaluation and metaprogramming | constant evaluation, macros, reflection, attributes |
@@ -90,8 +98,17 @@ Milestone plan (a proposal; confirmed or reordered with the designer during M00)
 | M13 | Formal consolidation | complete semantics, soundness statements and proof sketches, and mechanized proofs if chosen |
 | M14 | Standard library and prelude | |
 | M15 | Tooling | diagnostics, formatter, LSP, test framework, package manager, docs |
-| M16 | Implementation plan | pipeline, IRs, bootstrapping toward self-hosting, the conformance suite |
-| M17 | Final review and Spec v1.0 | a consistency audit, a rationale document, a changelog |
+| M16 | Implementation plan | Dropped: merged into I1–I3 (D0038) |
+| M17 | Final review and Spec v1.0 | a consistency audit, a rationale document, a changelog, the plan after v1.0; only after I4 (D0041) |
+
+Implementation milestones (D0039):
+
+| ID | Milestone | Covers |
+| --- | --- | --- |
+| I1 | Front end and core interpreter | the host interpreter (Rust) for M01–M05: scanner, parser, names, types, elaboration, the tree-walking interpreter, the REPL, the driver; opens with its architecture, the code layout, the conformance harness, and how implementation tasks run |
+| I2 | Host complete for the core language | the host interpreter through M06–M09 and M14; the host compiler (OCaml) and host VM (Zig); opens with the core interchange and bytecode formats and their architecture |
+| I3 | `qubecc` and the fixpoint | the self-hosted compiler, the fixpoint check, and the release checks; opens with `qubecc`'s architecture |
+| I4 | The remaining features | M10–M12 in the host implementation, then in `qubecc` |
 
 Formal rules accumulate in every milestone, not only in M13. Drop, merge, or reorder milestones when the vision
 calls for it, and record each change as a decision. For the host-language and proof-assistant choices in M00, show

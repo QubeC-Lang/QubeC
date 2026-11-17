@@ -1,8 +1,8 @@
 # Vision
 
 Status: **Vision I and II complete** (T0002, T0003); **how QubeC is specified** decided (T0004), including **how far
-it is formalized** (T0005); **how QubeC is first implemented** decided (T0006). Each part links to the decision record
-that settles it.
+it is formalized** (T0005); **how QubeC is first implemented** decided (T0006); **how design and implementation are
+planned** decided (T0007). Each part links to the decision record that settles it.
 
 ## Starting point
 
@@ -106,6 +106,16 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Three parts, connected through the typed core:** the **host interpreter** (Rust: front end, tree-walking core interpreter, REPL, driver; it makes every rejection), the **host compiler** (OCaml: typed core → bytecode), and the **host VM** (Zig: interpreter loop, heap and GC, stacks, natives, as a C-ABI library). This presumes a bytecode VM, which M01 confirms or revisits. | [D0030](decisions/D0030-three-part-host.md)–[D0033](decisions/D0033-zig-host-vm.md) |
 | **Idiomatic code in each part,** with conformance (rule IDs, checked core, the specified formats) as the only shared contract; the self-hosted compiler is designed fresh. | [D0034](decisions/D0034-idiomatic-code-per-part.md) |
 | **Pinned toolchains,** and third-party libraries only when recorded with their purpose and locked by checksum. | [D0035](decisions/D0035-pinned-toolchains-and-recorded-libraries.md) |
+
+## How the work is planned (T0007)
+
+| Commitment | Record |
+| --- | --- |
+| **Implementation trails the design:** it starts once the execution model (M01) and the lexical structure (M02) are decided, implements only closed design milestones, and design never waits for it. | [D0036](decisions/D0036-trailing-implementation-track.md) |
+| **Two tracks of milestones:** design milestones M00, M01, … and implementation milestones I1, I2, …, with tasks in one series and at most one Active task per track. | [D0037](decisions/D0037-implementation-milestones-and-tasks.md) |
+| **Four implementation stages:** I1 the front end and core interpreter, I2 the complete host with its compiler and VM, I3 the self-hosted compiler and the fixpoint, I4 concurrency, metaprogramming, and interop in both. Each architecture is designed at the start of the stage that builds it. | [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md), [D0039](decisions/D0039-four-implementation-stages.md) |
+| **The design milestones stay as drafted,** with corrected dependencies. | [D0040](decisions/D0040-design-milestones-kept.md) |
+| **Spec v1.0 waits for the self-hosting test:** it is published only after both implementations implement the whole specification. | [D0041](decisions/D0041-spec-v1-after-i4.md) |
 
 ## Dream snippet
 

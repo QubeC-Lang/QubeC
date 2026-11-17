@@ -10,9 +10,9 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 <!-- status:begin -->
 ## Status
 
-- **Phase:** design, milestone M00 (Vision and principles).
-- **Last task:** T0006, how QubeC is first implemented.
-- **Decided so far:** 35 decisions.
+- **Phase:** design, milestone M01 (Execution and compilation model). M00 (Vision and principles) is complete.
+- **Last task:** T0007, confirming the plan for design and implementation.
+- **Decided so far:** 41 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -25,9 +25,12 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
     reference evaluator and checker. See the [formal rules](docs/spec/formal/README.md).
   - The first implementation is permanent and leads every feature: a Rust front end, interpreter, and REPL; an OCaml
     compiler from the typed core to bytecode; and a Zig VM and runtime.
+  - Implementation trails the design in four stages, starting once M01 and M02 are decided, and Spec v1.0 waits
+    until both implementations, including the self-hosted compiler, implement the whole language. See the
+    [roadmap](docs/design/roadmap.md).
   - See the [vision](docs/design/vision.md).
 - **Open questions:** 8.
-- **Next:** T0007, confirming the milestone plan and closing M00.
+- **Next:** T0009, the execution model and artifacts.
 <!-- status:end -->
 
 ## Where to look

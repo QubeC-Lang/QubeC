@@ -13,11 +13,13 @@ authority on design progress: status, task log, exactly one next action, and a h
 
 ## Milestones and tasks
 
-- A **milestone** (M00, M01, …) is one design area with exit criteria. See
+- A **design milestone** (M00, M01, …) is one design area with exit criteria. An **implementation milestone** (I1,
+  I2, …) is one stage of the implementation; it trails the design and never makes design wait (D0036, D0039). See
   [`docs/design/roadmap.md`](docs/design/roadmap.md).
-- A **task** (T0001, …, numbered in creation order) is one bounded sub-topic of one milestone. A session normally
-  runs one task. Revisits and audits are tasks too. Statuses: Planned, Active, Done, Dropped. The tracker names
-  exactly one Active task.
+- A **task** (T0001, …, numbered in creation order across both tracks) is one bounded sub-topic of one milestone. A
+  session normally runs one task. Revisits and audits are tasks too. Statuses: Planned, Active, Done, Dropped. The
+  tracker names at most one Active task per track (design, implementation), and one next action, for design
+  (D0037). The steps below are for design tasks; I1's opening task decides how implementation tasks run.
 - Three states, always kept apart: **Decided** (has a D record), **Provisional** (marked, and points to an open
   question), and **Open**.
 

@@ -23,6 +23,7 @@ defined. A term is added in the same change that defines it.
 | Decision record | A file `docs/design/decisions/Dnnnn-<slug>.md` recording one decision: the question, the options, the choice, the rationale, and the consequences. | [workflow.md §3](agent/workflow.md#recording-rules) |
 | Default layer | The part of QubeC that everyday code uses, judged by Safety > Simplicity > Ergonomics > Predictability > Performance. | [D0004](design/decisions/D0004-ranked-design-values.md) |
 | Definitional interpreter | An ordinary, runnable function together with a proof that it agrees with a semantics given as rules; running it is running the specification. | [D0027](design/decisions/D0027-executable-reference.md) |
+| Design track | The sequence of design milestones (M00, M01, …), which decide the language and write the specification. | [D0036](design/decisions/D0036-trailing-implementation-track.md) |
 | Differential testing | Running the same program through two implementations (such as the reference and a compiler) and comparing their answers. | [D0027](design/decisions/D0027-executable-reference.md) |
 | Diverse double-compiling | Compiling a compiler's source with two independent compilers and comparing the results, to detect a backdoor planted in a compiler binary. | [D0029](design/decisions/D0029-permanent-host-implementation.md) |
 | Dynamic semantics | What an accepted program does when it runs. | [§1.1](spec/01-introduction.md#11-scope) |
@@ -47,11 +48,13 @@ defined. A term is added in the same change that defines it.
 | Host interpreter | The part of the host implementation, written in Rust, that holds the front end, a tree-walking interpreter of the core, the REPL, and the driver; it makes every rejection. | [D0030](design/decisions/D0030-three-part-host.md), [D0031](design/decisions/D0031-rust-host-interpreter.md) |
 | Host VM | The part of the host implementation, written in Zig, that runs bytecode: the interpreter loop, heap and garbage collector, stacks, panics, and native library functions, as a C-ABI library. | [D0030](design/decisions/D0030-three-part-host.md), [D0033](design/decisions/D0033-zig-host-vm.md) |
 | Immutable collection | A collection that never changes; an update returns a new version sharing structure with the old one (also called persistent). | [D0010](design/decisions/D0010-mutable-default-collections.md) |
+| Implementation milestone | One stage of the implementation (I1, I2, …), with a stage target and the common exit criteria P1–P6. | [D0037](design/decisions/D0037-implementation-milestones-and-tasks.md), [D0039](design/decisions/D0039-four-implementation-stages.md) |
+| Implementation track | The sequence of implementation milestones; it trails the design track, implementing only closed design milestones, and never makes design wait. | [D0036](design/decisions/D0036-trailing-implementation-track.md) |
 | Intuitive name | A name QubeC provides that most programmers read correctly without context: a widely recognized short form, a familiar acronym, or a whole word. | [D0007](design/decisions/D0007-intuitive-names.md) |
 | Logical relation | A family of relations, defined type by type, stating when two values or programs behave the same; the usual tool for proving relational properties such as referential transparency. | [D0023](design/decisions/D0023-claimed-meta-properties.md) |
 | Mechanization | The core's rules and proofs written in a proof assistant (Lean 4), in `docs/spec/formal/lean/`. | [D0024](design/decisions/D0024-mechanize-the-core.md), [D0025](design/decisions/D0025-lean-4.md) |
 | Meta-property | A theorem about the language rather than in it, such as type soundness. | [D0023](design/decisions/D0023-claimed-meta-properties.md) |
-| Milestone | One design area (M00, M01, …) with exit criteria. | [workflow.md §3](agent/workflow.md#milestones-and-tasks) |
+| Milestone | One design area (a design milestone, M00, M01, …) or one stage of the implementation (an implementation milestone, I1, I2, …), with exit criteria. | [workflow.md §3](agent/workflow.md#milestones-and-tasks), [D0037](design/decisions/D0037-implementation-milestones-and-tasks.md) |
 | Monad | A type such as `IO a` ("a computation that yields an `a`") with a way to chain such computations; QubeC does not encode effects this way (NG-5). | [D0005](design/decisions/D0005-non-goals.md) |
 | Non-goal | A property QubeC deliberately does not have, recorded as NG-n; changing one needs a superseding decision. | [D0005](design/decisions/D0005-non-goals.md) |
 | Open | A design state: the matter is not decided and nothing depends on a guess about it. | [workflow.md §3](agent/workflow.md#interaction-rules) |
@@ -72,10 +75,11 @@ defined. A term is added in the same change that defines it.
 | Rule ID | The permanent name of a rejection rule, such as `R-func-calls-proc`; a rejecting implementation reports at least one. | [§1.3.5](spec/01-introduction.md#135-rejection-rules-and-rule-ids), [D0018](design/decisions/D0018-diagnosis-and-rule-ids.md) |
 | Self-hosted compiler | The QubeC compiler written in QubeC, working name `qubecc`; it never implements a feature the host implementation lacks. | [D0029](design/decisions/D0029-permanent-host-implementation.md) |
 | Self-hosting yardstick | The tie-breaking test "could QubeC's own compiler be written comfortably in this?". | [D0002](design/decisions/D0002-purpose-and-domain.md) |
+| Stage target | What an implementation milestone must show before it exits, such as "`qubec run` and the REPL work for the M01–M05 language" for I1. | [D0039](design/decisions/D0039-four-implementation-stages.md) |
 | Static semantics | The conditions a program must meet to be accepted (legality, typing, purity). | [§1.1](spec/01-introduction.md#11-scope) |
 | Strict evaluation | Call-by-value: arguments are evaluated before a call, not on demand. | [D0005](design/decisions/D0005-non-goals.md) |
 | Tail call | A call that is the last action of a function; a call marked `tailcall` replaces the caller's frame and runs in constant stack. | [D0012](design/decisions/D0012-tail-calls-and-stacks.md), [D0014](design/decisions/D0014-tailcall-keyword.md) |
-| Task | One bounded sub-topic of one milestone (T0001, …), normally one session. | [workflow.md §3](agent/workflow.md#milestones-and-tasks) |
+| Task | One bounded sub-topic or piece of one milestone, design or implementation (T0001, …, numbered in creation order across both tracks), normally one session. | [workflow.md §3](agent/workflow.md#milestones-and-tasks) |
 | Tie-breaking domain | The kind of program whose needs win when design goals conflict; for QubeC, tooling. | [D0002](design/decisions/D0002-purpose-and-domain.md) |
 | Tree-walking interpreter | An interpreter that runs a program by recursively evaluating its syntax tree (here, the core), without compiling it first. | [D0030](design/decisions/D0030-three-part-host.md) |
 | Type soundness | The property that a well-typed program never gets stuck: it finishes with a value, panics in a defined way, or runs forever (progress and preservation). | [D0023](design/decisions/D0023-claimed-meta-properties.md) |

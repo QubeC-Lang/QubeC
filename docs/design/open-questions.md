@@ -106,9 +106,10 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Status:** Open
 - **Arose in:** T0005 (M00), from [D0027](decisions/D0027-executable-reference.md) (a verified reference evaluator and
   checker that read core programs)
-- **To be settled in:** M16, with the conformance harness (M15); needed earlier, before the host compiler is built,
-  because the host compiler reads the core the host interpreter emits
-  ([D0030](decisions/D0030-three-part-host.md))
+- **To be settled in:** I2's opening task, before the host compiler is built, because the host compiler reads the core
+  the host interpreter emits ([D0030](decisions/D0030-three-part-host.md)); or earlier, in I1, if I1 is the first to
+  send core across a boundary, for example to the Lean reference
+  ([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md); M16 was merged into I1–I3)
 - **Blocked on it:** the reference tool's name and commands, which are provisional; running implementations against
   the reference; the interface between the host interpreter and the host compiler
 - **Options so far:**
@@ -123,7 +124,8 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Status:** Open
 - **Arose in:** T0006 (M00), from [D0030](decisions/D0030-three-part-host.md) (the host compiler lowers the typed core
   to bytecode, which the host VM runs)
-- **To be settled in:** M01 (whether bytecode is an artifact users see, and its stability) and M16 (the format itself)
+- **To be settled in:** M01, task T0009 (whether bytecode is an artifact users see, and its stability), and I2's
+  opening task (the format itself; [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md))
 - **Blocked on it:** the interface between the host compiler ([D0032](decisions/D0032-ocaml-host-compiler.md)) and
   the host VM ([D0033](decisions/D0033-zig-host-vm.md))
 - **Options so far:**

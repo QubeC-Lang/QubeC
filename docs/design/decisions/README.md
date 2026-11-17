@@ -41,3 +41,9 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0033](D0033-zig-host-vm.md) | The host VM is written in Zig | Accepted | M00 / T0006 | 2026-11-16 |
 | [D0034](D0034-idiomatic-code-per-part.md) | Each host part is idiomatic for its language; the self-hosted compiler is designed fresh | Accepted | M00 / T0006 | 2026-11-16 |
 | [D0035](D0035-pinned-toolchains-and-recorded-libraries.md) | Toolchains are pinned; third-party libraries are allowed when recorded and locked | Accepted | M00 / T0006 | 2026-11-16 |
+| [D0036](D0036-trailing-implementation-track.md) | Implementation is a trailing track that starts once M01 and M02 have closed | Accepted | M00 / T0007 | 2026-11-16 |
+| [D0037](D0037-implementation-milestones-and-tasks.md) | Implementation milestones I1, I2, … with tasks in the shared series; one Active task per track | Accepted | M00 / T0007 | 2026-11-16 |
+| [D0038](D0038-m16-merged-into-implementation-milestones.md) | M16 is merged into I1–I3; each implementation milestone opens with its own design tasks | Accepted | M00 / T0007 | 2026-11-16 |
+| [D0039](D0039-four-implementation-stages.md) | Four implementation stages, I1–I4, with common exit criteria | Accepted | M00 / T0007 | 2026-11-16 |
+| [D0040](D0040-design-milestones-kept.md) | The design milestones are kept as drafted, with corrected dependencies and scopes | Accepted | M00 / T0007 | 2026-11-16 |
+| [D0041](D0041-spec-v1-after-i4.md) | Spec v1.0 is published only after I4 | Accepted | M00 / T0007 | 2026-11-16 |

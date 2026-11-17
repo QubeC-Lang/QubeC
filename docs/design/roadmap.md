@@ -1,27 +1,49 @@
 # Roadmap
 
-The design is organized into milestones (one design area each) and tasks (one bounded sub-topic of one milestone).
-Task statuses: **Planned**, **Active**, **Done**, **Dropped**. Exactly one task is Active at a time; the
-[tracker](tracker.md) names it. The milestone plan below is a proposal, to be confirmed or reordered during M00;
-every change to it is recorded as a decision.
+The work is organized into two tracks ([D0036](decisions/D0036-trailing-implementation-track.md),
+[D0037](decisions/D0037-implementation-milestones-and-tasks.md)):
+- the **design track**: design milestones M00, M01, …, one design area each;
+- the **implementation track**: implementation milestones I1, I2, …, one stage of the implementation each. It starts
+  once M01 and M02 have closed, implements only closed design milestones, and never makes design wait.
 
-Every milestone shares these exit criteria, on top of its own:
+A task (T0001, …, numbered in creation order across both tracks) is one bounded piece of one milestone. Task
+statuses: **Planned**, **Active**, **Done**, **Dropped**. At most one task per track is Active at a time; the
+[tracker](tracker.md) names them. The plan was confirmed in T0007
+([D0036](decisions/D0036-trailing-implementation-track.md)–[D0041](decisions/D0041-spec-v1-after-i4.md)); every
+change to it is recorded as a decision.
+
+Every design milestone shares these exit criteria, on top of its own:
 - its decisions are recorded;
 - its spec sections are written;
 - the grammar and formal rules are updated;
 - examples are added;
 - no open question is left that it was meant to settle.
 
+Every implementation milestone shares these exit criteria, on top of its stage target
+([D0039](decisions/D0039-four-implementation-stages.md)):
+- **P1:** every task is Done, or Dropped with a reason;
+- **P2:** the architecture decisions made in it are recorded as decision records;
+- **P3:** the code builds from a clean checkout with the pinned toolchains, and the build is documented;
+- **P4:** its unit tests, and the conformance tests for everything it implements, pass on every execution path it
+  has;
+- **P5:** every divergence found between the code and the specification is resolved in the specification or
+  recorded as an open question; the specification stays the authority;
+- **P6:** its stage target is met.
+
+An implementation milestone cannot exit before every design milestone it implements has closed.
+
 ## Overview
+
+Design track:
 
 | ID | Milestone | Status | Depends on |
 | --- | --- | --- | --- |
-| [M00](#m00-vision-and-principles) | Vision and principles | Active | — |
-| [M01](#m01-execution-and-compilation-model) | Execution and compilation model | Planned | M00 |
+| [M00](#m00-vision-and-principles) | Vision and principles | Done | — |
+| [M01](#m01-execution-and-compilation-model) | Execution and compilation model | Active | M00 |
 | [M02](#m02-lexical-structure) | Lexical structure | Planned | M00 |
 | [M03](#m03-expressions-and-statements) | Expressions and statements | Planned | M02 |
 | [M04](#m04-names-bindings-and-scope) | Names, bindings, and scope | Planned | M03 |
-| [M05](#m05-core-type-system) | Core type system | Planned | M03, M04 |
+| [M05](#m05-core-type-system) | Core type system | Planned | M03, M04 (not M07) |
 | [M06](#m06-abstraction-and-polymorphism) | Abstraction and polymorphism | Planned | M05 |
 | [M07](#m07-memory-and-resources) | Memory and resources | Planned | M01, M05 |
 | [M08](#m08-errors-and-effects) | Errors and effects | Planned | M05, M06 |
@@ -30,12 +52,29 @@ Every milestone shares these exit criteria, on top of its own:
 | [M11](#m11-compile-time-evaluation-and-metaprogramming) | Compile-time evaluation and metaprogramming | Planned | M01, M06 |
 | [M12](#m12-interop-and-platform) | Interop and platform | Planned | M07 |
 | [M13](#m13-formal-consolidation) | Formal consolidation | Planned | M05–M12 |
-| [M14](#m14-standard-library-and-prelude) | Standard library and prelude | Planned | M06–M10 |
-| [M15](#m15-tooling) | Tooling | Planned | M09 |
-| [M16](#m16-implementation-plan) | Implementation plan | Planned | M00, M01 |
-| [M17](#m17-final-review-and-spec-v10) | Final review and Spec v1.0 | Planned | all |
+| [M14](#m14-standard-library-and-prelude) | Standard library and prelude | Planned | M06–M09 |
+| [M15](#m15-tooling) | Tooling | Planned | M09, M14 |
+| [M16](#m16-implementation-plan) | Implementation plan | Dropped (merged into I1–I3, [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)) | — |
+| [M17](#m17-final-review-and-spec-v10) | Final review and Spec v1.0 | Planned | M13, M14, M15, I4 |
 
-The dependencies are a first estimate; M00's planning task revisits them.
+Implementation track ([D0039](decisions/D0039-four-implementation-stages.md)):
+
+| ID | Milestone | Status | Implements | Depends on |
+| --- | --- | --- | --- | --- |
+| [I1](#i1-front-end-and-core-interpreter) | Front end and core interpreter | Planned | M01–M05 | M01, M02 |
+| [I2](#i2-host-complete-for-the-core-language) | Host complete for the core language | Planned | M06–M09, M14 | I1 |
+| [I3](#i3-qubecc-and-the-fixpoint) | `qubecc` and the fixpoint | Planned | — | I2 |
+| [I4](#i4-the-remaining-features) | The remaining features | Planned | M10–M12 | I3 |
+
+The order of both tracks, as confirmed in T0007 ([D0040](decisions/D0040-design-milestones-kept.md)):
+
+```
+design: M00 → M01 → M02 → M03 → M04 → M05 → M06 → M07 → M08 → M09 → M14 ─┬→ M10 · M11 · M12 · M15 → M13 ─┬→ M17
+impl:                 └→ I1 (trails M01–M05) ─→ I2 (M06–M09, M14) ───────└→ I3 ─→ I4 ────────────────────┘
+```
+
+I1 starts once M01 and M02 have closed. M15 may run alongside I2 and I3. An implementation milestone trails the design
+milestones it implements and exits only after they have closed.
 
 ## M00 Vision and principles
 
@@ -46,6 +85,22 @@ The dependencies are a first estimate; M00's planning task revisits them.
   conventions are fixed; the formalization depth and proof assistant (or "no mechanization") are decided, with
   samples shown; the host language is decided, with samples shown and cheap pilots run; the milestone plan is
   confirmed.
+- **Exit review (T0007, 2026-11-16):**
+
+  | Criterion | Result |
+  | --- | --- |
+  | The vision is complete, and every part has a D record | Met: D0002–D0014, [vision.md](vision.md) |
+  | The spec conventions are fixed | Met: D0015–D0020, [spec §1.3](../spec/01-introduction.md#13-notation-and-conventions) (the EBNF dialect is M02's) |
+  | The formalization depth and proof assistant are decided, with samples | Met: D0021–D0028, [R0004](research/R0004-formalization-prior-art-and-pilots.md) |
+  | The host language is decided, with samples and pilots | Met: D0029–D0035, [R0005](research/R0005-host-language-prior-art-and-pilots.md) |
+  | The milestone plan is confirmed | Met: D0036–D0041 |
+  | Common: decisions recorded | Met: D0001–D0041 |
+  | Common: spec sections written | Met: §1 Introduction (Draft) |
+  | Common: grammar and formal rules updated | Met as far as M00 reaches: the grammar file is a provisional placeholder; the formal files are skeletons with the claimed properties fixed |
+  | Common: examples added | Not met, waived: M00 decided no syntax, and its provisional snippets live in [vision.md](vision.md); `examples/` starts once M02 and M03 decide syntax |
+  | Common: no open question left that M00 was to settle | Met: OQ-001–OQ-003 and OQ-005–OQ-009 all target later milestones |
+
+  M00 closed on 2026-11-16.
 
 | Task | Sub-topic | Status |
 | --- | --- | --- |
@@ -55,10 +110,10 @@ The dependencies are a first estimate; M00's planning task revisits them.
 | T0004 | Spec audience, authority (prose versus formal rules), and formality level | Done |
 | T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Done |
 | T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Done |
-| T0007 | Confirm or reorder the milestone plan, in light of D0002–D0014; M00 exit review | Planned |
+| T0007 | Confirm or reorder the milestone plan; when implementation starts; M00 exit review | Done |
 | T0008 | Revisit: the spelling of explicit tail calls (`tailcall`; part of OQ-005) | Done |
 
-Notes for T0007: T0003 decided several matters normally owned by later milestones (purity, D0008, from M08;
+Notes for T0007 (all handled in T0007, D0036–D0041): T0003 decided several matters normally owned by later milestones (purity, D0008, from M08;
 bindings, D0009, from M04; tail calls, D0012, from M01/M03), at the vision level; those milestones now refine
 rather than decide them. Go-style concurrency ([D0006](decisions/D0006-inspirations.md), OQ-001) makes M01's runtime
 decision constrain M10, and the explicit layer ([D0004](decisions/D0004-ranked-design-values.md), OQ-003) makes M07
@@ -85,6 +140,9 @@ OQ-008 before the host compiler is built, earlier than M16; it also opens
 [OQ-009](open-questions.md#oq-009-what-is-the-bytecode-format-between-the-host-compiler-and-the-host-vm) (the
 bytecode format, M01/M16).
 
+T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong to I1 and I2
+([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)).
+
 ## M01 Execution and compilation model
 
 - **Scope:** compiled, interpreted, or JIT; targets; how much runtime there is; the compile-time/run-time boundary;
@@ -93,7 +151,19 @@ bytecode format, M01/M16).
   and a bytecode VM with a C-ABI runtime ([D0030](decisions/D0030-three-part-host.md)). If M01 decides an execution
   model without a bytecode VM, it revisits D0030. M01 also settles whether bytecode is a visible artifact
   ([OQ-009](open-questions.md#oq-009-what-is-the-bytecode-format-between-the-host-compiler-and-the-host-vm)).
-- **Tasks:** to be planned when M00 closes.
+- **Also targets:** the M01 part of OQ-009 (whether bytecode is an artifact users see, and its stability); the
+  conformance requirements for observable behavior and implementation limits that spec §1.2 leaves to M01; the
+  run mode of [D0013](decisions/D0013-easy-start.md).
+- **Closing it, together with M02, starts the implementation track** (I1,
+  [D0036](decisions/D0036-trailing-implementation-track.md)).
+
+| Task | Sub-topic | Status |
+| --- | --- | --- |
+| T0009 | Execution model and artifacts: interpreter, bytecode VM, native code (which, and when); what `run` and `build` produce; the M01 part of OQ-009; first targets and platforms; confirming or revisiting D0030's bytecode VM | Planned |
+| T0010 | Observable behavior and determinism: what is observable (output, exit status, panics); what may differ between implementations, execution paths, and platforms (for example floats, iteration order, resource limits); implementation limits; the conformance additions to spec §1.2 | Planned |
+| T0011 | The runtime and the program lifecycle: the runtime's responsibilities (hooks for M07's memory management and M10's scheduler, D0012's stacks, native functions); the forms of `main` and the exit status; panics and their report; resource exhaustion; output at exit | Planned |
+| T0012 | The compile-time/run-time boundary: program phases; constant evaluation; what may run at compile time, and how `func` purity relates to it; what a compile-time failure means | Planned |
+| T0013 | Units, separate compilation, and reproducibility: what a compiled unit is; whether build output is reproducible; how source locations are named | Planned |
 
 ## M02 Lexical structure
 
@@ -119,6 +189,9 @@ bytecode format, M01/M16).
 ## M05 Core type system
 
 - **Scope:** primitives, the numeric model, products and sums, inference, subtyping, the core typing judgments.
+- **From T0007:** M05 does not wait for M07. It decides the numeric model, including sized integers and how the
+  explicit layer is marked (OQ-003's M05 part); M07 decides borrowed references
+  ([D0040](decisions/D0040-design-milestones-kept.md)).
 - **Tasks:** to be planned.
 
 ## M06 Abstraction and polymorphism
@@ -134,7 +207,8 @@ bytecode format, M01/M16).
 
 ## M08 Errors and effects
 
-- **Scope:** results, exceptions, panics, effect tracking, purity.
+- **Scope:** errors (results, exceptions, panics) and the mechanics of effects, refining the purity of
+  [D0008](decisions/D0008-purity.md) ([D0040](decisions/D0040-design-milestones-kept.md)).
 - **Tasks:** to be planned.
 
 ## M09 Modules and packages
@@ -166,25 +240,77 @@ bytecode format, M01/M16).
 
 ## M14 Standard library and prelude
 
-- **Scope:** the prelude and the standard library.
+- **Scope:** the prelude and the standard library. Depends on M06–M09 (not M10), because I2 needs the core library
+  before M10 runs; M10 adds its own library surface ([D0040](decisions/D0040-design-milestones-kept.md)).
 - **Tasks:** to be planned.
 
 ## M15 Tooling
 
-- **Scope:** diagnostics, formatter, LSP, test framework, package manager, docs.
+- **Scope:** diagnostics, formatter, LSP, test framework, package manager, docs. Depends on M09 and M14, and may run
+  alongside I2 and I3 ([D0040](decisions/D0040-design-milestones-kept.md)). The conformance harness itself starts in
+  I1 ([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)).
 - **Tasks:** to be planned.
 
 ## M16 Implementation plan
 
-- **Scope:** pipeline, IRs, bootstrapping toward self-hosting, the conformance suite.
-- **From T0006:** plans the three host parts, their builds, dependency tables, and repository layout
-  ([D0030](decisions/D0030-three-part-host.md)–[D0035](decisions/D0035-pinned-toolchains-and-recorded-libraries.md));
-  the build from source and the fixpoint check as release steps
-  ([D0029](decisions/D0029-permanent-host-implementation.md)); the bytecode format (OQ-009). OQ-008 may be settled
-  earlier, when the host compiler starts.
-- **Tasks:** to be planned.
+- **Status:** Dropped on 2026-11-16 (T0007): merged into I1–I3
+  ([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)). Its number is not reused. Its former scope
+  is now planned as follows: the host interpreter's architecture, code layout, and conformance harness in I1; the core
+  interchange format (OQ-008), the bytecode format (OQ-009), and the host compiler's and VM's architecture in I2;
+  `qubecc`'s pipeline and IRs, the fixpoint check, and the release checks in I3; the plan after v1.0 in M17.
 
 ## M17 Final review and Spec v1.0
 
-- **Scope:** a consistency audit, a rationale document, a changelog.
+- **Scope:** a consistency audit, a rationale document, a changelog; the plan after Spec v1.0
+  ([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)), and how a published specification
+  changes.
+- **Depends on:** M13, M14, M15, and I4. Spec v1.0 is published only after I4 has exited; drafts may be tagged 0.x
+  before then ([D0041](decisions/D0041-spec-v1-after-i4.md)).
 - **Tasks:** to be planned.
+
+## I1 Front end and core interpreter
+
+- **Implements:** M01–M05, each as it closes. Starts once M01 and M02 have closed
+  ([D0036](decisions/D0036-trailing-implementation-track.md)).
+- **Builds:** the host interpreter in Rust ([D0031](decisions/D0031-rust-host-interpreter.md)): scanner, parser, name
+  resolution, type and purity checking, elaboration into the core, the tree-walking interpreter, the REPL, and the
+  driver.
+- **Opens with** design tasks for the host interpreter's architecture and the code's repository layout, the start of
+  the conformance harness and the dependency table ([D0035](decisions/D0035-pinned-toolchains-and-recorded-libraries.md)),
+  and how implementation tasks are run ([D0037](decisions/D0037-implementation-milestones-and-tasks.md),
+  [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)). OQ-008 is decided here if I1 is the first to
+  send core across a boundary.
+- **Stage target:** `qubec run` and the REPL work for the M01–M05 language; the conformance harness exists.
+- **Tasks:** to be planned when I1 starts.
+
+## I2 Host complete for the core language
+
+- **Implements:** M06–M09 and M14, each as it closes. Starts once I1 has exited.
+- **Builds:** the host interpreter extended; the host compiler in OCaml ([D0032](decisions/D0032-ocaml-host-compiler.md))
+  and the host VM in Zig ([D0033](decisions/D0033-zig-host-vm.md)), with its memory management written after M07.
+- **Opens with** design tasks for the core interchange format
+  ([OQ-008](open-questions.md#oq-008-what-is-the-core-interchange-format-and-how-do-implementations-emit-core)), the
+  bytecode format ([OQ-009](open-questions.md#oq-009-what-is-the-bytecode-format-between-the-host-compiler-and-the-host-vm)),
+  and the host compiler's and host VM's architecture.
+- **Stage target:** the whole conformance suite so far passes on the interpreted path and the compiled path.
+- **Tasks:** to be planned when I2 starts.
+
+## I3 `qubecc` and the fixpoint
+
+- **Starts** once I2 has exited.
+- **Builds:** `qubecc`, the self-hosted compiler, in QubeC.
+- **Opens with** design tasks for `qubecc`'s architecture (designed fresh,
+  [D0034](decisions/D0034-idiomatic-code-per-part.md)), which features its own source uses, and the release procedure
+  of [D0029](decisions/D0029-permanent-host-implementation.md).
+- **Stage target:** the fixpoint check and the release checks pass (build from source, fixpoint, both
+  implementations passing the conformance suite).
+- **Tasks:** to be planned when I3 starts.
+
+## I4 The remaining features
+
+- **Implements:** M10–M12, each as it closes. Starts once I3 has exited.
+- **Builds:** each feature in the host implementation first, then in `qubecc`
+  ([D0029](decisions/D0029-permanent-host-implementation.md)).
+- **Stage target:** both implementations pass the whole conformance suite. Its exit allows M17 to publish Spec v1.0
+  ([D0041](decisions/D0041-spec-v1-after-i4.md)).
+- **Tasks:** to be planned when I4 starts.
