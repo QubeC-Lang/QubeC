@@ -3,8 +3,8 @@
 Status: Draft · Formal: static none, dynamic none
 
 This chapter states what the specification covers, what conformance means (including what about a run is
-observable, what may differ between runs, how a run starts and ends, and what happens before it starts), and how the
-specification is written.
+observable, what may differ between runs, how a run starts and ends, what happens before it starts, and how a
+program is made of units and names its source files), and how the specification is written.
 
 ## 1.1 Scope
 
@@ -111,8 +111,8 @@ The **observable behavior** of a run is its trace together with its outcome. [D0
    streams or files. [D0048]
 3. A run panics at the first failing operation that the evaluation order of the program reaches. Its trace consists
    of exactly the events that precede that operation. [D0049]
-4. The kind, the message, and the source location of a panic are each specified with the operation that can fail and,
-   for source locations, with source files. [D0050]
+4. The kind, the message, and the source location of a panic are each specified with the operation that can fail.
+   How a source location is written is specified in §1.2.9. [D0050, D0077]
 5. **Determinism.** If two runs of a conforming program receive the same response to each event, they have the same
    observable behavior, whatever the conforming implementation, the means of execution, the build settings, and the
    platform. The only exception is resource exhaustion, as §1.2.6 permits. [D0049, D0051]
@@ -213,7 +213,8 @@ environment. [D0008, D0048, D0057, D0058]
    1. All pending output is delivered.
    2. Exactly one **report line** is written to standard error. For a panic, it is
       `panic: <kind>: <message> at <location>`; for resource exhaustion, it is `exhausted: stack` or
-      `exhausted: memory`, with no location. The exact text of the kind, the message, and the location is
+      `exhausted: memory`, with no location. The location is written as §1.2.9 rule 7 states. The exact text of the
+      kind and the message is
       *Provisional ([OQ-014](../design/open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter))*.
    3. If an input of the run requests it, a delimiter line and a **backtrace** MAY follow. Everything written from
       the delimiter line to the end of the run is not part of the trace. The delimiter's text is
@@ -364,6 +365,91 @@ a program; source files are build inputs. [D0009, D0056, D0063, D0068, D0070]
 > ```
 >
 > Without `SPARE`, `SCRATCH`, `C`, and `D`, the program is accepted and every run writes `true`.
+
+### 1.2.9 Units, builds, and source names
+
+A **unit** is a set of one or more source files that is compiled as a whole. A unit **depends on** another unit when
+its source refers to that unit. The **root unit** of a program is the unit that declares its entry point (§1.2.7). A
+**compiled form** of a unit is anything an implementation produces from the unit's source files and keeps for later
+use, such as its checked core, the values of its constants, or its bytecode. The **source name** of a source file is
+the name by which a program's observable behavior refers to it. A **source location** is a position in a source file.
+[D0057, D0072, D0073, D0076, D0077]
+
+**Units**
+
+1. Every source file of a program belongs to exactly one unit. A declaration in one file of a unit may refer to a
+   declaration in any other file of the same unit. What a unit corresponds to in source, how a unit names the units it
+   depends on, and how units are named are
+   *Provisional ([OQ-016](../design/open-questions.md#oq-016-how-are-units-named-and-declared))*. [D0073]
+2. [R-unit-cycle] A unit MUST NOT depend on itself, directly or through other units. [D0073]
+3. A program consists of its root unit and every unit on which the root unit depends, directly or through other
+   units, the units of the standard library included. Every declaration of every unit of the program is checked, and
+   every constant of every unit of the program is evaluated (§1.2.8 rule 4). A unit on which the root unit does not
+   depend is not part of the program. A single source file that depends only on the standard library is a complete
+   program. [D0013, D0064, D0073]
+
+**Source-only meaning**
+
+4. Whether a program is accepted, the values of its constants, and its observable behavior are determined by the build
+   inputs of the program (§1.2.8), never by a compiled form of a unit. [D0068, D0072]
+5. A conforming implementation MAY use a compiled form of a unit, produced earlier or provided with the
+   implementation, only if the result is the same as compiling that unit from its source files. [D0072]
+
+**Source names and locations**
+
+6. The source name of a source file is the name of its unit, followed by `/` and the path of the file within the
+   unit, with `/` between the components of the path. It does not depend on where or how the file is stored. How the
+   name of a unit is formed, and what the path of a file within a unit is relative to, are
+   *Provisional ([OQ-016](../design/open-questions.md#oq-016-how-are-units-named-and-declared))*. [D0076]
+7. A source location is written `<source name>:<line>:<column>`, where the line and the column are decimal numerals
+   with no leading zeros. The first line of a file is line 1, and the first column of a line is column 1. What a
+   column counts, and what ends a line, are specified with the lexical structure. The source location of an operation
+   that can fail is specified with the operation. [D0050, D0077]
+8. Wherever the observable behavior of a run contains a source location, including the report line (§1.2.7 rule 5),
+   the location is written as rule 7 states. Nothing in the observable behavior of a run depends on where or how the
+   program's files are stored. [D0050, D0051, D0076]
+9. No part of the language, the core library, or the standard library gives a program access to the implementation,
+   the release, the build settings, or any record of the build that produced it. [D0051, D0075]
+10. A diagnostic for a rejected program, and other output of an implementation that is not part of a run, MAY name
+    source files in another way, such as by the paths through which they were given. [D0076]
+
+> **Note (non-normative).** Until units are named, the unit of a single-file program is named after the file's name
+> without `.qbc`, and the standard library's unit is named `std`. Source names for code entered in a REPL are
+> specified with the tools. Rule 9 is a consequence of §1.2.5 rule 5: a program that could read how it was built
+> could behave differently under two builds of the same source.
+
+> **Note (non-normative).** The host implementation and the self-hosted compiler also promise reproducible builds. A
+> build is identified by the contents of its build inputs, the implementation and its release, the target platform,
+> and the build settings; the same identity gives byte-identical artifacts on any building machine, in any
+> directory, with any state of caches, and a cross-build gives the same bytes as a native build. Every executable they
+> build carries a record of its build identity, with the source name and a content hash of each file, which tools can
+> show. Other implementations are encouraged to do the same. Neither promise is a conformance requirement (§1.2.4).
+> [D0074, D0075]
+
+> **Example (non-normative).** The QubeC code is provisional syntax beyond `func`, `proc`, `const`, and the forms of
+> `main`; how one unit names another is not yet specified.
+>
+> ```qubec
+> // unit textutil, file width.qbc
+> const WIDTHS: ImmutableMap[Char, Int] = build_widths();
+> func display_width(s: Str) -> Int = …;
+>
+> // unit wc, file main.qbc
+> const BANNER_W: Int = textutil.display_width("wc 1.0");
+> proc main() { print(count(read_all()).to_str()); }
+>
+> // unit wc, file src/count.qbc
+> func count(s: Str) -> Int = …;   // line 12 indexes sizes[j] at column 24
+> ```
+>
+> ```
+> wc, textutil, std        the program; main.qbc and src/count.qbc refer to each other freely
+> textutil depends on wc   rejected: R-unit-cycle
+> a failing sizes[j]       err "panic: <kind>: <message> at wc/src/count.qbc:12:24", status 101
+> ```
+>
+> The report line is the same whatever directory the files are stored in and whatever machine built or runs the
+> program.
 
 ## 1.3 Notation and conventions
 

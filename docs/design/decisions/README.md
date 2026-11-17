@@ -77,3 +77,9 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0069](D0069-compile-time-panic-is-a-rejection.md) | A panic while evaluating a constant is a rejection | Accepted | M01 / T0012 | 2026-11-17 |
 | [D0070](D0070-compile-time-step-floor-and-cap.md) | Compile-time evaluation has a guaranteed number of steps per constant, a raisable cap, and a per-constant raise | Accepted | M01 / T0012 | 2026-11-17 |
 | [D0071](D0071-dbg-at-compile-time.md) | `dbg` output from compile-time evaluation is shown during the build and never replayed at run time | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0072](D0072-source-only-meaning.md) | A program's meaning comes from source alone; compiled units are caches | Accepted | M01 / T0013 | 2026-11-17 |
+| [D0073](D0073-acyclic-multi-file-units.md) | A unit is one or more source files, and units form an acyclic graph | Accepted | M01 / T0013 | 2026-11-17 |
+| [D0074](D0074-reproducible-artifacts.md) | A build is identified by its inputs, and our implementations give byte-identical artifacts on any host | Accepted | M01 / T0013 | 2026-11-17 |
+| [D0075](D0075-build-record.md) | Every executable carries a record of its build, which tools can read and programs cannot | Accepted | M01 / T0013 | 2026-11-17 |
+| [D0076](D0076-source-names.md) | Every source file has a source name, its unit's name followed by its path in the unit | Accepted | M01 / T0013 | 2026-11-17 |
+| [D0077](D0077-location-text.md) | A source location is written as source name, line, and column | Accepted | M01 / T0013 | 2026-11-17 |

@@ -204,7 +204,7 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Status:** Open
 - **Arose in:** T0011 (M01), from [D0059](decisions/D0059-report-line-and-backtrace.md) (one specified report line)
   and [D0061](decisions/D0061-failed-standard-output.md) (the "output failed" kind)
-- **To be settled in:** M08, with T0013 and M02 (the location's text) and M05 and M14 (kinds and messages)
+- **To be settled in:** M08, with M02 (what a column counts) and M05 and M14 (kinds and messages)
 - **Blocked on it:** the report line's pieces in
   [spec §1.2.7](../spec/01-introduction.md#127-program-start-and-termination); the conformance suite's expected
   standard error for failing runs
@@ -212,6 +212,10 @@ examples points to one of these. When a question is decided, it moves to **Decid
   1. The shape fixed in D0059: `panic: <kind>: <message> at <location>`, `exhausted: stack`, `exhausted: memory`,
      with each kind a short lowercase phrase and the location `<source name>:<line>:<column>`.
   2. As 1, with kinds written as stable identifiers (`index-out-of-bounds`) rather than phrases.
+- **Partly decided in T0013:** a location is `<source name>:<line>:<column>`, with source names
+  `<unit>/<path in unit>` ([D0076](decisions/D0076-source-names.md), [D0077](decisions/D0077-location-text.md),
+  [spec §1.2.9](../spec/01-introduction.md#129-units-builds-and-source-names) rule 7); what a column counts is M02's,
+  and unit names are [OQ-016](#oq-016-how-are-units-named-and-declared)'s.
 - **Notes:** also open: how a message containing a line break or a control character is written so that the report
   stays one line; the delimiter line's text; how an implementation marks a truncated backtrace.
 
@@ -229,6 +233,23 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Notes:** the raise applies to one constant's initializer only, can only raise the guarantee of 10,000,000 steps,
   and states a number; a form with no limit was considered and not chosen. The number is part of the program, so it
   binds every implementation.
+
+### OQ-016: How are units named and declared?
+
+- **Status:** Open
+- **Arose in:** T0013 (M01), from [D0073](decisions/D0073-acyclic-multi-file-units.md) (units of one or more files,
+  in an acyclic graph) and [D0076](decisions/D0076-source-names.md) (source names begin with the unit's name)
+- **To be settled in:** M09
+- **Blocked on it:** [spec §1.2.9](../spec/01-introduction.md#129-units-builds-and-source-names) rules 1 and 6 (what a
+  unit is in source, how it names its dependencies, how its name is formed, and what a file's path within it is
+  relative to); the exact source names in expected report lines of the conformance suite
+- **Options so far:**
+  1. A unit is a directory of `.qbc` files, named in a manifest or by the directory's name; a single file run directly
+     is a unit named after the file's stem (the provisional rule).
+  2. A unit is declared by a manifest that lists its files and dependencies, and names it.
+- **Notes:** a unit's name must not contain `/` or `:`, and a path component must not contain `:`, or locations become
+  ambiguous. Whether a dependency's version appears in its name, and how the standard library's unit (provisionally
+  `std`) is named, are part of the question. Source names of REPL entries are M15's.
 
 ## Decided
 

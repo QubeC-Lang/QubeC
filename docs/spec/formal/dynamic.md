@@ -20,7 +20,9 @@ and termination by the environment are stated about implementations, as truncati
 [D0060](../../design/decisions/D0060-termination-by-the-environment.md), [metatheory.md](metatheory.md) property 7).
 How a run ends (delivering pending output, the report line, the exit status) is stated in prose in
 [spec §1.2.7](../01-introduction.md#127-program-start-and-termination)
-([D0058](../../design/decisions/D0058-exit-statuses.md), [D0059](../../design/decisions/D0059-report-line-and-backtrace.md)). The forms of events and outcomes are fixed in M03, with the machine's
+([D0058](../../design/decisions/D0058-exit-statuses.md), [D0059](../../design/decisions/D0059-report-line-and-backtrace.md)). A panic's source location is a source name, a line,
+and a column ([D0076](../../design/decisions/D0076-source-names.md), [D0077](../../design/decisions/D0077-location-text.md)), carried by the core term that can fail; the machine never
+sees where files are stored. The forms of events and outcomes are fixed in M03, with the machine's
 states. The informal statement is [spec §1.2.5](../01-introduction.md#125-observable-behavior-and-determinism).
 
 ## Compile-time evaluation

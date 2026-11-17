@@ -39,8 +39,8 @@ Design track:
 | ID | Milestone | Status | Depends on |
 | --- | --- | --- | --- |
 | [M00](#m00-vision-and-principles) | Vision and principles | Done | — |
-| [M01](#m01-execution-and-compilation-model) | Execution and compilation model | Active | M00 |
-| [M02](#m02-lexical-structure) | Lexical structure | Planned | M00 |
+| [M01](#m01-execution-and-compilation-model) | Execution and compilation model | Done | M00 |
+| [M02](#m02-lexical-structure) | Lexical structure | Active | M00 |
 | [M03](#m03-expressions-and-statements) | Expressions and statements | Planned | M02 |
 | [M04](#m04-names-bindings-and-scope) | Names, bindings, and scope | Planned | M03 |
 | [M05](#m05-core-type-system) | Core type system | Planned | M03, M04 (not M07) |
@@ -178,6 +178,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   abrupt by default ([D0060](decisions/D0060-termination-by-the-environment.md)), which also covers a closed reader of standard output or error ([D0061](decisions/D0061-failed-standard-output.md)); a guaranteed depth
   of 100,000 nested calls and a raisable stack cap ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)), which settles OQ-012.
 - **From T0012:** three phases, with a guarded door for integer constants in types ([D0063](decisions/D0063-program-phases.md)); every constant evaluated exactly once ([D0064](decisions/D0064-every-constant-once.md)); cycles found during evaluation ([D0065](decisions/D0065-cycles-found-during-evaluation.md)); no generic parameters in constants ([D0066](decisions/D0066-constants-independent-of-generic-parameters.md)); no mutable state in constant values ([D0067](decisions/D0067-constant-values-without-mutable-state.md)); only pure code at compile time, with a guarded door for embedded files ([D0068](decisions/D0068-only-pure-code-at-compile-time.md)); a panic in a constant is a rejection ([D0069](decisions/D0069-compile-time-panic-is-a-rejection.md)); 10,000,000 guaranteed steps per constant, a per-constant raise ([OQ-015](open-questions.md#oq-015-how-is-the-raise-of-a-constants-guaranteed-steps-written)), and a 1,000,000,000-step host cap ([D0070](decisions/D0070-compile-time-step-floor-and-cap.md)); `dbg` shown during the build ([D0071](decisions/D0071-dbg-at-compile-time.md)).
+- **From T0013:** source-only meaning, with compiled units as caches ([D0072](decisions/D0072-source-only-meaning.md)); units of one or more files in an acyclic graph, `R-unit-cycle`, and the program as its root unit and dependencies ([D0073](decisions/D0073-acyclic-multi-file-units.md), unit naming provisional, [OQ-016](open-questions.md#oq-016-how-are-units-named-and-declared)); build identity and byte-identical artifacts on any host from our implementations ([D0074](decisions/D0074-reproducible-artifacts.md)); an embedded build record that programs cannot read ([D0075](decisions/D0075-build-record.md)); source names `<unit>/<path in unit>` ([D0076](decisions/D0076-source-names.md)); locations `<source name>:<line>:<column>` ([D0077](decisions/D0077-location-text.md)), which settles OQ-014's location part apart from M02's column rule.
 - **Closing it, together with M02, starts the implementation track** (I1,
   [D0036](decisions/D0036-trailing-implementation-track.md)).
 
@@ -187,12 +188,32 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 | T0010 | Observable behavior and determinism: what is observable (output, exit status, panics); what may differ between implementations, execution paths, and platforms (for example floats, iteration order, resource limits); implementation limits; the conformance additions to spec §1.2 | Done |
 | T0011 | The runtime and the program lifecycle: the runtime's responsibilities (hooks for M07's memory management and M10's scheduler, D0012's stacks, native functions); the forms of `main` and the exit status; panics and their report; resource exhaustion; output at exit | Done |
 | T0012 | The compile-time/run-time boundary: program phases; constant evaluation; what may run at compile time, and how `func` purity relates to it; what a compile-time failure means | Done |
-| T0013 | Units, separate compilation, and reproducibility: what a compiled unit is; whether build output is reproducible; how source locations are named | Planned |
+| T0013 | Units, separate compilation, and reproducibility: what a compiled unit is; whether build output is reproducible; how source locations are named; M01 exit review | Done |
+
+- **Exit review (T0013, 2026-11-17):**
+
+  | Criterion | Result |
+  | --- | --- |
+  | Scope: compiled, interpreted, or JIT; targets | Met: a tree-walker and a bytecode VM, no JIT, native code after v1.0 ([D0042](decisions/D0042-tree-walker-and-bytecode-vm.md), [D0043](decisions/D0043-native-code-after-v1.md)); self-contained executables ([D0044](decisions/D0044-executables-and-unstable-bytecode.md)); platforms in three tiers with parity ([D0046](decisions/D0046-first-platforms-and-tiers.md), [D0047](decisions/D0047-platform-parity.md)) |
+  | Scope: how much runtime there is | Met: one runtime contract, thin natives, the program lifecycle ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)–[D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)) |
+  | Scope: the compile-time/run-time boundary | Met: [D0063](decisions/D0063-program-phases.md)–[D0071](decisions/D0071-dbg-at-compile-time.md) |
+  | Scope: separate compilation | Met: [D0072](decisions/D0072-source-only-meaning.md)–[D0077](decisions/D0077-location-text.md) |
+  | Also targets: OQ-009's M01 part; observable behavior and implementation limits; D0013's run mode | Met: [D0044](decisions/D0044-executables-and-unstable-bytecode.md); [D0048](decisions/D0048-trace-and-outcome.md)–[D0054](decisions/D0054-implementation-limits-as-rules.md); [D0045](decisions/D0045-run-is-a-shortcut.md) |
+  | Common: decisions recorded | Met: D0042–D0077 |
+  | Common: spec sections written | Met: [spec §1.2.4–§1.2.9](../spec/01-introduction.md#124-means-of-execution) (Draft) |
+  | Common: grammar and formal rules updated | Met as far as M01 reaches: M01 decided no syntax, so the grammar is unchanged; the formal files gained claimed property 7 and prose notes on observable behavior, compile-time evaluation, units, and locations; rules start in M03 |
+  | Common: examples added | Not met, waived: M01 decided no syntax; its provisional snippets are in the spec's examples and [vision.md](vision.md); `examples/` starts once M02 and M03 decide syntax |
+  | Common: no open question left that M01 was to settle | Met: OQ-009's M01 part and OQ-012 are decided; OQ-001's constraint on the runtime is met by the runtime contract's hooks (D0055); OQ-010, OQ-011, OQ-013–OQ-016 target later milestones |
+
+  M01 closed on 2026-11-17.
 
 ## M02 Lexical structure
 
 - **Scope:** encoding, identifiers, keywords, literals, comments, whitespace; the EBNF dialect.
-- **Tasks:** to be planned.
+- **From T0013:** defines what a column counts (for example code points), how tabs count, and what ends a line, for
+  locations `<source name>:<line>:<column>` ([D0077](decisions/D0077-location-text.md), [OQ-014](open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter)); nothing in a file's meaning
+  depends on its path or where it is stored ([D0076](decisions/D0076-source-names.md)).
+- **Tasks:** to be planned at the start of the next task.
 
 ## M03 Expressions and statements
 
@@ -212,6 +233,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 
 - **Scope:** declarations, mutability, shadowing, name resolution.
 - **From T0011:** states the entry-point rule, with its rule ID, for the two forms of `main` ([D0057](decisions/D0057-forms-of-main.md)).
+- **From T0013:** name resolution within a unit spans all of its files ([D0073](decisions/D0073-acyclic-multi-file-units.md)).
 - **From T0012:** writes the constant declaration with `R-const-cycle`, `R-const-generic`, `R-const-mutable`, and `R-const-panic` ([D0064](decisions/D0064-every-constant-once.md)–[D0069](decisions/D0069-compile-time-panic-is-a-rejection.md)); local constants are scoped like local declarations but evaluated before the run; with M11, the raise's syntax ([OQ-015](open-questions.md#oq-015-how-is-the-raise-of-a-constants-guaranteed-steps-written)).
 - **Tasks:** to be planned.
 
@@ -263,6 +285,11 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **Scope:** units, imports, visibility, versioning, the build model.
 - **From T0011:** which unit's `main` is the entry point ([D0057](decisions/D0057-forms-of-main.md)); how the standard library, the only place
   natives are declared, is identified ([D0056](decisions/D0056-thin-natives.md)).
+- **From T0013:** units are sets of files in an acyclic graph; M09 decides what a unit is in source, how it names its
+  dependencies, and how units are named, possibly with versions, and settles
+  [OQ-016](open-questions.md#oq-016-how-are-units-named-and-declared); unit names contain no `/` or `:`, and path
+  components no `:` ([D0073](decisions/D0073-acyclic-multi-file-units.md), [D0076](decisions/D0076-source-names.md)); packages are distributed as source
+  ([D0072](decisions/D0072-source-only-meaning.md)).
 - **Tasks:** to be planned.
 
 ## M10 Concurrency
@@ -280,6 +307,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 
 - **Scope:** constant evaluation, macros, reflection, attributes.
 - **From T0012:** constant evaluation is decided ([D0063](decisions/D0063-program-phases.md)–[D0071](decisions/D0071-dbg-at-compile-time.md)); M11 builds macros, reflection, and attributes on the three phases, with no effects at compile time; it may add embedded files under D0068's rules; it settles [OQ-015](open-questions.md#oq-015-how-is-the-raise-of-a-constants-guaranteed-steps-written) (the raise's syntax).
+- **From T0013:** embedded files, if added, are build inputs, part of a build's identity, and listed in the build
+  record with their source names and hashes ([D0074](decisions/D0074-reproducible-artifacts.md), [D0075](decisions/D0075-build-record.md)).
 - **Tasks:** to be planned.
 
 ## M12 Interop and platform
@@ -309,6 +338,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   environment, and `exit` ([D0057](decisions/D0057-forms-of-main.md), [D0058](decisions/D0058-exit-statuses.md)); standard-output procedures and explicit writers with results, and a way
   to receive interrupts ([D0060](decisions/D0060-termination-by-the-environment.md), [D0061](decisions/D0061-failed-standard-output.md)); collection functions avoid non-tail recursion over their length ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **From T0012:** marks which natives are pure, so that they may run at compile time ([D0068](decisions/D0068-only-pure-code-at-compile-time.md)); constant tables use the immutable collections, which may want short literal syntax ([D0067](decisions/D0067-constant-values-without-mutable-state.md)).
+- **From T0013:** no library procedure returns build data: the implementation, release, settings, or record
+  ([D0075](decisions/D0075-build-record.md)).
 - **Tasks:** to be planned.
 
 ## M15 Tooling
@@ -322,6 +353,9 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0011:** names the input that requests a backtrace and the one that raises the stack cap ([D0059](decisions/D0059-report-line-and-backtrace.md),
   [D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **From T0012:** names the build input that raises the step cap; progress notes for long constants and the warning when a constant needed more than its guarantee ([D0070](decisions/D0070-compile-time-step-floor-and-cap.md)); how compile-time `dbg` output is marked ([D0071](decisions/D0071-dbg-at-compile-time.md)); diagnostics for constant cycles and panics.
+- **From T0013:** the command that shows the build record ([D0075](decisions/D0075-build-record.md)); the names of build settings
+  ([D0074](decisions/D0074-reproducible-artifacts.md)); source names for code entered in the REPL; diagnostics may name files by the
+  paths the user gave ([D0076](decisions/D0076-source-names.md)).
 - **Tasks:** to be planned.
 
 ## M16 Implementation plan
@@ -360,6 +394,10 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   decides where the contract is kept ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); the first natives and a minimal library are needed early ([D0056](decisions/D0056-thin-natives.md));
   the tree-walker reaches the guaranteed depth in release builds on every Tier 1 and Tier 2 platform ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **From T0012:** the front end checks, then evaluates every constant with its interpreter, counting steps with a cap of 1,000,000,000 and honoring raises; constant values are handed on as values ([D0063](decisions/D0063-program-phases.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md)).
+- **From T0013:** the driver builds the unit graph, rejects `R-unit-cycle`, and checks each unit's files together, in
+  dependency order ([D0073](decisions/D0073-acyclic-multi-file-units.md)); every file gets its source name, and the core carries source
+  names, never disk paths ([D0076](decisions/D0076-source-names.md)); caches are keyed by content and give what compiling from source
+  gives ([D0072](decisions/D0072-source-only-meaning.md)).
 - **Tasks:** to be planned when I1 starts.
 
 ## I2 Host complete for the core language
@@ -373,6 +411,11 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   and the host compiler's and host VM's architecture.
 - **Stage target:** the whole conformance suite so far passes on the interpreted path and the compiled path.
 - **From T0011:** the host VM's runtime, in Zig, meets the same contract independently ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)).
+- **From T0013:** the bundler, the emitted bytecode, and the serialized constant values are deterministic, and the
+  bundler writes the `macos-arm64` ad-hoc signature itself; the release check compares builds made on two hosts, in
+  two directories, with warm and cold caches ([D0074](decisions/D0074-reproducible-artifacts.md)); the build record's format
+  ([D0075](decisions/D0075-build-record.md)); stored function values refer to code symbolically ([D0072](decisions/D0072-source-only-meaning.md)).
+  Producing identical executables from every host is the main risk.
 - **Tasks:** to be planned when I2 starts.
 
 ## I3 `qubecc` and the fixpoint
@@ -385,6 +428,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **Stage target:** the fixpoint check and the release checks pass (build from source, fixpoint, both
   implementations passing the conformance suite).
 - **From T0012:** a QubeC program cannot run code it generates, so `qubecc` contains an evaluator for the pure language written in QubeC, with constant states and a step counter ([D0063](decisions/D0063-program-phases.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md)).
+- **From T0013:** `qubecc` gives byte-identical artifacts on any host and writes the build record
+  ([D0074](decisions/D0074-reproducible-artifacts.md), [D0075](decisions/D0075-build-record.md)).
 - **Tasks:** to be planned when I3 starts.
 
 ## I4 The remaining features

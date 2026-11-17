@@ -10,9 +10,10 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 <!-- status:begin -->
 ## Status
 
-- **Phase:** design, milestone M01 (Execution and compilation model). M00 (Vision and principles) is complete.
-- **Last task:** T0012, the compile-time/run-time boundary.
-- **Decided so far:** 71 decisions.
+- **Phase:** design, milestone M02 (Lexical structure). M00 (Vision and principles) and M01 (Execution and
+  compilation model) are complete.
+- **Last task:** T0013, units, separate compilation, and reproducibility, which closed M01.
+- **Decided so far:** 77 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -39,9 +40,12 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
   - A program is checked, then every constant is evaluated exactly once, then it runs. Constants run only pure code,
     hold no mutable state, and fail the build if they panic; every implementation completes 10,000,000 steps per
     constant, or more if the constant says so.
+  - A program means what its source says: compiled units are only caches. Units are sets of files that depend on
+    each other without cycles. Builds are byte-identical on any machine, and panics name files by unit and path, as
+    in `wc/src/count.qbc:12:24`.
   - See the [vision](docs/design/vision.md).
-- **Open questions:** 13.
-- **Next:** T0013, units, separate compilation, and reproducibility (the last task of M01).
+- **Open questions:** 14.
+- **Next:** planning M02, the lexical structure; closing M01 and M02 starts the implementation.
 <!-- status:end -->
 
 ## Where to look

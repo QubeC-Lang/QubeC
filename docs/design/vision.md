@@ -159,6 +159,15 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **A constant that fails stops the build:** a panic is a rejection; every implementation completes 10,000,000 steps per constant, or more if the constant says so, and reports, rather than rejects, a constant it stops beyond that. | [D0069](decisions/D0069-compile-time-panic-is-a-rejection.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md) |
 | **Constants can be debugged:** `dbg` output from compile-time evaluation is shown during the build, never at run time. | [D0071](decisions/D0071-dbg-at-compile-time.md) |
 
+## How a program is built (T0013)
+
+| Commitment | Record |
+| --- | --- |
+| **Source is the meaning:** a program means what the source of its units says; compiled units are only caches, and there are no binary-only libraries. | [D0072](decisions/D0072-source-only-meaning.md) |
+| **Units of several files, without cycles:** a unit's files refer to each other freely; units depend on each other in one direction only; a program is its root unit and everything it depends on. | [D0073](decisions/D0073-acyclic-multi-file-units.md) |
+| **Reproducible builds:** the same sources, implementation, target, and settings give byte-identical executables on any machine, and every executable records what built it, for tools only. | [D0074](decisions/D0074-reproducible-artifacts.md), [D0075](decisions/D0075-build-record.md) |
+| **Locations that do not depend on the machine:** files are named by unit and path, such as `wc/src/count.qbc:12:24`, wherever a run reports a location. | [D0076](decisions/D0076-source-names.md), [D0077](decisions/D0077-location-text.md) |
+
 ## Dream snippet
 
 This is the program we would like to be able to write: a tiny expression compiler that evaluates several files
