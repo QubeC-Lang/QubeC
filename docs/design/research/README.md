@@ -12,3 +12,4 @@ Verified (with a source) or Recalled.
 | [R0004](R0004-formalization-prior-art-and-pilots.md) | Formalization depth and proof assistants: prior art and pilots | M00 / T0005 | D0021–D0028 |
 | [R0005](R0005-host-language-prior-art-and-pilots.md) | Host languages: prior art and pilots | M00 / T0006 | D0029–D0035 |
 | [R0006](R0006-planning-prior-art.md) | Prior art for planning design and implementation together | M00 / T0007 | D0036, D0037, D0041 |
+| [R0007](R0007-execution-model-prior-art-and-checks.md) | Execution model: prior art, platform support, and executable embedding | M01 / T0009 | D0042–D0047, OQ-010 |

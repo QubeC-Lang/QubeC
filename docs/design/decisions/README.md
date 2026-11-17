@@ -47,3 +47,9 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0039](D0039-four-implementation-stages.md) | Four implementation stages, I1–I4, with common exit criteria | Accepted | M00 / T0007 | 2026-11-16 |
 | [D0040](D0040-design-milestones-kept.md) | The design milestones are kept as drafted, with corrected dependencies and scopes | Accepted | M00 / T0007 | 2026-11-16 |
 | [D0041](D0041-spec-v1-after-i4.md) | Spec v1.0 is published only after I4 | Accepted | M00 / T0007 | 2026-11-16 |
+| [D0042](D0042-tree-walker-and-bytecode-vm.md) | QubeC runs on a tree-walking interpreter and a bytecode VM; no JIT is planned | Accepted | M01 / T0009 | 2026-11-17 |
+| [D0043](D0043-native-code-after-v1.md) | Native code comes after Spec v1.0, and no feature may need a VM at run time | Accepted | M01 / T0009 | 2026-11-17 |
+| [D0044](D0044-executables-and-unstable-bytecode.md) | A build produces a self-contained executable; bytecode can be emitted but is unstable | Accepted | M01 / T0009 | 2026-11-17 |
+| [D0045](D0045-run-is-a-shortcut.md) | `run` behaves as build-then-execute; the engine is the implementation's choice | Accepted | M01 / T0009 | 2026-11-17 |
+| [D0046](D0046-first-platforms-and-tiers.md) | Linux x86-64 and macOS arm64 come first; platforms are supported in three tiers | Accepted | M01 / T0009 | 2026-11-17 |
+| [D0047](D0047-platform-parity.md) | Platforms fall under the host-leads rule; back ends do not | Accepted | M01 / T0009 | 2026-11-17 |

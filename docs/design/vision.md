@@ -2,7 +2,7 @@
 
 Status: **Vision I and II complete** (T0002, T0003); **how QubeC is specified** decided (T0004), including **how far
 it is formalized** (T0005); **how QubeC is first implemented** decided (T0006); **how design and implementation are
-planned** decided (T0007). Each part links to the decision record that settles it.
+planned** decided (T0007); **how QubeC runs** decided (T0009). Each part links to the decision record that settles it.
 
 ## Starting point
 
@@ -103,7 +103,7 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | Commitment | Record |
 | --- | --- |
 | **A permanent host implementation** that leads every feature: the self-hosted compiler never has a feature the host lacks, and once QubeC self-hosts, every release needs both to pass the whole conformance suite. | [D0029](decisions/D0029-permanent-host-implementation.md) |
-| **Three parts, connected through the typed core:** the **host interpreter** (Rust: front end, tree-walking core interpreter, REPL, driver; it makes every rejection), the **host compiler** (OCaml: typed core → bytecode), and the **host VM** (Zig: interpreter loop, heap and GC, stacks, natives, as a C-ABI library). This presumes a bytecode VM, which M01 confirms or revisits. | [D0030](decisions/D0030-three-part-host.md)–[D0033](decisions/D0033-zig-host-vm.md) |
+| **Three parts, connected through the typed core:** the **host interpreter** (Rust: front end, tree-walking core interpreter, REPL, driver; it makes every rejection), the **host compiler** (OCaml: typed core → bytecode), and the **host VM** (Zig: interpreter loop, heap and GC, stacks, natives, as a C-ABI library). | [D0030](decisions/D0030-three-part-host.md)–[D0033](decisions/D0033-zig-host-vm.md) |
 | **Idiomatic code in each part,** with conformance (rule IDs, checked core, the specified formats) as the only shared contract; the self-hosted compiler is designed fresh. | [D0034](decisions/D0034-idiomatic-code-per-part.md) |
 | **Pinned toolchains,** and third-party libraries only when recorded with their purpose and locked by checksum. | [D0035](decisions/D0035-pinned-toolchains-and-recorded-libraries.md) |
 
@@ -116,6 +116,16 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Four implementation stages:** I1 the front end and core interpreter, I2 the complete host with its compiler and VM, I3 the self-hosted compiler and the fixpoint, I4 concurrency, metaprogramming, and interop in both. Each architecture is designed at the start of the stage that builds it. | [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md), [D0039](decisions/D0039-four-implementation-stages.md) |
 | **The design milestones stay as drafted,** with corrected dependencies. | [D0040](decisions/D0040-design-milestones-kept.md) |
 | **Spec v1.0 waits for the self-hosting test:** it is published only after both implementations implement the whole specification. | [D0041](decisions/D0041-spec-v1-after-i4.md) |
+
+## How QubeC runs (T0009)
+
+| Commitment | Record |
+| --- | --- |
+| **Two engines:** a tree-walking interpreter of the typed core and a bytecode VM; no JIT is planned. | [D0042](decisions/D0042-tree-walker-and-bytecode-vm.md) |
+| **Native code after Spec v1.0,** and meanwhile no feature may need a VM at run time, so that native code is a pure speed-up when it comes. | [D0043](decisions/D0043-native-code-after-v1.md) |
+| **A build is one self-contained executable;** bytecode can be emitted for inspection, and loads only in the release that wrote it. | [D0044](decisions/D0044-executables-and-unstable-bytecode.md) |
+| **Running a file directly behaves as building and executing it;** the engine is each implementation's choice. | [D0045](decisions/D0045-run-is-a-shortcut.md) |
+| **Linux x86-64 and macOS arm64 first,** with Linux arm64 and RISC-V next and Windows later, in three tiers; the host implementation can build the self-hosted compiler for every platform it supports. | [D0046](decisions/D0046-first-platforms-and-tiers.md), [D0047](decisions/D0047-platform-parity.md) |
 
 ## Dream snippet
 

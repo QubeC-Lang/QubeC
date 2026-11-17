@@ -124,15 +124,40 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Status:** Open
 - **Arose in:** T0006 (M00), from [D0030](decisions/D0030-three-part-host.md) (the host compiler lowers the typed core
   to bytecode, which the host VM runs)
-- **To be settled in:** M01, task T0009 (whether bytecode is an artifact users see, and its stability), and I2's
-  opening task (the format itself; [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md))
+- **To be settled in:** I2's opening task (the format itself;
+  [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)); the M01 part is decided
 - **Blocked on it:** the interface between the host compiler ([D0032](decisions/D0032-ocaml-host-compiler.md)) and
   the host VM ([D0033](decisions/D0033-zig-host-vm.md))
 - **Options so far:**
   1. An internal, unversioned format that changes freely between releases.
   2. A versioned, documented format, stable within a release series.
   3. A specified format, part of the specification.
-- **Notes:** the format must carry enough source locations for a panic to report where it happened.
+- **M01 part decided** by [D0044](decisions/D0044-executables-and-unstable-bytecode.md) on 2026-11-17 (T0009):
+  bytecode is internal and unstable (option 1). A build embeds it in a self-contained executable; it can be emitted
+  on request, and it loads only in the release that wrote it. Stabilizing it takes a new decision.
+- **Notes:**
+  - The format must carry enough source locations for a panic to report where it happened.
+  - Until native code exists, the host compiler and `qubecc` emit the same format within a release
+    ([D0042](decisions/D0042-tree-walker-and-bytecode-vm.md)).
+
+### OQ-010: How is native code generated?
+
+- **Status:** Open
+- **Arose in:** T0009 (M01), from [D0043](decisions/D0043-native-code-after-v1.md) (native code after Spec v1.0)
+- **To be settled in:** M17, in the post-v1.0 plan
+- **Blocked on it:** the native back end of `qubecc` (and of the host compiler, if any;
+  [D0047](decisions/D0047-platform-parity.md) does not require one)
+- **Options so far:**
+  1. Emit C and compile it with `zig cc`, linked against the Zig runtime through its C ABI (the preferred route at
+     the time of D0043).
+  2. Emit LLVM IR.
+  3. A code generator of our own, per architecture.
+- **Notes:**
+  - Every route must keep `tailcall`'s constant-space guarantee for every callee
+    ([D0014](decisions/D0014-tailcall-keyword.md)), growable stacks ([D0012](decisions/D0012-tail-calls-and-stacks.md)),
+    precise panic locations, and precise GC roots. Portable C expresses none of the first, which needs trampolines or
+    a compiler extension such as Clang's `musttail`.
+  - A route that emits C must rule out every C undefined behavior in the code it emits.
 
 ## Decided
 

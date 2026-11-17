@@ -76,6 +76,17 @@ An **extension** is a feature provided by an implementation that this specificat
 4. A program that contains an extension opt-in is not a conforming program. This specification gives such a program
    no meaning beyond rule 3. [D0019]
 
+### 1.2.4 Means of execution
+
+1. This specification defines what a program means. It does not define how a program is executed, what files an
+   implementation produces, or what an implementation's commands are called. [D0042, D0044]
+2. A conforming implementation MAY execute a program by interpreting it, by compiling it, or by any combination of
+   the two, and MAY use different means for different runs of the same program. [D0042, D0045]
+
+> **Note (non-normative).** The host implementation runs programs with a tree-walking interpreter and with a bytecode
+> VM. A command that runs a source file directly is expected to behave as building the program and executing the
+> result. The observable behavior that every means of execution must share is specified with the dynamic semantics.
+
 ## 1.3 Notation and conventions
 
 ### 1.3.1 Requirement keywords

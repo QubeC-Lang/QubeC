@@ -154,12 +154,20 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **Also targets:** the M01 part of OQ-009 (whether bytecode is an artifact users see, and its stability); the
   conformance requirements for observable behavior and implementation limits that spec §1.2 leaves to M01; the
   run mode of [D0013](decisions/D0013-easy-start.md).
+- **From T0009:** a tree-walking interpreter and a bytecode VM, with no JIT, so D0030 stands
+  ([D0042](decisions/D0042-tree-walker-and-bytecode-vm.md)); native code after Spec v1.0 under the native-compatible
+  rule ([D0043](decisions/D0043-native-code-after-v1.md)); self-contained executables with unstable emitted bytecode
+  ([D0044](decisions/D0044-executables-and-unstable-bytecode.md)), which settles OQ-009's M01 part; `run` as
+  build-then-execute ([D0045](decisions/D0045-run-is-a-shortcut.md)); platforms in three tiers
+  ([D0046](decisions/D0046-first-platforms-and-tiers.md)) under the host-leads rule
+  ([D0047](decisions/D0047-platform-parity.md)). T0010 must define the observable behavior that D0045's equivalence
+  rests on.
 - **Closing it, together with M02, starts the implementation track** (I1,
   [D0036](decisions/D0036-trailing-implementation-track.md)).
 
 | Task | Sub-topic | Status |
 | --- | --- | --- |
-| T0009 | Execution model and artifacts: interpreter, bytecode VM, native code (which, and when); what `run` and `build` produce; the M01 part of OQ-009; first targets and platforms; confirming or revisiting D0030's bytecode VM | Planned |
+| T0009 | Execution model and artifacts: interpreter, bytecode VM, native code (which, and when); what `run` and `build` produce; the M01 part of OQ-009; first targets and platforms; confirming or revisiting D0030's bytecode VM | Done |
 | T0010 | Observable behavior and determinism: what is observable (output, exit status, panics); what may differ between implementations, execution paths, and platforms (for example floats, iteration order, resource limits); implementation limits; the conformance additions to spec §1.2 | Planned |
 | T0011 | The runtime and the program lifecycle: the runtime's responsibilities (hooks for M07's memory management and M10's scheduler, D0012's stacks, native functions); the forms of `main` and the exit status; panics and their report; resource exhaustion; output at exit | Planned |
 | T0012 | The compile-time/run-time boundary: program phases; constant evaluation; what may run at compile time, and how `func` purity relates to it; what a compile-time failure means | Planned |
@@ -248,7 +256,10 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 
 - **Scope:** diagnostics, formatter, LSP, test framework, package manager, docs. Depends on M09 and M14, and may run
   alongside I2 and I3 ([D0040](decisions/D0040-design-milestones-kept.md)). The conformance harness itself starts in
-  I1 ([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)).
+  I1 ([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)). Names the commands and flags, which
+  are provisional until then ([D0044](decisions/D0044-executables-and-unstable-bytecode.md),
+  [D0045](decisions/D0045-run-is-a-shortcut.md)); plans CI per platform tier
+  ([D0046](decisions/D0046-first-platforms-and-tiers.md)).
 - **Tasks:** to be planned.
 
 ## M16 Implementation plan
@@ -263,7 +274,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 
 - **Scope:** a consistency audit, a rationale document, a changelog; the plan after Spec v1.0
   ([D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)), and how a published specification
-  changes.
+  changes. The post-v1.0 plan includes native code and its route
+  ([D0043](decisions/D0043-native-code-after-v1.md), [OQ-010](open-questions.md#oq-010-how-is-native-code-generated)).
 - **Depends on:** M13, M14, M15, and I4. Spec v1.0 is published only after I4 has exited; drafts may be tagged 0.x
   before then ([D0041](decisions/D0041-spec-v1-after-i4.md)).
 - **Tasks:** to be planned.
