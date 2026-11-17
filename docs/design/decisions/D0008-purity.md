@@ -206,6 +206,10 @@ parameters let one `map` serve pure and effectful code.
 - **M15:** the diagnostic for "a `func` calls a `proc`" must explain the rule; readers from Swift or Go read `func`
   as "any function".
 
+> **Later note (T0012).** Compile-time evaluation runs pure code only, pure natives included
+> ([D0068](D0068-only-pure-code-at-compile-time.md)); `dbg` output produced there should be shown during the build and
+> is never written again by a run ([D0071](D0071-dbg-at-compile-time.md)).
+
 ## Affected artifacts
 
 - Spec: none yet (declarations in M04; effects in M08)

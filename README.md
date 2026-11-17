@@ -11,8 +11,8 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M01 (Execution and compilation model). M00 (Vision and principles) is complete.
-- **Last task:** T0011, the runtime and the program lifecycle.
-- **Decided so far:** 62 decisions.
+- **Last task:** T0012, the compile-time/run-time boundary.
+- **Decided so far:** 71 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -36,9 +36,12 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
   - `main` is `proc main()` or returns a result; exit statuses are 0, 1 (an error from `main`), 101 (a panic), and
     102 (resource exhaustion), and a failure is reported in one specified line. Interrupts and closed pipes end a
     run quietly. Each runtime supplies only thin natives; the rest of the library is QubeC source.
+  - A program is checked, then every constant is evaluated exactly once, then it runs. Constants run only pure code,
+    hold no mutable state, and fail the build if they panic; every implementation completes 10,000,000 steps per
+    constant, or more if the constant says so.
   - See the [vision](docs/design/vision.md).
-- **Open questions:** 12.
-- **Next:** T0012, the compile-time/run-time boundary.
+- **Open questions:** 13.
+- **Next:** T0013, units, separate compilation, and reproducibility (the last task of M01).
 <!-- status:end -->
 
 ## Where to look

@@ -112,6 +112,11 @@ other comparison exact, and a guaranteed floor makes D0012's promise that deep r
 > ([D0058](D0058-exit-statuses.md)); the reserve is part of the runtime contract
 > ([D0055](D0055-runtime-contract-and-runtimes.md)).
 
+> **Later note (T0012).** While a program is processed, running out of steps of compile-time evaluation is handled
+> like exhausting stack or memory under choice 5: reported, not a rejection, above a guaranteed number of steps per
+> constant ([D0070](D0070-compile-time-step-floor-and-cap.md)). The guaranteed depth applies to compile-time
+> evaluation too.
+
 ## Affected artifacts
 
 - Spec: [§1.2.6](../../spec/01-introduction.md#126-resource-exhaustion-and-implementation-limits) (new)

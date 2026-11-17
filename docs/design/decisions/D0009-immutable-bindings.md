@@ -100,6 +100,11 @@ exists.
 - **M10:** no global variables to race on.
 - **M11:** compile-time evaluation of constants, which call only `func`s.
 
+> **Later note (T0012).** Constants are evaluated in a phase between checking and the run
+> ([D0063](D0063-program-phases.md)), every one exactly once ([D0064](D0064-every-constant-once.md)); a constant's
+> value contains no mutable state ([D0067](D0067-constant-values-without-mutable-state.md)), and only pure code runs
+> while it is computed ([D0068](D0068-only-pure-code-at-compile-time.md)).
+
 ## Affected artifacts
 
 - Spec: none yet (declarations in M04)

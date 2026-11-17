@@ -3,7 +3,8 @@
 Status: Draft · Formal: static none, dynamic none
 
 This chapter states what the specification covers, what conformance means (including what about a run is
-observable, what may differ between runs, and how a run starts and ends), and how the specification is written.
+observable, what may differ between runs, how a run starts and ends, and what happens before it starts), and how the
+specification is written.
 
 ## 1.1 Scope
 
@@ -172,7 +173,8 @@ The **observable behavior** of a run is its trace together with its outcome. [D0
 3. Within rules 1 and 2, the point at which a run exhausts a resource is not specified, and it may differ between
    runs, implementations, means of execution, and platforms. [D0053]
 4. If a conforming implementation exhausts a resource while processing a program, it MUST report this and MUST NOT
-   run the program. Such a report is not a rejection (§1.2.1). [D0053]
+   run the program. Such a report is not a rejection (§1.2.1). Running out of steps during compile-time evaluation
+   counts as exhausting a resource for this rule (§1.2.8). [D0053, D0070]
 5. Every limit that this specification places on the structure of a program, such as a depth of nesting or a number
    of parameters, is a rejection rule, stated with the construct it limits. [D0054]
 6. A conforming implementation MUST NOT reject a conforming program. If it exhausts a resource while processing one,
@@ -254,6 +256,114 @@ environment. [D0008, D0048, D0057, D0058]
 > (a failing index) err "panic: <kind>: <message> at <location>"  panic, status 101
 > (too deep)        err "exhausted: stack"                       resource exhaustion, status 102
 > ```
+
+### 1.2.8 Program phases and compile-time evaluation
+
+A **constant** is a name declared with `const`, at top level or locally, whose value is computed before the program
+runs; its **initializer** is the expression that computes it. Declarations are specified in a later chapter.
+**Compile-time evaluation** is the evaluation of constants' initializers. A **step** of compile-time evaluation is one
+call of any callable, or one iteration of a loop. A **pure native** is a native operation of the standard library
+whose specification makes it pure. A **build input** is a file whose contents are part of what is processed to build
+a program; source files are build inputs. [D0009, D0056, D0063, D0068, D0070]
+
+**Phases**
+
+1. A conforming implementation processes a program in three phases, in this order: **checking**, in which the whole
+   program is checked against every rejection rule that does not depend on evaluation; **compile-time evaluation**,
+   in which every constant is evaluated; and the run, which starts at the entry point (§1.2.7). A program rejected in
+   either of the first two phases is not run, and no part of it runs. [D0063]
+2. Checking does not evaluate any expression. A type does not mention the value of a constant. [D0063]
+3. Compile-time evaluation follows the dynamic semantics of the run. The value of a constant is the value its
+   initializer would have if it were evaluated by a run, with the same results, panics, and evaluation order (§1.2.5).
+   [D0049, D0051, D0063]
+
+> **Note (non-normative).** A later chapter may allow integer constants in types, such as the length of an array
+> type. If it does, the checker uses this same evaluation, not a separate language of types; cycles through types are
+> rejected; whether two types are equal is the same in every implementation; and only constants, never values
+> computed by a run, appear in types. [D0063]
+
+**Which constants, and how often**
+
+4. Every constant of the program is evaluated exactly once, whether or not anything uses it, including the local
+   constants of callables that are never called. Every use of a constant refers to that one value. The order in which
+   constants are evaluated is not observable: it does not change any value, any step count, or whether the program is
+   accepted. [D0064]
+5. [R-const-cycle] The evaluation of a constant MUST NOT read a constant whose evaluation is in progress. A mention of
+   a constant in code that the evaluation does not execute is not such a read. [D0065]
+6. [R-const-generic] The type and the initializer of a constant MUST NOT mention a type parameter or a purity
+   parameter of an enclosing declaration. [D0066]
+7. [R-const-mutable] The value of a constant MUST NOT contain mutable state: neither a mutable object nor, through any
+   value it holds or any value captured by a function value it holds, a reference to one. A constant whose type is or
+   contains a mutable collection type violates this rule. A constant may otherwise have any type, including a
+   function type. How the rule is checked beyond types is specified with memory and resources. [D0067]
+
+**What runs**
+
+8. Compile-time evaluation performs no effect. It calls no procedure and no effectful function value; the
+   corresponding rejection rules are stated with constants and purity. A pure native may be called, and has the same
+   result as in a run. [D0008, D0009, D0068]
+9. The value of a constant depends only on the source files of the program, the standard library's included. [D0068]
+
+> **Note (non-normative).** A later chapter may let a constant's value come from a named file. If it does, that file
+> is a build input like a source file, and the same file gives the same value in every implementation. [D0068]
+
+**Failure**
+
+10. [R-const-panic] The evaluation of a constant MUST NOT panic. A diagnostic for this rule SHOULD give the kind, the
+    message, and the source location of the panic (§1.2.5 rule 4). [D0069]
+
+**Bounds**
+
+11. Steps are counted on the program as written, together with the standard library's source. Each constant is
+    charged only for the steps of its own initializer; reading another constant takes no steps. Which constructs are
+    loops is specified with them. [D0070]
+12. The **guaranteed number of steps** of a constant is 10,000,000, or the number its declaration states, if that is
+    larger. The syntax of that statement is
+    *Provisional ([OQ-015](../design/open-questions.md#oq-015-how-is-the-raise-of-a-constants-guaranteed-steps-written))*.
+    [D0070]
+13. A conforming implementation MUST complete the evaluation of a constant that needs no more steps than its
+    guaranteed number of steps, no more nested calls than the guaranteed minimum depth (§1.2.6 rule 1), and no more
+    memory than is available. [D0062, D0070]
+14. Beyond its guaranteed number of steps, a constant's evaluation MAY be stopped. An implementation that stops it
+    has exhausted a resource while processing the program (§1.2.6 rule 4): it MUST report this and MUST NOT run the
+    program, and the report is not a rejection. Where an implementation stops is not specified. [D0053, D0070]
+15. Rejection by rules 5, 7, and 10, and stopping by rule 14, are the only ways in which compile-time evaluation fails.
+    Within the bounds of rule 13, every conforming implementation gives each constant the same value, or rejects the
+    program by the same rule. [D0051, D0069, D0070]
+
+**Debugging output**
+
+16. The output of `dbg` during compile-time evaluation is not observable (§1.2.5 rule 1). An implementation SHOULD
+    show it while processing the program, marking the constant being evaluated, and MUST NOT write it again when the
+    program runs. [D0008, D0071]
+
+> **Note (non-normative).** The host implementation stops a constant's evaluation after 1,000,000,000 steps, or the
+> constant's stated number if that is larger, and an input of the build raises that limit. An implementation is
+> expected to report progress while a constant runs long, and to say when a constant needed more steps than its
+> guarantee, so that its author can state the number and every implementation completes it.
+
+> **Example (non-normative).** The QubeC code is provisional syntax beyond `const`, `func`, and `proc`.
+>
+> ```qubec
+> const KEYWORDS: ImmutableList[Str] = ImmutableList.of(["func", "proc", "let", "const"]);
+> const MAX_TOKEN: Int = dbg(16 * 16);
+> const SPARE: Int = KEYWORDS.len() / 0;
+> const SCRATCH: List[Str] = List.new();
+> const C: Int = D + 1;
+> const D: Int = C + 1;
+>
+> func is_keyword(s: Str) -> Bool = KEYWORDS.contains(s);
+> proc main() { print(is_keyword("proc").to_str()); }
+> ```
+>
+> ```
+> SPARE      rejected: R-const-panic, although nothing uses it
+> SCRATCH    rejected: R-const-mutable (List is mutable)
+> C, D       rejected: R-const-cycle
+> MAX_TOKEN  256; its dbg line may be shown while building, and never by a run
+> ```
+>
+> Without `SPARE`, `SCRATCH`, `C`, and `D`, the program is accepted and every run writes `true`.
 
 ## 1.3 Notation and conventions
 

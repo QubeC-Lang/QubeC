@@ -8,62 +8,60 @@ follows the next action. Agent-oriented: "the designer" makes every decision; "t
 | Field | Value |
 | --- | --- |
 | Active milestone (design) | M01 Execution and compilation model |
-| Active design task | none (T0011 closed; T0012 is next) |
+| Active design task | none (T0012 closed; T0013 is next) |
 | Active milestone (implementation) | none (I1 starts once M01 and M02 have closed, D0036) |
 | Active implementation task | none |
-| Last closed task | T0011 The runtime and the program lifecycle |
-| Decisions | D0001–D0062 |
-| Open questions | OQ-001, OQ-002, OQ-003, OQ-005, OQ-006, OQ-007, OQ-008, OQ-009 (M01 part decided), OQ-010, OQ-011, OQ-013, OQ-014 (OQ-004 and OQ-012 decided) |
-| Research notes | R0001–R0009 |
-| Spec status | §1 Introduction written (Draft): scope, conformance (including §1.2.4 means of execution, §1.2.5 observable behavior and determinism, §1.2.6 resource exhaustion and implementation limits, §1.2.7 program start and termination), notation and conventions |
+| Last closed task | T0012 The compile-time/run-time boundary |
+| Decisions | D0001–D0071 |
+| Open questions | OQ-001, OQ-002, OQ-003, OQ-005, OQ-006, OQ-007, OQ-008, OQ-009 (M01 part decided), OQ-010, OQ-011, OQ-013, OQ-014, OQ-015 (OQ-004 and OQ-012 decided) |
+| Research notes | R0001–R0010 |
+| Spec status | §1 Introduction written (Draft): scope, conformance (including §1.2.4 means of execution, §1.2.5 observable behavior and determinism, §1.2.6 resource exhaustion and implementation limits, §1.2.7 program start and termination, §1.2.8 program phases and compile-time evaluation), notation and conventions |
 | Grammar status | Empty, provisional W3C-style EBNF |
-| Formal status | Skeleton: scope, structure, conventions, and claimed properties fixed (property 7 added in T0010, extended to termination in T0011); observable behavior stated in prose in dynamic.md; no rules yet; Lean package starts in M03 |
+| Formal status | Skeleton: scope, structure, conventions, and claimed properties fixed (property 7 added in T0010, extended to termination in T0011); observable behavior and compile-time evaluation stated in prose in dynamic.md; no rules yet; Lean package starts in M03 |
 
 The tracker names at most one Active task per track (design and implementation,
 [D0037](decisions/D0037-implementation-milestones-and-tasks.md)). The next action below names the next design step.
 
 ## Next action
 
-Run **T0012 (M01): the compile-time/run-time boundary.** Decide the program's phases (checking, compile-time
-evaluation, running); which constants are evaluated, when, and how often; what may run at compile time and how `func`
-purity ([D0008](decisions/D0008-purity.md)) relates to it, including whether any native may run there
-([D0056](decisions/D0056-thin-natives.md)); what a panic during compile-time evaluation means (a rejection, a
-report, or something else), next to D0053's rule that exhaustion while compiling is reported, not a rejection; how
-compile-time evaluation is bounded; and what `dbg` does at compile time. Read
-[roadmap.md, M01](roadmap.md#m01-execution-and-compilation-model), D0008, D0011, D0013, D0027, D0043, D0045,
-D0048–D0055, D0059, and spec §1.2.4–§1.2.7. Leave macros and reflection to M11, and units, separate compilation, and
-source-location naming to T0013.
+Run **T0013 (M01): units, separate compilation, and reproducibility.** Decide what a compiled unit is (one file or
+several, and whether units form an acyclic graph); what identifies a build and what its inputs are, leaving room for
+embedded files ([D0068](decisions/D0068-only-pure-code-at-compile-time.md)); whether build output is reproducible and
+how strictly (byte-identical artifacts or the same observable behavior); whether and how an artifact stores evaluated
+constant values, including function values that refer to code in other units
+([D0064](decisions/D0064-every-constant-once.md), [D0067](decisions/D0067-constant-values-without-mutable-state.md));
+and how source locations are named in panics and diagnostics (OQ-014's location part). Read
+[roadmap.md, M01](roadmap.md#m01-execution-and-compilation-model), D0013, D0044, D0045, D0050, D0051, D0059,
+D0063–D0068, D0070, and spec §1.2.4–§1.2.8. Leave module syntax, imports, visibility, and packages to M09, and
+embedded files themselves to M11. Then run M01's exit review in the same task.
 
 ## Handoff
 
-- **Decided in T0011:**
-  - One written runtime contract (memory, stacks with reserves, natives, the outcome and its report, output delivery,
-    later the scheduler and FFI); two independent host runtimes, Rust and Zig; post-v1.0 native code links a runtime
-    written in QubeC, which binds M07 and M12 (D0055).
-  - Natives are thin (the OS boundary and runtime internals) and declared in the standard library's source; the
-    library's QubeC source is normative; only the standard library declares natives (D0056).
-  - `main` is `proc main()` or `proc main() -> Result[Unit, E]` (the second provisional, OQ-013); arguments come from
-    library procedures (D0057).
-  - Exit statuses: 0, 1 (an error returned from `main`), `exit(n)` for 0–255 everywhere, 101 a panic, 102 resource
-    exhaustion; pending output is delivered first (D0058).
-  - One specified report line on standard error, then an optional backtrace after a delimiter, not observable; the
-    exact text is OQ-014 (D0059).
-  - A fifth outcome, terminated by the environment, abrupt by default, extending D0048 (D0060); a closed reader of
-    standard output or error ends the run that way, and other failed writes to them panic (D0061).
-  - The guaranteed depth is 100,000 nested calls of frames holding at most 256 values; a raisable stack cap, 1 GiB
-    in the host (D0062), settling OQ-012.
-- **Spec:** §1.2.5's outcome list gains termination by the environment; §1.2.6 rule 1 states the depth; new §1.2.7
-  (program start and termination). Formal: dynamic.md and metatheory.md property 7 cover termination. Glossary: 11 new
-  terms, 4 updated. Vision: a new "How a run starts and ends" table, and the combined sample uses `main`'s result
-  form. Roadmap: "From T0011" notes in M01, M03–M10, M12, M14, M15, M17, I1, I2. Later notes in D0012, D0048, D0053.
-- **Research:** R0009 (exit statuses of Rust, Go, OCaml, Zig; broken-pipe behavior of Rust, Go, OCaml, Python; a
-  Rust tree-walker's stack use per call, 768 bytes in release and 7,584 in debug; Go's 1 GB goroutine stack cap).
-- **Constraints for T0012:** compile-time evaluation runs inside the compiler and is not bound by the native-compatible
-  rule (D0043); it must give the same results as running (D0049, D0051); exhaustion while compiling is reported, not
-  a rejection (D0053); `dbg` output is never observable (D0008); thin natives are almost all procedures, so pure
-  constants need few or none (D0056).
-- **Repairs made in T0011:** the T0010 task-log row's commit was filled in (003628f).
-- No uncommitted design work is pending once T0011 is committed.
+- **Decided in T0012:**
+  - Three phases: checking, compile-time evaluation, the run; types do not mention constant values, with a guarded
+    door for integer constants in types (M05, M06, M12) (D0063).
+  - Every constant is evaluated exactly once, used or not, in an unobservable order (D0064); a read of a constant in
+    progress is `R-const-cycle` (D0065); constants must not mention enclosing generic parameters, `R-const-generic`
+    (D0066); a constant's value contains no mutable state, `R-const-mutable`, its check defined by M05 and M07 (D0067).
+  - Only pure code, pure natives included, runs at compile time; a constant depends on the source alone, with a
+    guarded door for embedded files as build inputs (M11) (D0068).
+  - A panic in a constant is `R-const-panic` (D0069).
+  - A step is one call or one loop iteration, counted per constant on the program as written; every implementation
+    completes 10,000,000 steps per constant, or the constant's raise (syntax OQ-015); the host's cap is
+    1,000,000,000, raisable by a build input; stopping is exhaustion, reported, not a rejection (D0070).
+  - `dbg` output from compile-time evaluation should be shown during the build and is never replayed (D0071).
+- **Spec:** new §1.2.8 (program phases and compile-time evaluation, rules 1–16); §1.2.6 rule 4 covers running out of
+  steps; the chapter's summary line. Formal: notes in static.md and dynamic.md. Glossary: 12 new terms, 2 updated.
+  Vision: a new "What happens before a run" table. Roadmap: "From T0012" notes in M01, M03–M07, M10–M12, M14, M15, I1,
+  I3. Later notes in D0008, D0009, D0027, D0053. OQ-015 opened.
+- **Research:** R0010 (Rust and Go constant behavior run on rustc 1.99.1 and Go 1.27.2; Rust's, Clang's, GCC's, and
+  Zig's step limits; a Rust tree-walker at about 30 million calls per second in release and 7 million in debug).
+- **Constraints for T0013:** an artifact may store evaluated constant values (D0064, D0067), so stored values must
+  not change meaning; a build's inputs must leave room for embedded files (D0068); a constant's value depends on the
+  source alone (D0068); determinism across implementations and platforms (D0051) and `run` as build-then-execute
+  (D0045); a panic's location is observable (D0050, D0059), so the naming of source files is part of the trace.
+- **Repairs made in T0012:** the T0011 task-log row's commit was filled in (561bc88).
+- No uncommitted design work is pending once T0012 is committed.
 
 ## Task log
 
@@ -79,4 +77,5 @@ source-location naming to T0013.
 | T0007 | 2026-11-16 | M00 | Confirm the milestone plan: implementation track, I1–I4, M16 merged, Spec v1.0 gate; M01 tasks; M00 exit review | D0036–D0041 | OQ-008, OQ-009 (retargeted) | cb50dd2 |
 | T0009 | 2026-11-17 | M01 | Execution model and artifacts: engines, native code timing, build artifacts, `run`, platforms and tiers, platform parity | D0042–D0047 | OQ-009 (M01 part decided), OQ-010 (opened) | 9473358 |
 | T0010 | 2026-11-17 | M01 | Observable behavior and determinism: trace and outcome, precise panics, panic contents, determinism, floats, resource exhaustion, implementation limits | D0048–D0054 | OQ-011, OQ-012 (opened) | 003628f |
-| T0011 | 2026-11-17 | M01 | The runtime and the program lifecycle: runtime contract and runtimes, natives, forms of `main`, exit statuses, the report line, termination by the environment, failed standard output, guaranteed depth and stack cap | D0055–D0062 | OQ-012 (decided), OQ-013, OQ-014 (opened) | (pending) |
+| T0011 | 2026-11-17 | M01 | The runtime and the program lifecycle: runtime contract and runtimes, natives, forms of `main`, exit statuses, the report line, termination by the environment, failed standard output, guaranteed depth and stack cap | D0055–D0062 | OQ-012 (decided), OQ-013, OQ-014 (opened) | 561bc88 |
+| T0012 | 2026-11-17 | M01 | The compile-time/run-time boundary: phases, every constant once, cycles, generic parameters, constant values, what runs at compile time, compile-time panics, guaranteed steps and cap, `dbg` | D0063–D0071 | OQ-015 (opened) | (pending) |

@@ -107,6 +107,9 @@ typed core and machine dynamics, both functions are nearly direct transcriptions
 - **M11:** the reference evaluator is a candidate model for compile-time evaluation.
 - **M15/M16:** the conformance harness runs the reference beside implementations; M16 settles OQ-008.
 
+> **Later note (T0012).** The reference evaluates each constant with fuel of at least its guaranteed number of steps
+> ([D0070](D0070-compile-time-step-floor-and-cap.md)); running out of fuel stays inconclusive.
+
 ## Affected artifacts
 
 - Spec: [§1.3.3](../../spec/01-introduction.md#133-formal-status-and-authority) (promotion requirement)

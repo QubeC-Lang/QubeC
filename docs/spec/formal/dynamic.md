@@ -23,6 +23,18 @@ How a run ends (delivering pending output, the report line, the exit status) is 
 ([D0058](../../design/decisions/D0058-exit-statuses.md), [D0059](../../design/decisions/D0059-report-line-and-backtrace.md)). The forms of events and outcomes are fixed in M03, with the machine's
 states. The informal statement is [spec §1.2.5](../01-introduction.md#125-observable-behavior-and-determinism).
 
+## Compile-time evaluation
+
+Constants are evaluated by the same machine, between checking and the run
+([D0063](../../design/decisions/D0063-program-phases.md)). Constant evaluation will be a relation over a store that maps
+each constant to *unevaluated*, *in progress*, or its value; reading a constant that is in progress is the premise of
+`R-const-cycle` ([D0065](../../design/decisions/D0065-cycles-found-during-evaluation.md)), and a panic is the premise of
+`R-const-panic` ([D0069](../../design/decisions/D0069-compile-time-panic-is-a-rejection.md)). The machine performs no
+events while evaluating constants ([D0068](../../design/decisions/D0068-only-pure-code-at-compile-time.md)). Steps are
+counted per constant, and the machine is unbounded; the guaranteed number of steps, like the guaranteed depth, is
+stated about implementations ([D0070](../../design/decisions/D0070-compile-time-step-floor-and-cap.md)). The rules come
+with the machine's states, from M03.
+
 ## Judgment forms
 
 | Judgment | Reading |

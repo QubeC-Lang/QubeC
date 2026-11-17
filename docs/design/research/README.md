@@ -15,3 +15,4 @@ Verified (with a source) or Recalled.
 | [R0007](R0007-execution-model-prior-art-and-checks.md) | Execution model: prior art, platform support, and executable embedding | M01 / T0009 | D0042–D0047, OQ-010 |
 | [R0008](R0008-observable-behavior-prior-art-and-pilots.md) | Observable behavior and determinism: prior art and a floating-point pilot | M01 / T0010 | D0048–D0054, OQ-011 |
 | [R0009](R0009-runtime-and-lifecycle-pilots.md) | Runtime and program lifecycle: exit statuses, broken pipes, and stack depth pilots | M01 / T0011 | D0057–D0059, D0061, D0062, OQ-012 |
+| [R0010](R0010-compile-time-evaluation-prior-art-and-pilots.md) | Compile-time evaluation: prior art, step limits, and an evaluator throughput pilot | M01 / T0012 | D0064, D0066, D0067, D0069, D0070, OQ-015 |

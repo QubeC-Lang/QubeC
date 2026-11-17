@@ -68,3 +68,12 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0060](D0060-termination-by-the-environment.md) | A run ended from outside has the outcome "terminated by the environment," abruptly by default | Accepted | M01 / T0011 | 2026-11-17 |
 | [D0061](D0061-failed-standard-output.md) | A closed reader of standard output or error ends the run quietly; any other failed write to them panics | Accepted | M01 / T0011 | 2026-11-17 |
 | [D0062](D0062-guaranteed-depth-and-stack-cap.md) | The guaranteed depth is 100,000 nested calls of bounded frames; runtimes have a raisable stack cap | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0063](D0063-program-phases.md) | A program is checked, then its constants are evaluated, then it runs; types do not mention constant values | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0064](D0064-every-constant-once.md) | Every constant is evaluated exactly once, used or not, in an order that is not observable | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0065](D0065-cycles-found-during-evaluation.md) | A cycle between constants is found during evaluation and is a rejection | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0066](D0066-constants-independent-of-generic-parameters.md) | A constant does not depend on an enclosing generic parameter | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0067](D0067-constant-values-without-mutable-state.md) | A constant may have any type, but its value contains no mutable state | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0068](D0068-only-pure-code-at-compile-time.md) | Only pure code runs at compile time, and a constant's value depends on the source alone | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0069](D0069-compile-time-panic-is-a-rejection.md) | A panic while evaluating a constant is a rejection | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0070](D0070-compile-time-step-floor-and-cap.md) | Compile-time evaluation has a guaranteed number of steps per constant, a raisable cap, and a per-constant raise | Accepted | M01 / T0012 | 2026-11-17 |
+| [D0071](D0071-dbg-at-compile-time.md) | `dbg` output from compile-time evaluation is shown during the build and never replayed at run time | Accepted | M01 / T0012 | 2026-11-17 |

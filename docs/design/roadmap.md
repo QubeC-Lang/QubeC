@@ -177,6 +177,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   non-observable backtrace ([D0059](decisions/D0059-report-line-and-backtrace.md), its text provisional, [OQ-014](open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter)); termination by the environment as a fifth outcome,
   abrupt by default ([D0060](decisions/D0060-termination-by-the-environment.md)), which also covers a closed reader of standard output or error ([D0061](decisions/D0061-failed-standard-output.md)); a guaranteed depth
   of 100,000 nested calls and a raisable stack cap ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)), which settles OQ-012.
+- **From T0012:** three phases, with a guarded door for integer constants in types ([D0063](decisions/D0063-program-phases.md)); every constant evaluated exactly once ([D0064](decisions/D0064-every-constant-once.md)); cycles found during evaluation ([D0065](decisions/D0065-cycles-found-during-evaluation.md)); no generic parameters in constants ([D0066](decisions/D0066-constants-independent-of-generic-parameters.md)); no mutable state in constant values ([D0067](decisions/D0067-constant-values-without-mutable-state.md)); only pure code at compile time, with a guarded door for embedded files ([D0068](decisions/D0068-only-pure-code-at-compile-time.md)); a panic in a constant is a rejection ([D0069](decisions/D0069-compile-time-panic-is-a-rejection.md)); 10,000,000 guaranteed steps per constant, a per-constant raise ([OQ-015](open-questions.md#oq-015-how-is-the-raise-of-a-constants-guaranteed-steps-written)), and a 1,000,000,000-step host cap ([D0070](decisions/D0070-compile-time-step-floor-and-cap.md)); `dbg` shown during the build ([D0071](decisions/D0071-dbg-at-compile-time.md)).
 - **Closing it, together with M02, starts the implementation track** (I1,
   [D0036](decisions/D0036-trailing-implementation-track.md)).
 
@@ -185,7 +186,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 | T0009 | Execution model and artifacts: interpreter, bytecode VM, native code (which, and when); what `run` and `build` produce; the M01 part of OQ-009; first targets and platforms; confirming or revisiting D0030's bytecode VM | Done |
 | T0010 | Observable behavior and determinism: what is observable (output, exit status, panics); what may differ between implementations, execution paths, and platforms (for example floats, iteration order, resource limits); implementation limits; the conformance additions to spec §1.2 | Done |
 | T0011 | The runtime and the program lifecycle: the runtime's responsibilities (hooks for M07's memory management and M10's scheduler, D0012's stacks, native functions); the forms of `main` and the exit status; panics and their report; resource exhaustion; output at exit | Done |
-| T0012 | The compile-time/run-time boundary: program phases; constant evaluation; what may run at compile time, and how `func` purity relates to it; what a compile-time failure means | Planned |
+| T0012 | The compile-time/run-time boundary: program phases; constant evaluation; what may run at compile time, and how `func` purity relates to it; what a compile-time failure means | Done |
 | T0013 | Units, separate compilation, and reproducibility: what a compiled unit is; whether build output is reproducible; how source locations are named | Planned |
 
 ## M02 Lexical structure
@@ -204,12 +205,14 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   An added exit criterion: the mechanization covers M03's core rules, or each gap is an open question.
 - **From T0011:** defines frames and restates the guaranteed depth's 256-value frame bound in their terms; may set
   D0054's nesting limit well below the guaranteed depth ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
+- **From T0012:** names the loop constructs whose iterations count as steps of compile-time evaluation; the machine's rules for constant evaluation (a store of constant states, cycle and panic premises) ([D0065](decisions/D0065-cycles-found-during-evaluation.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md)).
 - **Tasks:** to be planned.
 
 ## M04 Names, bindings, and scope
 
 - **Scope:** declarations, mutability, shadowing, name resolution.
 - **From T0011:** states the entry-point rule, with its rule ID, for the two forms of `main` ([D0057](decisions/D0057-forms-of-main.md)).
+- **From T0012:** writes the constant declaration with `R-const-cycle`, `R-const-generic`, `R-const-mutable`, and `R-const-panic` ([D0064](decisions/D0064-every-constant-once.md)–[D0069](decisions/D0069-compile-time-panic-is-a-rejection.md)); local constants are scoped like local declarations but evaluated before the run; with M11, the raise's syntax ([OQ-015](open-questions.md#oq-015-how-is-the-raise-of-a-constants-guaranteed-steps-written)).
 - **Tasks:** to be planned.
 
 ## M05 Core type system
@@ -225,12 +228,14 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   checked and wrapping is written ([D0049](decisions/D0049-precise-panics.md)).
 - **From T0011:** float formatting, parsing, and correctly rounded math are library code in QubeC, not natives
   ([D0056](decisions/D0056-thin-natives.md)); the result type of `main`'s second form ([OQ-013](open-questions.md#oq-013-what-exactly-is-the-result-form-of-main)).
+- **From T0012:** defines which types are free of mutable state ([D0067](decisions/D0067-constant-values-without-mutable-state.md)); may admit integer constants in types only under D0063's guard rules ([D0063](decisions/D0063-program-phases.md)).
 - **Tasks:** to be planned.
 
 ## M06 Abstraction and polymorphism
 
 - **Scope:** functions and closures, generics, traits or typeclasses, coherence, dispatch.
 - **From T0011:** what "can be displayed" means for the error type of `main`'s second form ([OQ-013](open-questions.md#oq-013-what-exactly-is-the-result-form-of-main)).
+- **From T0012:** constants do not mention generic parameters; per-type values, if wanted, come from another mechanism ([D0066](decisions/D0066-constants-independent-of-generic-parameters.md)); may admit integer generic parameters only under D0063's guard rules.
 - **Tasks:** to be planned.
 
 ## M07 Memory and resources
@@ -242,6 +247,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0011:** the explicit layer and the unsafe escape hatch must be able to express a runtime: a garbage
   collector or reference counting, and stack management, written in QubeC ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); whether `exit` runs cleanup
   ([D0058](decisions/D0058-exit-statuses.md)); cleanup does not run on termination by the environment ([D0060](decisions/D0060-termination-by-the-environment.md)).
+- **From T0012:** defines the check that a constant's value, closure captures included, contains no mutable object, and keeps new mutable heap objects out of constants ([D0067](decisions/D0067-constant-values-without-mutable-state.md)).
 - **Tasks:** to be planned.
 
 ## M08 Errors and effects
@@ -267,11 +273,13 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   events of concurrent tasks interleave in the trace ([D0048](decisions/D0048-trace-and-outcome.md)).
 - **From T0011:** the scheduler is a runtime-contract responsibility ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); each task's stack follows the cap and
   guaranteed depth ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)); the API to receive interrupts and termination requests, with M14 ([D0060](decisions/D0060-termination-by-the-environment.md)).
+- **From T0012:** may reuse the property "contains no mutable state" for values shared between tasks ([D0067](decisions/D0067-constant-values-without-mutable-state.md), OQ-001).
 - **Tasks:** to be planned.
 
 ## M11 Compile-time evaluation and metaprogramming
 
 - **Scope:** constant evaluation, macros, reflection, attributes.
+- **From T0012:** constant evaluation is decided ([D0063](decisions/D0063-program-phases.md)–[D0071](decisions/D0071-dbg-at-compile-time.md)); M11 builds macros, reflection, and attributes on the three phases, with no effects at compile time; it may add embedded files under D0068's rules; it settles [OQ-015](open-questions.md#oq-015-how-is-the-raise-of-a-constants-guaranteed-steps-written) (the raise's syntax).
 - **Tasks:** to be planned.
 
 ## M12 Interop and platform
@@ -279,6 +287,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **Scope:** FFI, ABI, layout control, embedding.
 - **From T0011:** layout control and the C ABI must let a runtime written in QubeC call the operating system
   ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)).
+- **From T0012:** may admit integer constants in layout types only under D0063's guard rules ([D0063](decisions/D0063-program-phases.md)).
 - **Tasks:** to be planned.
 
 ## M13 Formal consolidation
@@ -299,6 +308,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0011:** the list of natives, their declaration marker, and the library around them ([D0056](decisions/D0056-thin-natives.md)); `args()`, the
   environment, and `exit` ([D0057](decisions/D0057-forms-of-main.md), [D0058](decisions/D0058-exit-statuses.md)); standard-output procedures and explicit writers with results, and a way
   to receive interrupts ([D0060](decisions/D0060-termination-by-the-environment.md), [D0061](decisions/D0061-failed-standard-output.md)); collection functions avoid non-tail recursion over their length ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
+- **From T0012:** marks which natives are pure, so that they may run at compile time ([D0068](decisions/D0068-only-pure-code-at-compile-time.md)); constant tables use the immutable collections, which may want short literal syntax ([D0067](decisions/D0067-constant-values-without-mutable-state.md)).
 - **Tasks:** to be planned.
 
 ## M15 Tooling
@@ -311,6 +321,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   ([D0046](decisions/D0046-first-platforms-and-tiers.md)).
 - **From T0011:** names the input that requests a backtrace and the one that raises the stack cap ([D0059](decisions/D0059-report-line-and-backtrace.md),
   [D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
+- **From T0012:** names the build input that raises the step cap; progress notes for long constants and the warning when a constant needed more than its guarantee ([D0070](decisions/D0070-compile-time-step-floor-and-cap.md)); how compile-time `dbg` output is marked ([D0071](decisions/D0071-dbg-at-compile-time.md)); diagnostics for constant cycles and panics.
 - **Tasks:** to be planned.
 
 ## M16 Implementation plan
@@ -348,6 +359,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0011:** the host interpreter's runtime is written in Rust and meets the runtime contract; I1's opening task
   decides where the contract is kept ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); the first natives and a minimal library are needed early ([D0056](decisions/D0056-thin-natives.md));
   the tree-walker reaches the guaranteed depth in release builds on every Tier 1 and Tier 2 platform ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
+- **From T0012:** the front end checks, then evaluates every constant with its interpreter, counting steps with a cap of 1,000,000,000 and honoring raises; constant values are handed on as values ([D0063](decisions/D0063-program-phases.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md)).
 - **Tasks:** to be planned when I1 starts.
 
 ## I2 Host complete for the core language
@@ -372,6 +384,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   of [D0029](decisions/D0029-permanent-host-implementation.md).
 - **Stage target:** the fixpoint check and the release checks pass (build from source, fixpoint, both
   implementations passing the conformance suite).
+- **From T0012:** a QubeC program cannot run code it generates, so `qubecc` contains an evaluator for the pure language written in QubeC, with constant states and a step counter ([D0063](decisions/D0063-program-phases.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md)).
 - **Tasks:** to be planned when I3 starts.
 
 ## I4 The remaining features

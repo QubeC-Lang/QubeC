@@ -148,6 +148,17 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Interrupts and closed pipes end a run quietly:** termination by the environment is an outcome of its own, abrupt by default; other output failures panic. | [D0060](decisions/D0060-termination-by-the-environment.md), [D0061](decisions/D0061-failed-standard-output.md) |
 | **Deep recursion is safe to 100,000 nested calls** on every implementation, and much deeper by default; the stack cap can be raised. | [D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md) |
 
+## What happens before a run (T0012)
+
+| Commitment | Record |
+| --- | --- |
+| **Three phases:** a program is checked, then its constants are evaluated, then it runs; types do not mention constant values, and later milestones may admit integer constants in types only through the same evaluator. | [D0063](decisions/D0063-program-phases.md) |
+| **Every constant, once:** each constant is evaluated exactly once, used or not, so whether a program builds never depends on what it uses; cycles are found during evaluation. | [D0064](decisions/D0064-every-constant-once.md), [D0065](decisions/D0065-cycles-found-during-evaluation.md) |
+| **Constants are plain values:** any type, functions included, but no mutable state and no dependence on generic parameters, so a constant is never a global variable in disguise. | [D0066](decisions/D0066-constants-independent-of-generic-parameters.md), [D0067](decisions/D0067-constant-values-without-mutable-state.md) |
+| **Nothing happens during a build:** only pure code runs at compile time, and a constant depends on the source alone. | [D0068](decisions/D0068-only-pure-code-at-compile-time.md) |
+| **A constant that fails stops the build:** a panic is a rejection; every implementation completes 10,000,000 steps per constant, or more if the constant says so, and reports, rather than rejects, a constant it stops beyond that. | [D0069](decisions/D0069-compile-time-panic-is-a-rejection.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md) |
+| **Constants can be debugged:** `dbg` output from compile-time evaluation is shown during the build, never at run time. | [D0071](decisions/D0071-dbg-at-compile-time.md) |
+
 ## Dream snippet
 
 This is the program we would like to be able to write: a tiny expression compiler that evaluates several files
@@ -219,7 +230,7 @@ func checksum_fast(data: &[u32]) -> u32 = {
 And a word-count tool combining the T0003 commitments (provisional syntax):
 
 ```
-const TOP: Int = 3;
+const TOP: Int = 3;                                  // evaluated once, while building (D0063, D0064)
 
 func tokenize(src: Str) -> List[Str] = {             // pure: builds a list it created (D0011)
   let mut words = List.new();

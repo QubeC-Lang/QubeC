@@ -215,6 +215,21 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Notes:** also open: how a message containing a line break or a control character is written so that the report
   stays one line; the delimiter line's text; how an implementation marks a truncated backtrace.
 
+### OQ-015: How is the raise of a constant's guaranteed steps written?
+
+- **Status:** Open
+- **Arose in:** T0012 (M01), from [D0070](decisions/D0070-compile-time-step-floor-and-cap.md) (a guaranteed number of
+  steps per constant, which the constant's declaration may raise)
+- **To be settled in:** M11 (attributes), with M04 (the form of a constant declaration)
+- **Blocked on it:** the syntax in [spec §1.2.8](../spec/01-introduction.md#128-program-phases-and-compile-time-evaluation)
+  rule 12; examples of heavy constants, which use the provisional `@steps(N)`
+- **Options so far:**
+  1. An attribute on the declaration, such as `@steps(50_000_000) const T: … = …;`, if M11 adopts attributes.
+  2. A clause of the declaration itself, such as `const T: … = … steps 50_000_000;`.
+- **Notes:** the raise applies to one constant's initializer only, can only raise the guarantee of 10,000,000 steps,
+  and states a number; a form with no limit was considered and not chosen. The number is part of the program, so it
+  binds every implementation.
+
 ## Decided
 
 ### OQ-012: What is the guaranteed minimum depth of nested calls?
