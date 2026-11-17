@@ -11,8 +11,8 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M00 (Vision and principles).
-- **Last task:** T0005, how far QubeC is formalized, and how.
-- **Decided so far:** 28 decisions.
+- **Last task:** T0006, how QubeC is first implemented.
+- **Decided so far:** 35 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -23,9 +23,11 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
   - The whole sequential language gets formal semantics: surface rules elaborate into an explicitly typed core,
     which is mechanized in Lean 4, with soundness, purity, determinism, and tail-call space theorems, and a verified
     reference evaluator and checker. See the [formal rules](docs/spec/formal/README.md).
+  - The first implementation is permanent and leads every feature: a Rust front end, interpreter, and REPL; an OCaml
+    compiler from the typed core to bytecode; and a Zig VM and runtime.
   - See the [vision](docs/design/vision.md).
-- **Open questions:** 7.
-- **Next:** T0006, the host language for the first implementation.
+- **Open questions:** 8.
+- **Next:** T0007, confirming the milestone plan and closing M00.
 <!-- status:end -->
 
 ## Where to look

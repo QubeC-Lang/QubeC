@@ -1,8 +1,8 @@
 # Vision
 
 Status: **Vision I and II complete** (T0002, T0003); **how QubeC is specified** decided (T0004), including **how far
-it is formalized** (T0005). The host language follows in T0006. Each part links to the decision record that settles
-it.
+it is formalized** (T0005); **how QubeC is first implemented** decided (T0006). Each part links to the decision record
+that settles it.
 
 ## Starting point
 
@@ -97,6 +97,15 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Typed elaboration:** surface legality rules translate programs into an explicitly typed core, over which the dynamics are defined. | [D0022](decisions/D0022-typed-elaboration-into-core.md) |
 | **Claimed theorems:** type soundness, elaboration soundness, purity with a frame property, the tail-call space bound, determinism, decidable checking. | [D0023](decisions/D0023-claimed-meta-properties.md) |
 | **The core is mechanized in Lean 4,** which governs the core rules, and it runs as a verified reference evaluator and checker. Elaboration proofs are on paper. The mechanization starts in M03. | [D0024](decisions/D0024-mechanize-the-core.md)–[D0028](decisions/D0028-mechanization-starts-in-m03.md) |
+
+## How QubeC is implemented (T0006)
+
+| Commitment | Record |
+| --- | --- |
+| **A permanent host implementation** that leads every feature: the self-hosted compiler never has a feature the host lacks, and once QubeC self-hosts, every release needs both to pass the whole conformance suite. | [D0029](decisions/D0029-permanent-host-implementation.md) |
+| **Three parts, connected through the typed core:** the **host interpreter** (Rust: front end, tree-walking core interpreter, REPL, driver; it makes every rejection), the **host compiler** (OCaml: typed core → bytecode), and the **host VM** (Zig: interpreter loop, heap and GC, stacks, natives, as a C-ABI library). This presumes a bytecode VM, which M01 confirms or revisits. | [D0030](decisions/D0030-three-part-host.md)–[D0033](decisions/D0033-zig-host-vm.md) |
+| **Idiomatic code in each part,** with conformance (rule IDs, checked core, the specified formats) as the only shared contract; the self-hosted compiler is designed fresh. | [D0034](decisions/D0034-idiomatic-code-per-part.md) |
+| **Pinned toolchains,** and third-party libraries only when recorded with their purpose and locked by checksum. | [D0035](decisions/D0035-pinned-toolchains-and-recorded-libraries.md) |
 
 ## Dream snippet
 

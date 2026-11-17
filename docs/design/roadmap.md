@@ -54,7 +54,7 @@ The dependencies are a first estimate; M00's planning task revisits them.
 | T0003 | Vision II: functional style (purity, bindings, collections, local mutation, recursion) and further must-haves | Done |
 | T0004 | Spec audience, authority (prose versus formal rules), and formality level | Done |
 | T0005 | Formalization depth and proof assistant (samples: a typing rule and a lemma per candidate) | Done |
-| T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Planned |
+| T0006 | Host language for the bootstrap implementation (samples: an AST and evaluator per candidate; pilots) | Done |
 | T0007 | Confirm or reorder the milestone plan, in light of D0002–D0014; M00 exit review | Planned |
 | T0008 | Revisit: the spelling of explicit tail calls (`tailcall`; part of OQ-005) | Done |
 
@@ -75,10 +75,24 @@ that changes core rules keeps it current before exiting ([D0024](decisions/D0024
 checking constrains M05/M06's inference ([D0023](decisions/D0023-claimed-meta-properties.md)); M16 owns the core
 interchange format ([OQ-008](open-questions.md#oq-008-what-is-the-core-interchange-format-and-how-do-implementations-emit-core)).
 
+T0006 added: the host implementation is permanent and leads every feature
+([D0029](decisions/D0029-permanent-host-implementation.md)), in three parts and languages (Rust host interpreter,
+OCaml host compiler, Zig host VM, [D0030](decisions/D0030-three-part-host.md)). So every feature milestone is
+implemented twice once QubeC self-hosts, and the project carries four pinned toolchains with the Lean mechanization
+([D0035](decisions/D0035-pinned-toolchains-and-recorded-libraries.md)); T0007 should weigh this load and when
+implementation work starts. D0030 presumes a bytecode VM, which constrains M01 (with a revisit trigger), and it needs
+OQ-008 before the host compiler is built, earlier than M16; it also opens
+[OQ-009](open-questions.md#oq-009-what-is-the-bytecode-format-between-the-host-compiler-and-the-host-vm) (the
+bytecode format, M01/M16).
+
 ## M01 Execution and compilation model
 
 - **Scope:** compiled, interpreted, or JIT; targets; how much runtime there is; the compile-time/run-time boundary;
   separate compilation.
+- **From T0006:** the host implementation already has a tree-walking interpreter, a typed-core-to-bytecode compiler,
+  and a bytecode VM with a C-ABI runtime ([D0030](decisions/D0030-three-part-host.md)). If M01 decides an execution
+  model without a bytecode VM, it revisits D0030. M01 also settles whether bytecode is a visible artifact
+  ([OQ-009](open-questions.md#oq-009-what-is-the-bytecode-format-between-the-host-compiler-and-the-host-vm)).
 - **Tasks:** to be planned when M00 closes.
 
 ## M02 Lexical structure
@@ -163,6 +177,11 @@ interchange format ([OQ-008](open-questions.md#oq-008-what-is-the-core-interchan
 ## M16 Implementation plan
 
 - **Scope:** pipeline, IRs, bootstrapping toward self-hosting, the conformance suite.
+- **From T0006:** plans the three host parts, their builds, dependency tables, and repository layout
+  ([D0030](decisions/D0030-three-part-host.md)–[D0035](decisions/D0035-pinned-toolchains-and-recorded-libraries.md));
+  the build from source and the fixpoint check as release steps
+  ([D0029](decisions/D0029-permanent-host-implementation.md)); the bytecode format (OQ-009). OQ-008 may be settled
+  earlier, when the host compiler starts.
 - **Tasks:** to be planned.
 
 ## M17 Final review and Spec v1.0

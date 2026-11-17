@@ -9,6 +9,8 @@ defined. A term is added in the same change that defines it.
 | Algebraic data type (ADT) | A type defined as a choice of variants, each of which may carry data, e.g. `Num(value: Int) \| Var(name: Str)`. | [D0002](design/decisions/D0002-purpose-and-domain.md) |
 | Async coloring | The way an `async` function can be called only from another `async` function, so the "color" spreads through the call graph. | [D0006](design/decisions/D0006-inspirations.md) |
 | Binding | A name for a value, introduced by `let`; immutable unless declared mutable. | [D0009](design/decisions/D0009-immutable-bindings.md) |
+| Bytecode | The instruction format that the host compiler produces and the host VM runs (format open, OQ-009). | [D0030](design/decisions/D0030-three-part-host.md) |
+| C ABI | The calling convention and data layout of C on a platform, which almost every language can call and be called through. | [D0033](design/decisions/D0033-zig-host-vm.md) |
 | Callable | A function or a procedure. | [D0008](design/decisions/D0008-purity.md) |
 | Conforming implementation | An implementation that meets every requirement the specification places on implementations. | [§1.2](spec/01-introduction.md#12-conformance) |
 | Conforming program | A program that violates no rejection rule and uses no extension. | [§1.2](spec/01-introduction.md#12-conformance) |
@@ -22,6 +24,7 @@ defined. A term is added in the same change that defines it.
 | Default layer | The part of QubeC that everyday code uses, judged by Safety > Simplicity > Ergonomics > Predictability > Performance. | [D0004](design/decisions/D0004-ranked-design-values.md) |
 | Definitional interpreter | An ordinary, runnable function together with a proof that it agrees with a semantics given as rules; running it is running the specification. | [D0027](design/decisions/D0027-executable-reference.md) |
 | Differential testing | Running the same program through two implementations (such as the reference and a compiler) and comparing their answers. | [D0027](design/decisions/D0027-executable-reference.md) |
+| Diverse double-compiling | Compiling a compiler's source with two independent compilers and comparing the results, to detect a backdoor planted in a compiler binary. | [D0029](design/decisions/D0029-permanent-host-implementation.md) |
 | Dynamic semantics | What an accepted program does when it runs. | [§1.1](spec/01-introduction.md#11-scope) |
 | Effect | Anything a pure function may not do: IO, mutation of state it did not create, nondeterminism, spawning or using channels, calling a procedure. | [D0008](design/decisions/D0008-purity.md) |
 | Elaboration | The translation of a surface program into the core, performed by the elaboration rules while checking legality. | [D0022](design/decisions/D0022-typed-elaboration-into-core.md) |
@@ -31,6 +34,7 @@ defined. A term is added in the same change that defines it.
 | Explicitly typed | Of a language such as the core: every binder, type instantiation, and purity instantiation is written in the term, so checking needs no inference. | [D0022](design/decisions/D0022-typed-elaboration-into-core.md) |
 | Extension | A feature an implementation provides that the specification does not define; it takes effect only in a file with an extension opt-in. | [§1.2.3](spec/01-introduction.md#123-extensions), [D0019](design/decisions/D0019-extensions-by-source-opt-in.md) |
 | Extension opt-in | A declaration in a source file that names an extension (syntax open, OQ-006). | [§1.2.3](spec/01-introduction.md#123-extensions) |
+| Fixpoint check | The test that self-hosting works: the self-hosted compiler, compiled by itself twice in succession, produces identical output. | [D0029](design/decisions/D0029-permanent-host-implementation.md) |
 | Formal status | A chapter's statement, for its static and for its dynamic semantics, of how far the formal rules cover it: complete, partial, or none. | [§1.3.3](spec/01-introduction.md#133-formal-status-and-authority), [D0016](design/decisions/D0016-authority-per-section.md) |
 | Formal target | The part of QubeC that the formal rules and theorems cover, and so the only part that can be formally complete: the whole sequential language. | [§1.3.3](spec/01-introduction.md#133-formal-status-and-authority), [D0021](design/decisions/D0021-formal-target-sequential-language.md) |
 | Formally complete | Of an aspect of a chapter: its formal status is complete, so the formal rules govern it. | [§1.3.3](spec/01-introduction.md#133-formal-status-and-authority) |
@@ -38,6 +42,10 @@ defined. A term is added in the same change that defines it.
 | Fuel | A step budget given to the reference evaluator; running out of fuel means the run is inconclusive, never that it is wrong. | [D0027](design/decisions/D0027-executable-reference.md) |
 | Function | A callable declared with `func`; it is pure. | [D0008](design/decisions/D0008-purity.md) |
 | Growable stack | A call stack that is enlarged on demand up to a large cap, instead of having a small fixed size. | [D0012](design/decisions/D0012-tail-calls-and-stacks.md) |
+| Host compiler | The part of the host implementation, written in OCaml, that lowers the typed core to bytecode; it makes no rejections. | [D0030](design/decisions/D0030-three-part-host.md), [D0032](design/decisions/D0032-ocaml-host-compiler.md) |
+| Host implementation | The permanent implementation of QubeC written in existing languages; it leads every feature. Its parts are the host interpreter, the host compiler, and the host VM. | [D0029](design/decisions/D0029-permanent-host-implementation.md), [D0030](design/decisions/D0030-three-part-host.md) |
+| Host interpreter | The part of the host implementation, written in Rust, that holds the front end, a tree-walking interpreter of the core, the REPL, and the driver; it makes every rejection. | [D0030](design/decisions/D0030-three-part-host.md), [D0031](design/decisions/D0031-rust-host-interpreter.md) |
+| Host VM | The part of the host implementation, written in Zig, that runs bytecode: the interpreter loop, heap and garbage collector, stacks, panics, and native library functions, as a C-ABI library. | [D0030](design/decisions/D0030-three-part-host.md), [D0033](design/decisions/D0033-zig-host-vm.md) |
 | Immutable collection | A collection that never changes; an update returns a new version sharing structure with the old one (also called persistent). | [D0010](design/decisions/D0010-mutable-default-collections.md) |
 | Intuitive name | A name QubeC provides that most programmers read correctly without context: a widely recognized short form, a familiar acronym, or a whole word. | [D0007](design/decisions/D0007-intuitive-names.md) |
 | Logical relation | A family of relations, defined type by type, stating when two values or programs behave the same; the usual tool for proving relational properties such as referential transparency. | [D0023](design/decisions/D0023-claimed-meta-properties.md) |
@@ -49,6 +57,7 @@ defined. A term is added in the same change that defines it.
 | Open | A design state: the matter is not decided and nothing depends on a guess about it. | [workflow.md §3](agent/workflow.md#interaction-rules) |
 | Open question | An undecided matter that something is waiting on, recorded as OQ-nnn. | [open-questions.md](design/open-questions.md) |
 | Persistent data structure | An immutable collection where an update returns a new version that shares structure with the old one. | [D0002](design/decisions/D0002-purpose-and-domain.md) |
+| Pinned toolchain | A compiler or prover version fixed in a file in the repository and changed only by a deliberate, separate change. | [D0035](design/decisions/D0035-pinned-toolchains-and-recorded-libraries.md) |
 | Procedure | A callable declared with `proc`; it may have effects. | [D0008](design/decisions/D0008-purity.md) |
 | Promotion | The recorded decision that makes an aspect of a chapter formally complete, after a checklist is met. | [§1.3.3](spec/01-introduction.md#133-formal-status-and-authority), [D0016](design/decisions/D0016-authority-per-section.md) |
 | Proof assistant | A program that checks proofs, in which rules are written as definitions and a theorem is accepted only when every case is handled. | [D0024](design/decisions/D0024-mechanize-the-core.md) |
@@ -61,11 +70,13 @@ defined. A term is added in the same change that defines it.
 | REPL | A read-eval-print loop: an interactive prompt that evaluates declarations and expressions one at a time. | [D0013](design/decisions/D0013-easy-start.md) |
 | Research note | A file `docs/design/research/Rnnnn-<slug>.md` recording verified findings that a decision relies on. | [research/README.md](design/research/README.md) |
 | Rule ID | The permanent name of a rejection rule, such as `R-func-calls-proc`; a rejecting implementation reports at least one. | [§1.3.5](spec/01-introduction.md#135-rejection-rules-and-rule-ids), [D0018](design/decisions/D0018-diagnosis-and-rule-ids.md) |
+| Self-hosted compiler | The QubeC compiler written in QubeC, working name `qubecc`; it never implements a feature the host implementation lacks. | [D0029](design/decisions/D0029-permanent-host-implementation.md) |
 | Self-hosting yardstick | The tie-breaking test "could QubeC's own compiler be written comfortably in this?". | [D0002](design/decisions/D0002-purpose-and-domain.md) |
 | Static semantics | The conditions a program must meet to be accepted (legality, typing, purity). | [§1.1](spec/01-introduction.md#11-scope) |
 | Strict evaluation | Call-by-value: arguments are evaluated before a call, not on demand. | [D0005](design/decisions/D0005-non-goals.md) |
 | Tail call | A call that is the last action of a function; a call marked `tailcall` replaces the caller's frame and runs in constant stack. | [D0012](design/decisions/D0012-tail-calls-and-stacks.md), [D0014](design/decisions/D0014-tailcall-keyword.md) |
 | Task | One bounded sub-topic of one milestone (T0001, …), normally one session. | [workflow.md §3](agent/workflow.md#milestones-and-tasks) |
 | Tie-breaking domain | The kind of program whose needs win when design goals conflict; for QubeC, tooling. | [D0002](design/decisions/D0002-purpose-and-domain.md) |
+| Tree-walking interpreter | An interpreter that runs a program by recursively evaluating its syntax tree (here, the core), without compiling it first. | [D0030](design/decisions/D0030-three-part-host.md) |
 | Type soundness | The property that a well-typed program never gets stuck: it finishes with a value, panics in a defined way, or runs forever (progress and preservation). | [D0023](design/decisions/D0023-claimed-meta-properties.md) |
 | Undefined behavior (UB) | An operation the language gives no meaning, so that anything may happen; QubeC excludes it from safe code. | [D0004](design/decisions/D0004-ranked-design-values.md) |

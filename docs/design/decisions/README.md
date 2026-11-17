@@ -34,3 +34,10 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0026](D0026-lean-governs-core-rules.md) | For core rules, the Lean definition governs; the Markdown rule mirrors it | Accepted | M00 / T0005 | 2026-11-16 |
 | [D0027](D0027-executable-reference.md) | An executable reference: a verified core evaluator and a verified core checker | Accepted | M00 / T0005 | 2026-11-16 |
 | [D0028](D0028-mechanization-starts-in-m03.md) | The mechanization starts in M03, as a Lean package in docs/spec/formal/lean/ | Accepted | M00 / T0005 | 2026-11-16 |
+| [D0029](D0029-permanent-host-implementation.md) | The host implementation is permanent and leads every feature | Accepted | M00 / T0006 | 2026-11-16 |
+| [D0030](D0030-three-part-host.md) | The host implementation has three parts in three languages, connected through the typed core | Accepted | M00 / T0006 | 2026-11-16 |
+| [D0031](D0031-rust-host-interpreter.md) | The host interpreter is written in Rust | Accepted | M00 / T0006 | 2026-11-16 |
+| [D0032](D0032-ocaml-host-compiler.md) | The host compiler is written in OCaml | Accepted | M00 / T0006 | 2026-11-16 |
+| [D0033](D0033-zig-host-vm.md) | The host VM is written in Zig | Accepted | M00 / T0006 | 2026-11-16 |
+| [D0034](D0034-idiomatic-code-per-part.md) | Each host part is idiomatic for its language; the self-hosted compiler is designed fresh | Accepted | M00 / T0006 | 2026-11-16 |
+| [D0035](D0035-pinned-toolchains-and-recorded-libraries.md) | Toolchains are pinned; third-party libraries are allowed when recorded and locked | Accepted | M00 / T0006 | 2026-11-16 |
