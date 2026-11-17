@@ -134,6 +134,11 @@ writes heavily can use an explicit buffered writer if M14 provides one.
 - **Conformance suite:** a test gives the inputs (arguments, standard input, files) and the expected trace and
   outcome, and may merge standard output and standard error.
 
+> **Later note (T0011).** A fifth outcome, *terminated by the environment*, joins the four of choice 1
+> ([D0060](D0060-termination-by-the-environment.md)). The exit statuses, the report line, and output delivery at
+> exit are [D0058](D0058-exit-statuses.md), [D0059](D0059-report-line-and-backtrace.md), and
+> [D0061](D0061-failed-standard-output.md).
+
 ## Affected artifacts
 
 - Spec: [§1.2.5](../../spec/01-introduction.md#125-observable-behavior-and-determinism) (new); the note in §1.2.4

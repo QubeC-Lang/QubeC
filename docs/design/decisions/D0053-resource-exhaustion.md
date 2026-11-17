@@ -106,6 +106,12 @@ other comparison exact, and a guaranteed floor makes D0012's promise that deep r
   [metatheory.md](../../spec/formal/metatheory.md)), amending the list of [D0023](D0023-claimed-meta-properties.md).
 - **Conformance suite:** a test that may exhaust a resource has the outcome "exhausted, or the expected outcome".
 
+> **Later note (T0011).** The guaranteed minimum depth is 100,000 nested calls of frames holding at most 256 values,
+> with a raisable stack cap ([D0062](D0062-guaranteed-depth-and-stack-cap.md)); exhaustion is reported as
+> `exhausted: stack` or `exhausted: memory` ([D0059](D0059-report-line-and-backtrace.md)) and exits with status 102
+> ([D0058](D0058-exit-statuses.md)); the reserve is part of the runtime contract
+> ([D0055](D0055-runtime-contract-and-runtimes.md)).
+
 ## Affected artifacts
 
 - Spec: [§1.2.6](../../spec/01-introduction.md#126-resource-exhaustion-and-implementation-limits) (new)

@@ -171,6 +171,12 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   structural limits are rejection rules ([D0054](decisions/D0054-implementation-limits-as-rules.md)). T0011 must settle
   [OQ-012](open-questions.md#oq-012-what-is-the-guaranteed-minimum-depth-of-nested-calls) (the guaranteed depth);
   [OQ-011](open-questions.md#oq-011-how-are-floating-point-math-functions-and-the-canonical-nan-specified) goes to M05.
+- **From T0011:** one runtime contract with two independent host runtimes, and a runtime in QubeC for native code
+  ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); thin natives declared in the standard library's source ([D0056](decisions/D0056-thin-natives.md)); two forms of `main` ([D0057](decisions/D0057-forms-of-main.md), the result form
+  provisional, [OQ-013](open-questions.md#oq-013-what-exactly-is-the-result-form-of-main)); exit statuses 0, 1, 101, 102 ([D0058](decisions/D0058-exit-statuses.md)); one report line on standard error with an optional,
+  non-observable backtrace ([D0059](decisions/D0059-report-line-and-backtrace.md), its text provisional, [OQ-014](open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter)); termination by the environment as a fifth outcome,
+  abrupt by default ([D0060](decisions/D0060-termination-by-the-environment.md)), which also covers a closed reader of standard output or error ([D0061](decisions/D0061-failed-standard-output.md)); a guaranteed depth
+  of 100,000 nested calls and a raisable stack cap ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)), which settles OQ-012.
 - **Closing it, together with M02, starts the implementation track** (I1,
   [D0036](decisions/D0036-trailing-implementation-track.md)).
 
@@ -178,7 +184,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 | --- | --- | --- |
 | T0009 | Execution model and artifacts: interpreter, bytecode VM, native code (which, and when); what `run` and `build` produce; the M01 part of OQ-009; first targets and platforms; confirming or revisiting D0030's bytecode VM | Done |
 | T0010 | Observable behavior and determinism: what is observable (output, exit status, panics); what may differ between implementations, execution paths, and platforms (for example floats, iteration order, resource limits); implementation limits; the conformance additions to spec §1.2 | Done |
-| T0011 | The runtime and the program lifecycle: the runtime's responsibilities (hooks for M07's memory management and M10's scheduler, D0012's stacks, native functions); the forms of `main` and the exit status; panics and their report; resource exhaustion; output at exit | Planned |
+| T0011 | The runtime and the program lifecycle: the runtime's responsibilities (hooks for M07's memory management and M10's scheduler, D0012's stacks, native functions); the forms of `main` and the exit status; panics and their report; resource exhaustion; output at exit | Done |
 | T0012 | The compile-time/run-time boundary: program phases; constant evaluation; what may run at compile time, and how `func` purity relates to it; what a compile-time failure means | Planned |
 | T0013 | Units, separate compilation, and reproducibility: what a compiled unit is; whether build output is reproducible; how source locations are named | Planned |
 
@@ -196,11 +202,14 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   ([OQ-007](open-questions.md#oq-007-how-does-the-mechanized-core-represent-binders))
   ([D0023](decisions/D0023-claimed-meta-properties.md), [D0028](decisions/D0028-mechanization-starts-in-m03.md)).
   An added exit criterion: the mechanization covers M03's core rules, or each gap is an open question.
+- **From T0011:** defines frames and restates the guaranteed depth's 256-value frame bound in their terms; may set
+  D0054's nesting limit well below the guaranteed depth ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **Tasks:** to be planned.
 
 ## M04 Names, bindings, and scope
 
 - **Scope:** declarations, mutability, shadowing, name resolution.
+- **From T0011:** states the entry-point rule, with its rule ID, for the two forms of `main` ([D0057](decisions/D0057-forms-of-main.md)).
 - **Tasks:** to be planned.
 
 ## M05 Core type system
@@ -214,11 +223,14 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   [OQ-011](open-questions.md#oq-011-how-are-floating-point-math-functions-and-the-canonical-nan-specified)); integer
   ranges are the same on every platform ([D0051](decisions/D0051-deterministic-sequential-language.md)); overflow is
   checked and wrapping is written ([D0049](decisions/D0049-precise-panics.md)).
+- **From T0011:** float formatting, parsing, and correctly rounded math are library code in QubeC, not natives
+  ([D0056](decisions/D0056-thin-natives.md)); the result type of `main`'s second form ([OQ-013](open-questions.md#oq-013-what-exactly-is-the-result-form-of-main)).
 - **Tasks:** to be planned.
 
 ## M06 Abstraction and polymorphism
 
 - **Scope:** functions and closures, generics, traits or typeclasses, coherence, dispatch.
+- **From T0011:** what "can be displayed" means for the error type of `main`'s second form ([OQ-013](open-questions.md#oq-013-what-exactly-is-the-result-form-of-main)).
 - **Tasks:** to be planned.
 
 ## M07 Memory and resources
@@ -227,17 +239,24 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   undefined-behavior policy.
 - **From T0010:** no memory address, or anything derived from one, is observable
   ([D0051](decisions/D0051-deterministic-sequential-language.md)).
+- **From T0011:** the explicit layer and the unsafe escape hatch must be able to express a runtime: a garbage
+  collector or reference counting, and stack management, written in QubeC ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); whether `exit` runs cleanup
+  ([D0058](decisions/D0058-exit-statuses.md)); cleanup does not run on termination by the environment ([D0060](decisions/D0060-termination-by-the-environment.md)).
 - **Tasks:** to be planned.
 
 ## M08 Errors and effects
 
 - **Scope:** errors (results, exceptions, panics) and the mechanics of effects, refining the purity of
   [D0008](decisions/D0008-purity.md) ([D0040](decisions/D0040-design-milestones-kept.md)).
+- **From T0011:** settles [OQ-013](open-questions.md#oq-013-what-exactly-is-the-result-form-of-main) (the result form of `main`) and [OQ-014](open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter) (the report line's text), and names panic
+  kinds and messages ([D0059](decisions/D0059-report-line-and-backtrace.md)).
 - **Tasks:** to be planned.
 
 ## M09 Modules and packages
 
 - **Scope:** units, imports, visibility, versioning, the build model.
+- **From T0011:** which unit's `main` is the entry point ([D0057](decisions/D0057-forms-of-main.md)); how the standard library, the only place
+  natives are declared, is identified ([D0056](decisions/D0056-thin-natives.md)).
 - **Tasks:** to be planned.
 
 ## M10 Concurrency
@@ -246,6 +265,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0010:** must state what concurrent programs may vary, since the determinism of
   [D0051](decisions/D0051-deterministic-sequential-language.md) covers the sequential language only, and how the
   events of concurrent tasks interleave in the trace ([D0048](decisions/D0048-trace-and-outcome.md)).
+- **From T0011:** the scheduler is a runtime-contract responsibility ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); each task's stack follows the cap and
+  guaranteed depth ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)); the API to receive interrupts and termination requests, with M14 ([D0060](decisions/D0060-termination-by-the-environment.md)).
 - **Tasks:** to be planned.
 
 ## M11 Compile-time evaluation and metaprogramming
@@ -256,6 +277,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 ## M12 Interop and platform
 
 - **Scope:** FFI, ABI, layout control, embedding.
+- **From T0011:** layout control and the C ABI must let a runtime written in QubeC call the operating system
+  ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)).
 - **Tasks:** to be planned.
 
 ## M13 Formal consolidation
@@ -273,6 +296,9 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   ([D0051](decisions/D0051-deterministic-sequential-language.md)); natives are specified as events
   ([D0048](decisions/D0048-trace-and-outcome.md)); the math functions have the specified results of
   [D0052](decisions/D0052-bit-identical-floats.md).
+- **From T0011:** the list of natives, their declaration marker, and the library around them ([D0056](decisions/D0056-thin-natives.md)); `args()`, the
+  environment, and `exit` ([D0057](decisions/D0057-forms-of-main.md), [D0058](decisions/D0058-exit-statuses.md)); standard-output procedures and explicit writers with results, and a way
+  to receive interrupts ([D0060](decisions/D0060-termination-by-the-environment.md), [D0061](decisions/D0061-failed-standard-output.md)); collection functions avoid non-tail recursion over their length ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **Tasks:** to be planned.
 
 ## M15 Tooling
@@ -283,6 +309,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   are provisional until then ([D0044](decisions/D0044-executables-and-unstable-bytecode.md),
   [D0045](decisions/D0045-run-is-a-shortcut.md)); plans CI per platform tier
   ([D0046](decisions/D0046-first-platforms-and-tiers.md)).
+- **From T0011:** names the input that requests a backtrace and the one that raises the stack cap ([D0059](decisions/D0059-report-line-and-backtrace.md),
+  [D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **Tasks:** to be planned.
 
 ## M16 Implementation plan
@@ -301,6 +329,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   ([D0043](decisions/D0043-native-code-after-v1.md), [OQ-010](open-questions.md#oq-010-how-is-native-code-generated)).
 - **Depends on:** M13, M14, M15, and I4. Spec v1.0 is published only after I4 has exited; drafts may be tagged 0.x
   before then ([D0041](decisions/D0041-spec-v1-after-i4.md)).
+- **From T0011:** the post-v1.0 plan includes the runtime written in QubeC that native code links ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)).
 - **Tasks:** to be planned.
 
 ## I1 Front end and core interpreter
@@ -316,6 +345,9 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   [D0038](decisions/D0038-m16-merged-into-implementation-milestones.md)). OQ-008 is decided here if I1 is the first to
   send core across a boundary.
 - **Stage target:** `qubec run` and the REPL work for the M01–M05 language; the conformance harness exists.
+- **From T0011:** the host interpreter's runtime is written in Rust and meets the runtime contract; I1's opening task
+  decides where the contract is kept ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); the first natives and a minimal library are needed early ([D0056](decisions/D0056-thin-natives.md));
+  the tree-walker reaches the guaranteed depth in release builds on every Tier 1 and Tier 2 platform ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **Tasks:** to be planned when I1 starts.
 
 ## I2 Host complete for the core language
@@ -328,6 +360,7 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   bytecode format ([OQ-009](open-questions.md#oq-009-what-is-the-bytecode-format-between-the-host-compiler-and-the-host-vm)),
   and the host compiler's and host VM's architecture.
 - **Stage target:** the whole conformance suite so far passes on the interpreted path and the compiled path.
+- **From T0011:** the host VM's runtime, in Zig, meets the same contract independently ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)).
 - **Tasks:** to be planned when I2 starts.
 
 ## I3 `qubecc` and the fixpoint

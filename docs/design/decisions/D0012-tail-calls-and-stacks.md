@@ -94,6 +94,10 @@ and the compiler checks it.
 > placeholder `become`. D0014 also records that cleanup runs before the jump and that no reference into the frame may
 > be live across a `tailcall`.
 
+> **Later note (T0011).** The guaranteed minimum depth, the default cap, and their handling are
+> [D0062](D0062-guaranteed-depth-and-stack-cap.md); exceeding the cap is resource exhaustion
+> ([D0053](D0053-resource-exhaustion.md)), reported by [D0059](D0059-report-line-and-backtrace.md).
+
 ## Affected artifacts
 
 - Spec: none yet (M01, M03)

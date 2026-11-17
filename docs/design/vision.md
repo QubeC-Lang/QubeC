@@ -131,10 +131,22 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 
 | Commitment | Record |
 | --- | --- |
-| **Observable behavior is a trace and an outcome:** the ordered interactions with the environment, then a return, a panic, resource exhaustion, or divergence. Nothing else, not even `dbg` output or timing, is observable. | [D0048](decisions/D0048-trace-and-outcome.md) |
+| **Observable behavior is a trace and an outcome:** the ordered interactions with the environment, then a return, a panic, resource exhaustion, termination by the environment (added in T0011), or divergence. Nothing else, not even `dbg` output or timing, is observable. | [D0048](decisions/D0048-trace-and-outcome.md) |
 | **Panics are precise,** with their kind, message, and source location the same everywhere; no engine, build profile, or optimization changes what a program does, and no build setting removes a check. | [D0049](decisions/D0049-precise-panics.md), [D0050](decisions/D0050-panic-contents.md) |
 | **One meaning everywhere:** the same program with the same inputs behaves the same on every implementation and platform, including bit-identical floating point. | [D0051](decisions/D0051-deterministic-sequential-language.md), [D0052](decisions/D0052-bit-identical-floats.md) |
 | **The one exception is running out of stack or memory,** which may happen at different points above a guaranteed depth, never with a wrong result; structural limits on programs are exact rules, so every implementation accepts the same programs. | [D0053](decisions/D0053-resource-exhaustion.md), [D0054](decisions/D0054-implementation-limits-as-rules.md) |
+
+## How a run starts and ends (T0011)
+
+| Commitment | Record |
+| --- | --- |
+| **One runtime contract, independent runtimes:** the host's Rust and Zig runtimes each meet one written contract (memory, stacks, natives, the outcome and its report, output delivery), so differential tests check them against each other; native code after v1.0 links a runtime written in QubeC. | [D0055](decisions/D0055-runtime-contract-and-runtimes.md) |
+| **Thin natives:** only the boundary with the operating system is supplied by each runtime; everything else in the standard library, float printing and math included, is QubeC source that every runtime runs. | [D0056](decisions/D0056-thin-natives.md) |
+| **`main` has two forms,** `proc main()` and `proc main() -> Result[Unit, E]`; arguments come from the library, as inputs. | [D0057](decisions/D0057-forms-of-main.md) |
+| **Exit statuses mean the same everywhere:** 0 success, 1 an error returned from `main`, `exit(n)` for 0–255, 101 a panic, 102 resource exhaustion; pending output is always delivered first. | [D0058](decisions/D0058-exit-statuses.md) |
+| **A failure is reported in one line** on standard error, identical on every engine, with an optional backtrace after it that is not observable. | [D0059](decisions/D0059-report-line-and-backtrace.md) |
+| **Interrupts and closed pipes end a run quietly:** termination by the environment is an outcome of its own, abrupt by default; other output failures panic. | [D0060](decisions/D0060-termination-by-the-environment.md), [D0061](decisions/D0061-failed-standard-output.md) |
+| **Deep recursion is safe to 100,000 nested calls** on every implementation, and much deeper by default; the stack cap can be raised. | [D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md) |
 
 ## Dream snippet
 
@@ -224,12 +236,13 @@ func count(words: List[Str]) -> Map[Str, Int] = {     // pure: a mutable Map, cr
 func skip_spaces(cs: List[Char], i: Int) -> Int =     // constant stack via a checked tail call (D0012, D0014)
   if i < cs.len() && cs[i] == ' ' then tailcall skip_spaces(cs, i + 1) else i;
 
-proc main() {                                          // effects only in procs (D0008)
-  let text   = file_system.read_text(Path.of(args()[0])).unwrap_or("");
+proc main() -> Result[Unit, IoError] {                // effects only in procs (D0008); a form of main (D0057)
+  let text   = file_system.read_text(Path.of(args()[0]))?;   // an error: shown on stderr, status 1 (D0058)
   let counts = dbg(count(tokenize(text)));             // dbg: allowed, output not observable
   for (w, n) in counts.sorted_by_value().reversed().take(TOP) { println("${w}: ${n}"); }
+  Ok(())                                               // status 0; a panic gives its report line and 101 (D0059)
 }
-// $ qubec run wc.qbc notes.txt                        (D0013)
+// $ qubec run wc.qbc notes.txt | head -3              (D0013; head closing the pipe ends the run quietly, D0061)
 ```
 
 ### What the snippet implies

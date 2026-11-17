@@ -3,7 +3,7 @@
 Status: Draft · Formal: static none, dynamic none
 
 This chapter states what the specification covers, what conformance means (including what about a run is
-observable, and what may differ between runs), and how the specification is written.
+observable, what may differ between runs, and how a run starts and ends), and how the specification is written.
 
 ## 1.1 Scope
 
@@ -94,10 +94,11 @@ the run interacts. An **event** is one interaction of a run with its environment
 receives in response. The **trace** of a run is the sequence of its events, in the order in which they happen. The
 **inputs** of a run are the responses it receives in its events. [D0048]
 
-The **outcome** of a run is one of the following [D0048, D0050, D0053]:
-- a return, with an exit status;
+The **outcome** of a run is one of the following [D0048, D0050, D0053, D0060]:
+- a return, with an exit status (§1.2.7);
 - a **panic**, with its kind, its message, and the source location of the operation that failed;
 - **resource exhaustion**, naming the resource (§1.2.6);
+- **termination by the environment**: the environment ends the run (§1.2.7);
 - **divergence**: the run never ends.
 
 The **observable behavior** of a run is its trace together with its outcome. [D0048]
@@ -162,9 +163,9 @@ The **observable behavior** of a run is its trace together with its outcome. [D0
 **Resource exhaustion** is a run's running out of stack or of memory. [D0053]
 
 1. A run that never has more nested calls in progress than the **guaranteed minimum depth** MUST NOT exhaust its
-   stack. The value of the guaranteed minimum depth is
-   *Provisional ([OQ-012](../design/open-questions.md#oq-012-what-is-the-guaranteed-minimum-depth-of-nested-calls))*.
-   [D0012, D0053]
+   stack. The guaranteed minimum depth is 100,000 nested calls. A call whose frame holds k values, its parameters
+   and local bindings, with k greater than 256, counts as ⌈k/256⌉ calls. A call made by `tailcall` does not add to
+   the number of nested calls. [D0012, D0014, D0053, D0062]
 2. When a run exhausts a resource, its trace MUST be a prefix of the trace that the run would have had without
    resource limits, and its outcome MUST be resource exhaustion, naming the resource. The outcome carries no source
    location. [D0053]
@@ -181,6 +182,78 @@ The **observable behavior** of a run is its trace together with its outcome. [D0
 > exactly as specified up to the point where it stops. Sizes, such as the length of a source file or the number of
 > declarations, are limited only by resources. A conformance test whose program might exhaust a resource accepts
 > either resource exhaustion or the expected outcome.
+
+### 1.2.7 Program start and termination
+
+A program's **entry point** is the procedure named `main` with which a run starts. A **procedure** is a callable
+declared with `proc`; declarations are specified in a later chapter, which states the rejection rule for an entry
+point of any other form. **Pending output** is output that a run has written but that has not yet been delivered to
+its destination; §1.2.5 rule 2 lets an implementation hold output only while this cannot be observed. The **exit
+status** of a run is an integer from 0 to 255 that a run that returns, panics, or exhausts a resource hands to its
+environment. [D0008, D0048, D0057, D0058]
+
+1. The entry point has one of two forms [D0057]:
+   - a procedure `main` with no parameters and the unit result;
+   - a procedure `main` with no parameters whose result type is the core library's result type with the unit success
+     type and an error type that can be displayed. This form is
+     *Provisional ([OQ-013](../design/open-questions.md#oq-013-what-exactly-is-the-result-form-of-main))*.
+2. A run receives its arguments, its environment, and its standard input only through procedures of the standard
+   library, as inputs (§1.2.5). [D0048, D0057]
+3. When the entry point returns, the run ends as follows [D0048, D0058]:
+   1. All pending output is delivered.
+   2. If the entry point returned an error value, the display of the error is written to standard error. Its text is
+      *Provisional ([OQ-013](../design/open-questions.md#oq-013-what-exactly-is-the-result-form-of-main))*.
+   3. The run returns with exit status 1 if the entry point returned an error value, and 0 otherwise.
+4. When the standard library's exit procedure is called with an integer n, the run ends as follows [D0048, D0058]:
+   1. If n is less than 0 or greater than 255, the call panics.
+   2. Otherwise, all pending output is delivered, and the run returns with exit status n.
+5. When a run panics or exhausts a resource, it ends as follows [D0048, D0053, D0058, D0059]:
+   1. All pending output is delivered.
+   2. Exactly one **report line** is written to standard error. For a panic, it is
+      `panic: <kind>: <message> at <location>`; for resource exhaustion, it is `exhausted: stack` or
+      `exhausted: memory`, with no location. The exact text of the kind, the message, and the location is
+      *Provisional ([OQ-014](../design/open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter))*.
+   3. If an input of the run requests it, a delimiter line and a **backtrace** MAY follow. Everything written from
+      the delimiter line to the end of the run is not part of the trace. The delimiter's text is
+      *Provisional ([OQ-014](../design/open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter))*.
+   4. The run ends with exit status 101 after a panic, and 102 after resource exhaustion. This holds even if the
+      report line could not be written.
+
+   Exhausting a resource MUST NOT prevent an implementation from performing steps 1 to 4.
+6. When the environment ends a run, its outcome is termination by the environment, and its trace is a prefix of the
+   trace it would have had otherwise. No further output is delivered and no report line is written; the run ends in
+   the way the platform ends it, so that the environment can tell the cause. When the environment ends a run is an
+   input of the run. [D0051, D0060]
+7. If a write to standard output or standard error fails because the reader of that stream has closed it, the
+   outcome of the run is termination by the environment. Any other failure of a write to standard output or standard
+   error is a panic whose kind states that output failed. [D0061]
+
+> **Note (non-normative).** A program that wants to finish its work when interrupted asks the standard library to
+> receive interrupts; by default, output held in a buffered writer of the standard library is lost when the
+> environment ends a run, while output written directly has already been delivered. On POSIX platforms, step 6
+> means that a run interrupted from the keyboard ends as if killed by `SIGINT`, which a shell reports as status 130,
+> and rule 7 means that `program | head -1` ends quietly.
+
+> **Example (non-normative).** The runs of one program, `wc.qbc`. The QubeC code is provisional syntax beyond the
+> forms of `main`.
+>
+> ```qubec
+> proc main() -> Result[Unit, IoError] {
+>   let argv = args();
+>   if argv.len() != 2 { eprint("usage: wc FILE"); exit(2); }
+>   let text = read_file(argv[1])?;
+>   print(count_words(text).to_str());
+>   Ok(())
+> }
+> ```
+>
+> ```
+> wc notes.txt      out "412"                                    return, status 0
+> wc missing.txt    err <display of the error>                   return, status 1
+> wc                err "usage: wc FILE"                         return, status 2
+> (a failing index) err "panic: <kind>: <message> at <location>"  panic, status 101
+> (too deep)        err "exhausted: stack"                       resource exhaustion, status 102
+> ```
 
 ## 1.3 Notation and conventions
 

@@ -14,9 +14,13 @@ with the response it receives ([D0048](../../design/decisions/D0048-trace-and-ou
 therefore denotes a **trace** (a finite or infinite sequence of events) and, when the trace is finite, an
 **outcome**: a return with an exit status, a panic with its kind, message, and source location
 ([D0049](../../design/decisions/D0049-precise-panics.md), [D0050](../../design/decisions/D0050-panic-contents.md)),
-or divergence after a finite trace. The machine has no resource limits; resource exhaustion is stated about
-implementations, as a truncation of the machine's trace ([D0053](../../design/decisions/D0053-resource-exhaustion.md),
-[metatheory.md](metatheory.md) property 7). The forms of events and outcomes are fixed in M03, with the machine's
+or divergence after a finite trace. The machine has no resource limits and is never interrupted; resource exhaustion
+and termination by the environment are stated about implementations, as truncations of the machine's trace
+([D0053](../../design/decisions/D0053-resource-exhaustion.md),
+[D0060](../../design/decisions/D0060-termination-by-the-environment.md), [metatheory.md](metatheory.md) property 7).
+How a run ends (delivering pending output, the report line, the exit status) is stated in prose in
+[spec §1.2.7](../01-introduction.md#127-program-start-and-termination)
+([D0058](../../design/decisions/D0058-exit-statuses.md), [D0059](../../design/decisions/D0059-report-line-and-backtrace.md)). The forms of events and outcomes are fixed in M03, with the machine's
 states. The informal statement is [spec §1.2.5](../01-introduction.md#125-observable-behavior-and-determinism).
 
 ## Judgment forms

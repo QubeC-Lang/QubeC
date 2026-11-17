@@ -27,6 +27,9 @@ examples points to one of these. When a question is decided, it moves to **Decid
   - Default collections are mutable ([D0010](decisions/D0010-mutable-default-collections.md)), so a mutable
     collection sent over a channel or captured by `spawn` must be moved (the sender loses access) or forbidden.
   - Lightweight tasks share the growable-stack machinery of [D0012](decisions/D0012-tail-calls-and-stacks.md).
+  - The scheduler is a responsibility of the runtime contract, met by every runtime, including the runtime in QubeC
+    ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); each task's stack follows the cap and guaranteed depth
+    of [D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md).
 
 ### OQ-002: Is absence written `Option[T]`, `T?`, or both?
 
@@ -158,6 +161,9 @@ examples points to one of these. When a question is decided, it moves to **Decid
     precise panic locations, and precise GC roots. Portable C expresses none of the first, which needs trampolines or
     a compiler extension such as Clang's `musttail`.
   - A route that emits C must rule out every C undefined behavior in the code it emits.
+  - `qubecc`'s native output links a runtime written in QubeC, not the Zig runtime
+    ([D0055](decisions/D0055-runtime-contract-and-runtimes.md)); option 1's linking against the Zig runtime would then
+    apply only to the host implementation, if it has a native back end.
 
 ### OQ-011: How are floating-point math functions and the canonical NaN specified?
 
@@ -177,13 +183,47 @@ examples points to one of these. When a question is decided, it moves to **Decid
   - Whichever option is chosen, the Rust interpreter, the Zig VM, and the Lean reference evaluator must compute the
     same results; Lean's `Float.sin` calls C's `sin` and cannot be used as is.
 
-### OQ-012: What is the guaranteed minimum depth of nested calls?
+### OQ-013: What exactly is the result form of `main`?
 
 - **Status:** Open
+- **Arose in:** T0011 (M01), from [D0057](decisions/D0057-forms-of-main.md) (two forms of `main`) and
+  [D0058](decisions/D0058-exit-statuses.md) (status 1 after the error is written)
+- **To be settled in:** M08, with M05 (the result type) and M06 (what "can be displayed" means)
+- **Blocked on it:** the second form of `main` in
+  [spec §1.2.7](../spec/01-introduction.md#127-program-start-and-termination); the text written to standard error for
+  an error returned from `main`
+- **Options so far:**
+  1. The standard result type with the unit success type, and an error type that has a display form (an interface or
+     a built-in notion, M06).
+  2. As 1, written as `error: <display of e>` on one line.
+  3. Generalize the fixed list later, to any return type implementing a library interface (Rust's `Termination`).
+- **Notes:** the status stays 1 in every option; extending the list only adds forms.
+
+### OQ-014: What is the exact text of the report line and the backtrace delimiter?
+
+- **Status:** Open
+- **Arose in:** T0011 (M01), from [D0059](decisions/D0059-report-line-and-backtrace.md) (one specified report line)
+  and [D0061](decisions/D0061-failed-standard-output.md) (the "output failed" kind)
+- **To be settled in:** M08, with T0013 and M02 (the location's text) and M05 and M14 (kinds and messages)
+- **Blocked on it:** the report line's pieces in
+  [spec §1.2.7](../spec/01-introduction.md#127-program-start-and-termination); the conformance suite's expected
+  standard error for failing runs
+- **Options so far:**
+  1. The shape fixed in D0059: `panic: <kind>: <message> at <location>`, `exhausted: stack`, `exhausted: memory`,
+     with each kind a short lowercase phrase and the location `<source name>:<line>:<column>`.
+  2. As 1, with kinds written as stable identifiers (`index-out-of-bounds`) rather than phrases.
+- **Notes:** also open: how a message containing a line break or a control character is written so that the report
+  stays one line; the delimiter line's text; how an implementation marks a truncated backtrace.
+
+## Decided
+
+### OQ-012: What is the guaranteed minimum depth of nested calls?
+
+- **Status:** Decided by [D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md) on 2026-11-17 (T0011)
 - **Arose in:** T0010 (M01), from [D0053](decisions/D0053-resource-exhaustion.md) (resource exhaustion above a
   guaranteed floor) and [D0012](decisions/D0012-tail-calls-and-stacks.md) (growable stacks with a cap)
 - **To be settled in:** M01, in T0011 (the runtime and the program lifecycle)
-- **Blocked on it:** the value in
+- **Was blocking:** the value in
   [spec §1.2.6](../spec/01-introduction.md#126-resource-exhaustion-and-implementation-limits) rule 1; the runtimes' default stack cap
 - **Options so far:**
   1. A fixed number of nested calls, for example 100,000 or 1,000,000, whatever the size of their frames.
@@ -192,8 +232,10 @@ examples points to one of these. When a question is decided, it moves to **Decid
 - **Notes:** marked tail calls ([D0014](decisions/D0014-tailcall-keyword.md)) do not count; the value must be
   reachable by every engine on every Tier 1 and Tier 2 platform ([D0046](decisions/D0046-first-platforms-and-tiers.md)),
   including the tree-walking interpreter, which nests host calls.
-
-## Decided
+- **Resolution:** 100,000 nested calls, each with a frame of at most 256 values, a larger frame counting as several
+  calls (option 2); `tailcall`s do not count. Each runtime has a default stack cap at least that large, 1 GiB of stack
+  memory in the host implementation, which an input of the run may raise
+  ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 
 ### OQ-004: What does "functional in style" commit QubeC to?
 

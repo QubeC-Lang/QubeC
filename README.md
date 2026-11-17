@@ -11,8 +11,8 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M01 (Execution and compilation model). M00 (Vision and principles) is complete.
-- **Last task:** T0010, observable behavior and determinism.
-- **Decided so far:** 54 decisions.
+- **Last task:** T0011, the runtime and the program lifecycle.
+- **Decided so far:** 62 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -32,10 +32,13 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
     native code comes after Spec v1.0. Linux x86-64 and macOS arm64 are supported first.
   - What a program does is its trace of interactions and its outcome, and it is the same on every implementation,
     engine, and platform, floating point included. Panics are precise; the only exception is running out of stack
-    or memory, above a guaranteed depth.
+    or memory, above a guaranteed depth of 100,000 nested calls.
+  - `main` is `proc main()` or returns a result; exit statuses are 0, 1 (an error from `main`), 101 (a panic), and
+    102 (resource exhaustion), and a failure is reported in one specified line. Interrupts and closed pipes end a
+    run quietly. Each runtime supplies only thin natives; the rest of the library is QubeC source.
   - See the [vision](docs/design/vision.md).
-- **Open questions:** 11.
-- **Next:** T0011, the runtime and the program lifecycle.
+- **Open questions:** 12.
+- **Next:** T0012, the compile-time/run-time boundary.
 <!-- status:end -->
 
 ## Where to look

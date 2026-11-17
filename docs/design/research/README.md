@@ -14,3 +14,4 @@ Verified (with a source) or Recalled.
 | [R0006](R0006-planning-prior-art.md) | Prior art for planning design and implementation together | M00 / T0007 | D0036, D0037, D0041 |
 | [R0007](R0007-execution-model-prior-art-and-checks.md) | Execution model: prior art, platform support, and executable embedding | M01 / T0009 | D0042–D0047, OQ-010 |
 | [R0008](R0008-observable-behavior-prior-art-and-pilots.md) | Observable behavior and determinism: prior art and a floating-point pilot | M01 / T0010 | D0048–D0054, OQ-011 |
+| [R0009](R0009-runtime-and-lifecycle-pilots.md) | Runtime and program lifecycle: exit statuses, broken pipes, and stack depth pilots | M01 / T0011 | D0057–D0059, D0061, D0062, OQ-012 |

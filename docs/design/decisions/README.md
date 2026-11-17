@@ -60,3 +60,11 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0052](D0052-bit-identical-floats.md) | Floating-point results are bit-identical on every implementation and platform | Accepted | M01 / T0010 | 2026-11-17 |
 | [D0053](D0053-resource-exhaustion.md) | Resource exhaustion may happen at different points above a guaranteed floor, and truncates the trace | Accepted | M01 / T0010 | 2026-11-17 |
 | [D0054](D0054-implementation-limits-as-rules.md) | Structural implementation limits are exact rejection rules; sizes are limited only by resources | Accepted | M01 / T0010 | 2026-11-17 |
+| [D0055](D0055-runtime-contract-and-runtimes.md) | One runtime contract, two independent host runtimes, and a runtime in QubeC for native code | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0056](D0056-thin-natives.md) | Natives are thin and declared in the standard library's source | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0057](D0057-forms-of-main.md) | `main` takes one of two forms, and arguments come from a library procedure | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0058](D0058-exit-statuses.md) | Exit statuses are 0, 1, 101 for a panic, and 102 for resource exhaustion | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0059](D0059-report-line-and-backtrace.md) | A panic or exhaustion is reported in one specified line on standard error, then an optional backtrace | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0060](D0060-termination-by-the-environment.md) | A run ended from outside has the outcome "terminated by the environment," abruptly by default | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0061](D0061-failed-standard-output.md) | A closed reader of standard output or error ends the run quietly; any other failed write to them panics | Accepted | M01 / T0011 | 2026-11-17 |
+| [D0062](D0062-guaranteed-depth-and-stack-cap.md) | The guaranteed depth is 100,000 nested calls of bounded frames; runtimes have a raisable stack cap | Accepted | M01 / T0011 | 2026-11-17 |

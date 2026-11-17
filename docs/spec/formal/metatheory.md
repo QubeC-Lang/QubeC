@@ -13,7 +13,8 @@ requirements for promoting a chapter's aspect to formally complete
 All of them are claimed for the formal target, the whole sequential language
 ([D0021](../../design/decisions/D0021-formal-target-sequential-language.md),
 [D0023](../../design/decisions/D0023-claimed-meta-properties.md)). Property 7 was added by
-[D0053](../../design/decisions/D0053-resource-exhaustion.md).
+[D0053](../../design/decisions/D0053-resource-exhaustion.md) and extended to termination by the environment by
+[D0060](../../design/decisions/D0060-termination-by-the-environment.md).
 
 | # | Property | Statement | Proof | Status |
 | --- | --- | --- | --- | --- |
@@ -23,7 +24,7 @@ All of them are claimed for the formal target, the whole sequential language
 | 4 | Tail-call space bound | A call marked `tailcall` does not grow the abstract machine's stack ([D0012](../../design/decisions/D0012-tail-calls-and-stacks.md), [D0014](../../design/decisions/D0014-tailcall-keyword.md)). | mechanized (Lean) | not started (M03) |
 | 5 | Determinism | For every sequence of responses from the environment, a sequential program has at most one trace and one outcome ([D0048](../../design/decisions/D0048-trace-and-outcome.md), [D0051](../../design/decisions/D0051-deterministic-sequential-language.md)). | mechanized (Lean) | not started (M03) |
 | 6 | Decidable checking | The inference algorithm is sound and complete with respect to the elaboration rules, and on rejection names the rule ID of a violated rule ([D0018](../../design/decisions/D0018-diagnosis-and-rule-ids.md)). | paper sketch | not started (M05–M06) |
-| 7 | Exhaustion truncates the trace | A run that exhausts a resource has, as its trace, a prefix of the trace that the abstract machine gives the same program for the same responses, and no other outcome than resource exhaustion ([D0053](../../design/decisions/D0053-resource-exhaustion.md)). | paper sketch | not started (M03) |
+| 7 | Exhaustion and termination truncate the trace | A run that exhausts a resource, or that the environment ends, has, as its trace, a prefix of the trace that the abstract machine gives the same program for the same responses, and no other outcome than resource exhaustion or termination by the environment, respectively ([D0053](../../design/decisions/D0053-resource-exhaustion.md), [D0060](../../design/decisions/D0060-termination-by-the-environment.md)). | paper sketch | not started (M03) |
 
 The reference evaluator and the reference checker are proved to agree with the core rules
 ([D0027](../../design/decisions/D0027-executable-reference.md)). Those agreement proofs are part of the mechanization,
