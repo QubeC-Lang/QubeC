@@ -11,8 +11,8 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 ## Status
 
 - **Phase:** design, milestone M01 (Execution and compilation model). M00 (Vision and principles) is complete.
-- **Last task:** T0009, the execution model and artifacts.
-- **Decided so far:** 47 decisions.
+- **Last task:** T0010, observable behavior and determinism.
+- **Decided so far:** 54 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -30,9 +30,12 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
     [roadmap](docs/design/roadmap.md).
   - Programs run on a tree-walking interpreter and a bytecode VM; a build is one self-contained executable, and
     native code comes after Spec v1.0. Linux x86-64 and macOS arm64 are supported first.
+  - What a program does is its trace of interactions and its outcome, and it is the same on every implementation,
+    engine, and platform, floating point included. Panics are precise; the only exception is running out of stack
+    or memory, above a guaranteed depth.
   - See the [vision](docs/design/vision.md).
-- **Open questions:** 9.
-- **Next:** T0010, observable behavior and determinism.
+- **Open questions:** 11.
+- **Next:** T0011, the runtime and the program lifecycle.
 <!-- status:end -->
 
 ## Where to look

@@ -159,6 +159,40 @@ examples points to one of these. When a question is decided, it moves to **Decid
     a compiler extension such as Clang's `musttail`.
   - A route that emits C must rule out every C undefined behavior in the code it emits.
 
+### OQ-011: How are floating-point math functions and the canonical NaN specified?
+
+- **Status:** Open
+- **Arose in:** T0010 (M01), from [D0052](decisions/D0052-bit-identical-floats.md) (bit-identical floats)
+- **To be settled in:** M05, with the float types (the library's list of math functions is M14's)
+- **Blocked on it:** the results of every math function in the core and standard library; the canonical NaN's bit
+  pattern; the float rules of the reference evaluator
+- **Options so far:**
+  1. Correctly rounded math functions: any correct implementation agrees, such as those of the CORE-MATH project.
+  2. One fixed algorithm for each function, such as fdlibm's, which Java's `StrictMath` requires.
+  3. A mix: correctly rounded where a practical implementation exists, a fixed algorithm elsewhere.
+- **Notes:**
+  - The canonical NaN could be the positive quiet NaN `7ff8000000000000`, which WebAssembly's deterministic profile
+    produces, or another pattern; our pilot found that arm64 and x86-64 produce different NaNs for `0.0 / 0.0`
+    ([R0008](research/R0008-observable-behavior-prior-art-and-pilots.md)).
+  - Whichever option is chosen, the Rust interpreter, the Zig VM, and the Lean reference evaluator must compute the
+    same results; Lean's `Float.sin` calls C's `sin` and cannot be used as is.
+
+### OQ-012: What is the guaranteed minimum depth of nested calls?
+
+- **Status:** Open
+- **Arose in:** T0010 (M01), from [D0053](decisions/D0053-resource-exhaustion.md) (resource exhaustion above a
+  guaranteed floor) and [D0012](decisions/D0012-tail-calls-and-stacks.md) (growable stacks with a cap)
+- **To be settled in:** M01, in T0011 (the runtime and the program lifecycle)
+- **Blocked on it:** the value in
+  [spec §1.2.6](../spec/01-introduction.md#126-resource-exhaustion-and-implementation-limits) rule 1; the runtimes' default stack cap
+- **Options so far:**
+  1. A fixed number of nested calls, for example 100,000 or 1,000,000, whatever the size of their frames.
+  2. A number of nested calls whose frames are within a stated size, with larger frames counting as several.
+  3. A size of stack in bytes of an abstract machine, which each implementation translates into its own frames.
+- **Notes:** marked tail calls ([D0014](decisions/D0014-tailcall-keyword.md)) do not count; the value must be
+  reachable by every engine on every Tier 1 and Tier 2 platform ([D0046](decisions/D0046-first-platforms-and-tiers.md)),
+  including the tree-walking interpreter, which nests host calls.
+
 ## Decided
 
 ### OQ-004: What does "functional in style" commit QubeC to?

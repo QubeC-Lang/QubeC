@@ -53,3 +53,10 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0045](D0045-run-is-a-shortcut.md) | `run` behaves as build-then-execute; the engine is the implementation's choice | Accepted | M01 / T0009 | 2026-11-17 |
 | [D0046](D0046-first-platforms-and-tiers.md) | Linux x86-64 and macOS arm64 come first; platforms are supported in three tiers | Accepted | M01 / T0009 | 2026-11-17 |
 | [D0047](D0047-platform-parity.md) | Platforms fall under the host-leads rule; back ends do not | Accepted | M01 / T0009 | 2026-11-17 |
+| [D0048](D0048-trace-and-outcome.md) | Observable behavior is the trace of interactions with the environment, followed by one outcome | Accepted | M01 / T0010 | 2026-11-17 |
+| [D0049](D0049-precise-panics.md) | Panics are precise, and no engine, profile, or optimization changes observable behavior | Accepted | M01 / T0010 | 2026-11-17 |
+| [D0050](D0050-panic-contents.md) | A panic's kind, message, and source location are observable; a backtrace is not | Accepted | M01 / T0010 | 2026-11-17 |
+| [D0051](D0051-deterministic-sequential-language.md) | The sequential language is deterministic across implementations and platforms, resource exhaustion excepted | Accepted | M01 / T0010 | 2026-11-17 |
+| [D0052](D0052-bit-identical-floats.md) | Floating-point results are bit-identical on every implementation and platform | Accepted | M01 / T0010 | 2026-11-17 |
+| [D0053](D0053-resource-exhaustion.md) | Resource exhaustion may happen at different points above a guaranteed floor, and truncates the trace | Accepted | M01 / T0010 | 2026-11-17 |
+| [D0054](D0054-implementation-limits-as-rules.md) | Structural implementation limits are exact rejection rules; sizes are limited only by resources | Accepted | M01 / T0010 | 2026-11-17 |

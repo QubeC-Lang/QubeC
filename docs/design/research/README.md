@@ -13,3 +13,4 @@ Verified (with a source) or Recalled.
 | [R0005](R0005-host-language-prior-art-and-pilots.md) | Host languages: prior art and pilots | M00 / T0006 | D0029–D0035 |
 | [R0006](R0006-planning-prior-art.md) | Prior art for planning design and implementation together | M00 / T0007 | D0036, D0037, D0041 |
 | [R0007](R0007-execution-model-prior-art-and-checks.md) | Execution model: prior art, platform support, and executable embedding | M01 / T0009 | D0042–D0047, OQ-010 |
+| [R0008](R0008-observable-behavior-prior-art-and-pilots.md) | Observable behavior and determinism: prior art and a floating-point pilot | M01 / T0010 | D0048–D0054, OQ-011 |

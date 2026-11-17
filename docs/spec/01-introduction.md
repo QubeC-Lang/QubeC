@@ -2,8 +2,8 @@
 
 Status: Draft · Formal: static none, dynamic none
 
-This chapter states what the specification covers, what conformance means, and how the specification is written.
-Further conformance requirements (observable behavior, implementation limits) are added by M01.
+This chapter states what the specification covers, what conformance means (including what about a run is
+observable, and what may differ between runs), and how the specification is written.
 
 ## 1.1 Scope
 
@@ -85,7 +85,102 @@ An **extension** is a feature provided by an implementation that this specificat
 
 > **Note (non-normative).** The host implementation runs programs with a tree-walking interpreter and with a bytecode
 > VM. A command that runs a source file directly is expected to behave as building the program and executing the
-> result. The observable behavior that every means of execution must share is specified with the dynamic semantics.
+> result. The observable behavior that every means of execution must share is defined in §1.2.5.
+
+### 1.2.5 Observable behavior and determinism
+
+A **run** is one execution of a program. The **environment** of a run is everything outside the program with which
+the run interacts. An **event** is one interaction of a run with its environment: what the run sends, and what it
+receives in response. The **trace** of a run is the sequence of its events, in the order in which they happen. The
+**inputs** of a run are the responses it receives in its events. [D0048]
+
+The **outcome** of a run is one of the following [D0048, D0050, D0053]:
+- a return, with an exit status;
+- a **panic**, with its kind, its message, and the source location of the operation that failed;
+- **resource exhaustion**, naming the resource (§1.2.6);
+- **divergence**: the run never ends.
+
+The **observable behavior** of a run is its trace together with its outcome. [D0048]
+
+1. Nothing other than the trace and the outcome of a run is observable. In particular, the output of `dbg`, the time
+   and memory a run uses, any backtrace, and the means of execution (§1.2.4) are not observable. [D0008, D0048,
+   D0050]
+2. The order of all the events in a trace is observable, including the order of events that concern different
+   streams or files. [D0048]
+3. A run panics at the first failing operation that the evaluation order of the program reaches. Its trace consists
+   of exactly the events that precede that operation. [D0049]
+4. The kind, the message, and the source location of a panic are each specified with the operation that can fail and,
+   for source locations, with source files. [D0050]
+5. **Determinism.** If two runs of a conforming program receive the same response to each event, they have the same
+   observable behavior, whatever the conforming implementation, the means of execution, the build settings, and the
+   platform. The only exception is resource exhaustion, as §1.2.6 permits. [D0049, D0051]
+6. No behavior of a conforming program is implementation-defined or unspecified, other than resource exhaustion
+   (§1.2.6). [D0051]
+7. A conforming implementation MUST NOT let a choice of its own, such as its means of execution, a build setting, or
+   an optimization, change the observable behavior of a run. No build setting removes or weakens a check that an
+   operation makes. [D0049]
+8. A conforming implementation MAY be nondeterministic internally, only where this cannot change the observable
+   behavior of a run. [D0051]
+9. Differences between platforms reach a program only as inputs. [D0051]
+10. Every floating-point operation, including the conversion of floating-point values to and from text and the
+    mathematical functions of the core library, has exactly one specified result for each choice of operands, so rule
+    5 holds for floating-point results without exception. How the mathematical functions and the canonical NaN are
+    specified is
+    *Provisional ([OQ-011](../design/open-questions.md#oq-011-how-are-floating-point-math-functions-and-the-canonical-nan-specified))*.
+    [D0052]
+
+> **Example (non-normative).** A run of the program below, whose input line is `Ann`. The QubeC code is provisional
+> syntax.
+>
+> ```qubec
+> proc main() {
+>   print("name? ");
+>   let n = read_line();
+>   eprint("got input");
+>   print("hello " + n);
+>   let x = dbg(1 + 1);
+> }
+> ```
+>
+> ```
+> trace:    out "name? " · in → "Ann" · err "got input" · out "hello Ann"
+> outcome:  return, with the exit status of a successful run
+> ```
+>
+> Every conforming implementation, by every means of execution and on every platform, gives this run the same trace
+> and outcome. The output of `dbg` is not part of either. An implementation that showed `name? ` only after reading
+> the input would change the order of events, and so would not conform.
+
+> **Note (non-normative).** Rule 10 means that floating-point operations follow IEEE 754 with rounding to nearest,
+> ties to even; that no implementation fuses operations such as `a * b + c` unless the program asks for it, or
+> flushes very small results to zero; and that every observation of a NaN sees one canonical NaN. The floating-point
+> types and their rules are specified with the types. Rules 5 and 6 cover the sequential language; what a program
+> that uses concurrency may vary is specified with concurrency.
+
+### 1.2.6 Resource exhaustion and implementation limits
+
+**Resource exhaustion** is a run's running out of stack or of memory. [D0053]
+
+1. A run that never has more nested calls in progress than the **guaranteed minimum depth** MUST NOT exhaust its
+   stack. The value of the guaranteed minimum depth is
+   *Provisional ([OQ-012](../design/open-questions.md#oq-012-what-is-the-guaranteed-minimum-depth-of-nested-calls))*.
+   [D0012, D0053]
+2. When a run exhausts a resource, its trace MUST be a prefix of the trace that the run would have had without
+   resource limits, and its outcome MUST be resource exhaustion, naming the resource. The outcome carries no source
+   location. [D0053]
+3. Within rules 1 and 2, the point at which a run exhausts a resource is not specified, and it may differ between
+   runs, implementations, means of execution, and platforms. [D0053]
+4. If a conforming implementation exhausts a resource while processing a program, it MUST report this and MUST NOT
+   run the program. Such a report is not a rejection (§1.2.1). [D0053]
+5. Every limit that this specification places on the structure of a program, such as a depth of nesting or a number
+   of parameters, is a rejection rule, stated with the construct it limits. [D0054]
+6. A conforming implementation MUST NOT reject a conforming program. If it exhausts a resource while processing one,
+   rule 4 applies. [D0054]
+
+> **Note (non-normative).** Rule 2 means that resource exhaustion never produces a wrong result: the run behaves
+> exactly as specified up to the point where it stops. Sizes, such as the length of a source file or the number of
+> declarations, are limited only by resources. A conformance test whose program might exhaust a resource accepts
+> either resource exhaustion or the expected outcome.
 
 ## 1.3 Notation and conventions
 

@@ -127,6 +127,15 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Running a file directly behaves as building and executing it;** the engine is each implementation's choice. | [D0045](decisions/D0045-run-is-a-shortcut.md) |
 | **Linux x86-64 and macOS arm64 first,** with Linux arm64 and RISC-V next and Windows later, in three tiers; the host implementation can build the self-hosted compiler for every platform it supports. | [D0046](decisions/D0046-first-platforms-and-tiers.md), [D0047](decisions/D0047-platform-parity.md) |
 
+## What every run can rely on (T0010)
+
+| Commitment | Record |
+| --- | --- |
+| **Observable behavior is a trace and an outcome:** the ordered interactions with the environment, then a return, a panic, resource exhaustion, or divergence. Nothing else, not even `dbg` output or timing, is observable. | [D0048](decisions/D0048-trace-and-outcome.md) |
+| **Panics are precise,** with their kind, message, and source location the same everywhere; no engine, build profile, or optimization changes what a program does, and no build setting removes a check. | [D0049](decisions/D0049-precise-panics.md), [D0050](decisions/D0050-panic-contents.md) |
+| **One meaning everywhere:** the same program with the same inputs behaves the same on every implementation and platform, including bit-identical floating point. | [D0051](decisions/D0051-deterministic-sequential-language.md), [D0052](decisions/D0052-bit-identical-floats.md) |
+| **The one exception is running out of stack or memory,** which may happen at different points above a guaranteed depth, never with a wrong result; structural limits on programs are exact rules, so every implementation accepts the same programs. | [D0053](decisions/D0053-resource-exhaustion.md), [D0054](decisions/D0054-implementation-limits-as-rules.md) |
+
 ## Dream snippet
 
 This is the program we would like to be able to write: a tiny expression compiler that evaluates several files

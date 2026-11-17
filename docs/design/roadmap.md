@@ -162,13 +162,22 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   ([D0046](decisions/D0046-first-platforms-and-tiers.md)) under the host-leads rule
   ([D0047](decisions/D0047-platform-parity.md)). T0010 must define the observable behavior that D0045's equivalence
   rests on.
+- **From T0010:** observable behavior is a trace of events and an outcome
+  ([D0048](decisions/D0048-trace-and-outcome.md)); panics are precise and carry their kind, message, and location
+  ([D0049](decisions/D0049-precise-panics.md), [D0050](decisions/D0050-panic-contents.md)); the sequential language,
+  floats included, is deterministic across implementations and platforms
+  ([D0051](decisions/D0051-deterministic-sequential-language.md), [D0052](decisions/D0052-bit-identical-floats.md));
+  resource exhaustion is the one exception, above a guaranteed depth ([D0053](decisions/D0053-resource-exhaustion.md));
+  structural limits are rejection rules ([D0054](decisions/D0054-implementation-limits-as-rules.md)). T0011 must settle
+  [OQ-012](open-questions.md#oq-012-what-is-the-guaranteed-minimum-depth-of-nested-calls) (the guaranteed depth);
+  [OQ-011](open-questions.md#oq-011-how-are-floating-point-math-functions-and-the-canonical-nan-specified) goes to M05.
 - **Closing it, together with M02, starts the implementation track** (I1,
   [D0036](decisions/D0036-trailing-implementation-track.md)).
 
 | Task | Sub-topic | Status |
 | --- | --- | --- |
 | T0009 | Execution model and artifacts: interpreter, bytecode VM, native code (which, and when); what `run` and `build` produce; the M01 part of OQ-009; first targets and platforms; confirming or revisiting D0030's bytecode VM | Done |
-| T0010 | Observable behavior and determinism: what is observable (output, exit status, panics); what may differ between implementations, execution paths, and platforms (for example floats, iteration order, resource limits); implementation limits; the conformance additions to spec §1.2 | Planned |
+| T0010 | Observable behavior and determinism: what is observable (output, exit status, panics); what may differ between implementations, execution paths, and platforms (for example floats, iteration order, resource limits); implementation limits; the conformance additions to spec §1.2 | Done |
 | T0011 | The runtime and the program lifecycle: the runtime's responsibilities (hooks for M07's memory management and M10's scheduler, D0012's stacks, native functions); the forms of `main` and the exit status; panics and their report; resource exhaustion; output at exit | Planned |
 | T0012 | The compile-time/run-time boundary: program phases; constant evaluation; what may run at compile time, and how `func` purity relates to it; what a compile-time failure means | Planned |
 | T0013 | Units, separate compilation, and reproducibility: what a compiled unit is; whether build output is reproducible; how source locations are named | Planned |
@@ -200,6 +209,11 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0007:** M05 does not wait for M07. It decides the numeric model, including sized integers and how the
   explicit layer is marked (OQ-003's M05 part); M07 decides borrowed references
   ([D0040](decisions/D0040-design-milestones-kept.md)).
+- **From T0010:** floats are bit-identical everywhere, with canonical NaN observations, specified text conversions,
+  and specified math functions ([D0052](decisions/D0052-bit-identical-floats.md),
+  [OQ-011](open-questions.md#oq-011-how-are-floating-point-math-functions-and-the-canonical-nan-specified)); integer
+  ranges are the same on every platform ([D0051](decisions/D0051-deterministic-sequential-language.md)); overflow is
+  checked and wrapping is written ([D0049](decisions/D0049-precise-panics.md)).
 - **Tasks:** to be planned.
 
 ## M06 Abstraction and polymorphism
@@ -211,6 +225,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 
 - **Scope:** values vs references; ownership, GC, reference counting, or regions; an unsafe escape hatch; the
   undefined-behavior policy.
+- **From T0010:** no memory address, or anything derived from one, is observable
+  ([D0051](decisions/D0051-deterministic-sequential-language.md)).
 - **Tasks:** to be planned.
 
 ## M08 Errors and effects
@@ -227,6 +243,9 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 ## M10 Concurrency
 
 - **Scope:** threads, tasks, async, actors; data-race freedom; the memory model.
+- **From T0010:** must state what concurrent programs may vary, since the determinism of
+  [D0051](decisions/D0051-deterministic-sequential-language.md) covers the sequential language only, and how the
+  events of concurrent tasks interleave in the trace ([D0048](decisions/D0048-trace-and-outcome.md)).
 - **Tasks:** to be planned.
 
 ## M11 Compile-time evaluation and metaprogramming
@@ -250,6 +269,10 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 
 - **Scope:** the prelude and the standard library. Depends on M06–M09 (not M10), because I2 needs the core library
   before M10 runs; M10 adds its own library surface ([D0040](decisions/D0040-design-milestones-kept.md)).
+- **From T0010:** maps and sets have a specified iteration order, and hash seeds stay unobservable
+  ([D0051](decisions/D0051-deterministic-sequential-language.md)); natives are specified as events
+  ([D0048](decisions/D0048-trace-and-outcome.md)); the math functions have the specified results of
+  [D0052](decisions/D0052-bit-identical-floats.md).
 - **Tasks:** to be planned.
 
 ## M15 Tooling
