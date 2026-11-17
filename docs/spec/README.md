@@ -19,8 +19,12 @@ Status: **Draft.** Chapter 1 (Introduction) is written. The conventions below su
 6. **Non-normative material** is labeled *Note (non-normative)* or *Example (non-normative)*. Everything else in a
    chapter is normative.
 7. **Grammar.** [`grammar/qubec.ebnf`](grammar/qubec.ebnf) is the source of truth. Chapters quote its productions
-   verbatim. Until M02 decides the EBNF dialect, the grammar uses W3C-style EBNF (XML 1.0, section 6) and is marked
-   provisional.
+   verbatim. It is written in W3C EBNF (XML 1.0, section 6), in two layers: lexical productions in `UPPER_SNAKE_CASE`
+   over characters, with `TOKEN` and `TRIVIA` listing the kinds of token and trivia, and syntactic productions in
+   `UpperCamelCase` over tokens, starting from `SourceFile`. Every production cites its decisions in a trailing
+   comment. Parse failures are `R-syntax`; lexical failures have named rules, with `R-token-invalid` as the fallback
+   ([§1.3.6](01-introduction.md#136-grammar-notation), [§1.3.8](01-introduction.md#138-rejection-by-the-grammar)). The
+   grammar checker is in [`tools/grammar/`](../../tools/grammar/README.md).
 8. **Formal rules** live in [`formal/`](formal/README.md), in Markdown with LaTeX math. Chapters name the rules that
    govern them. Elaboration rules over the surface define the static semantics and translate programs into an
    explicitly typed core. Core rules define the core's typing and the dynamic semantics. A core rule is governed by

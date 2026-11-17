@@ -55,6 +55,7 @@ docs/
   guide/tour.md               the language tour
   glossary.md                 every defined term
 examples/                     .qbc programs; README.md gives the header convention
+tools/                        README.md (index) · grammar/ (the grammar checker, D0080, D0081)
 tests/conformance/            later
 ```
 

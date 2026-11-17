@@ -213,7 +213,27 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0013:** defines what a column counts (for example code points), how tabs count, and what ends a line, for
   locations `<source name>:<line>:<column>` ([D0077](decisions/D0077-location-text.md), [OQ-014](open-questions.md#oq-014-what-is-the-exact-text-of-the-report-line-and-the-backtrace-delimiter)); nothing in a file's meaning
   depends on its path or where it is stored ([D0076](decisions/D0076-source-names.md)).
-- **Tasks:** to be planned at the start of the next task.
+- **Exit criteria added to the common ones (planned in T0014):** the lexical grammar in `qubec.ebnf` is complete and
+  machine-checked by the grammar checker's stages 1 and 2; the grammar notation is decided, and the provisional note
+  of spec §1.3.6 is removed (met in T0014). The common criterion "examples added" is met by lexical examples in the
+  specification and the tour; whole programs in `examples/` wait for M03's syntax.
+- **From T0014:** the grammar is written in W3C EBNF, with `-` only in lexical productions and with finite right
+  operands ([D0078](decisions/D0078-w3c-ebnf-notation.md)); two layers told apart by naming, with `TOKEN`, `TRIVIA`, helper productions, and the start symbol
+  `SourceFile` ([D0079](decisions/D0079-two-grammar-layers.md)); a staged checker, whose stage 1 is built before T0015 closes and whose reference lexer
+  (stage 2) grows with T0015–T0019 and divides text by longest match until T0019 ([D0080](decisions/D0080-staged-grammar-checker.md)); written in OCaml in
+  `tools/grammar/`, independent of both implementations, with Unicode data from pinned UCD files ([D0081](decisions/D0081-ocaml-grammar-checker.md)); named
+  lexical rules, the fallback `R-token-invalid`, and `R-syntax`, in spec §1.3.8 ([D0082](decisions/D0082-grammar-rejection-rules.md)). Each later task adds its
+  named lexical rules with reject tests in `tests/conformance/`.
+- **Tasks** (planned in T0014):
+
+| Task | Sub-topic | Status |
+| --- | --- | --- |
+| T0014 | Grammar machinery: the EBNF dialect; the lexical and syntactic layers and their naming; what the grammar checker verifies, in which language, and where it lives; how lexical and parse failures get rule IDs | Done |
+| T0015 | Source text and layout: encoding (UTF-8, a byte order mark), line endings, forbidden code points, whitespace and tabs, a `#!` first line for scripts ([D0013](decisions/D0013-easy-start.md)), what a column counts ([D0077](decisions/D0077-location-text.md), OQ-014), and how statements end (semicolons, newline rules, or both; M03 makes the exact rules conflict-free); the first lexical productions and reject tests | Planned |
+| T0016 | Comments, identifiers, and keywords: comment forms, nesting, and doc comments; ASCII or Unicode identifiers (normalization, confusables, a pinned Unicode version, [D0081](decisions/D0081-ocaml-grammar-checker.md)); whether letter case carries meaning; reserved or contextual keywords, and raw identifiers; the keyword spellings ([OQ-005](open-questions.md#oq-005-which-spellings-replace-the-placeholder-keywords-mut-become-and-dbg), `mut`); identifier length limits ([D0054](decisions/D0054-implementation-limits-as-rules.md)) | Planned |
+| T0017 | Numeric, character, and boolean literals: bases, digit separators, float forms, type suffixes (the list waits for M05), negative and out-of-range literals, what a character denotes, whether booleans are keywords; literal length limits (D0054) | Planned |
+| T0018 | String literals: escapes, raw strings, multi-line strings, string templates (lexer modes and nesting), byte strings | Planned |
+| T0019 | Token inventory and consolidation: punctuation, how text is divided into tokens (longest match) and where tokenization fails, the lexical chapter and the lexical grammar complete, provisional marks removed, M02 exit review | Planned |
 
 ## M03 Expressions and statements
 
@@ -227,6 +247,12 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0011:** defines frames and restates the guaranteed depth's 256-value frame bound in their terms; may set
   D0054's nesting limit well below the guaranteed depth ([D0062](decisions/D0062-guaranteed-depth-and-stack-cap.md)).
 - **From T0012:** names the loop constructs whose iterations count as steps of compile-time evaluation; the machine's rules for constant evaluation (a store of constant states, cycle and panic premises) ([D0065](decisions/D0065-cycles-found-during-evaluation.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md)).
+- **From T0014:** writes `SourceFile` and the syntactic grammar under the layer rules of [D0079](decisions/D0079-two-grammar-layers.md); `R-syntax` covers its
+  productions, and a specific syntactic rejection rule needs a mistake common enough to test alone and an exact
+  statement of the token sequences it covers ([D0082](decisions/D0082-grammar-rejection-rules.md)); chooses the grammar class and builds the checker's stage 3,
+  deciding whether it uses Menhir (pinned and recorded, D0035) ([D0080](decisions/D0080-staged-grammar-checker.md), [D0081](decisions/D0081-ocaml-grammar-checker.md)). To weigh: both implementations will
+  likely parse by hand-written recursive descent, which an LR(1)-clean grammar does not guarantee to suit. From M03
+  on, the programs in `examples/` parse.
 - **Tasks:** to be planned.
 
 ## M04 Names, bindings, and scope
@@ -398,6 +424,9 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
   dependency order ([D0073](decisions/D0073-acyclic-multi-file-units.md)); every file gets its source name, and the core carries source
   names, never disk paths ([D0076](decisions/D0076-source-names.md)); caches are keyed by content and give what compiling from source
   gives ([D0072](decisions/D0072-source-only-meaning.md)).
+- **From T0014:** the host lexer's token kinds correspond to the alternatives of `TOKEN`; it reports the lexical rule
+  IDs of §2 and the host parser reports `R-syntax` ([D0079](decisions/D0079-two-grammar-layers.md), [D0082](decisions/D0082-grammar-rejection-rules.md)); both pass the lexical tests that the grammar
+  checker's reference lexer passes ([D0080](decisions/D0080-staged-grammar-checker.md)), and share no code with it ([D0081](decisions/D0081-ocaml-grammar-checker.md)).
 - **Tasks:** to be planned when I1 starts.
 
 ## I2 Host complete for the core language
@@ -430,6 +459,8 @@ T0007 dropped M16 by merging it into I1–I3, so the M16 items above now belong 
 - **From T0012:** a QubeC program cannot run code it generates, so `qubecc` contains an evaluator for the pure language written in QubeC, with constant states and a step counter ([D0063](decisions/D0063-program-phases.md), [D0070](decisions/D0070-compile-time-step-floor-and-cap.md)).
 - **From T0013:** `qubecc` gives byte-identical artifacts on any host and writes the build record
   ([D0074](decisions/D0074-reproducible-artifacts.md), [D0075](decisions/D0075-build-record.md)).
+- **From T0014:** `qubecc`'s lexer names its token kinds after `TOKEN`'s alternatives and passes the same lexical tests
+  as the host lexer and the reference lexer ([D0079](decisions/D0079-two-grammar-layers.md), [D0080](decisions/D0080-staged-grammar-checker.md)).
 - **Tasks:** to be planned when I3 starts.
 
 ## I4 The remaining features

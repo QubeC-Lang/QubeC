@@ -12,8 +12,8 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 
 - **Phase:** design, milestone M02 (Lexical structure). M00 (Vision and principles) and M01 (Execution and
   compilation model) are complete.
-- **Last task:** T0013, units, separate compilation, and reproducibility, which closed M01.
-- **Decided so far:** 77 decisions.
+- **Last task:** T0014, the grammar machinery, which planned M02.
+- **Decided so far:** 82 decisions.
   - QubeC is general-purpose and tooling-first, with a safe default layer and an opt-in explicit layer for
     low-level work.
   - Purity is checked: pure functions (`func`) and effectful procedures (`proc`).
@@ -43,9 +43,13 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
   - A program means what its source says: compiled units are only caches. Units are sets of files that depend on
     each other without cycles. Builds are byte-identical on any machine, and panics name files by unit and path, as
     in `wc/src/count.qbc:12:24`.
+  - The grammar is one file in W3C EBNF, with a lexical layer over characters and a syntactic layer over tokens. An
+    independent checker in [tools/grammar/](tools/grammar/README.md) also runs the lexical grammar on text. Each
+    lexical failure has its own rule ID, and every parse failure is `R-syntax`.
   - See the [vision](docs/design/vision.md).
 - **Open questions:** 14.
-- **Next:** planning M02, the lexical structure; closing M01 and M02 starts the implementation.
+- **Next:** T0015, source text and layout (encoding, line ends, whitespace, columns, how statements end); closing
+  M02 starts the implementation.
 <!-- status:end -->
 
 ## Where to look
@@ -62,4 +66,5 @@ standalone EBNF grammar and formal semantics. The implementation follows the spe
 | Language tour | [docs/guide/tour.md](docs/guide/tour.md) |
 | Glossary | [docs/glossary.md](docs/glossary.md) |
 | Examples | [examples/](examples/README.md) |
+| Tools | [tools/](tools/README.md) |
 | How the design work is run | [docs/agent/workflow.md](docs/agent/workflow.md) |

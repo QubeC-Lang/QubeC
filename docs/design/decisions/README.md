@@ -83,3 +83,8 @@ One record per decision, made from [the template](../templates/decision.md).
 | [D0075](D0075-build-record.md) | Every executable carries a record of its build, which tools can read and programs cannot | Accepted | M01 / T0013 | 2026-11-17 |
 | [D0076](D0076-source-names.md) | Every source file has a source name, its unit's name followed by its path in the unit | Accepted | M01 / T0013 | 2026-11-17 |
 | [D0077](D0077-location-text.md) | A source location is written as source name, line, and column | Accepted | M01 / T0013 | 2026-11-17 |
+| [D0078](D0078-w3c-ebnf-notation.md) | The grammar is written in W3C EBNF, with exclusion limited to finite sets in the lexical grammar | Accepted | M02 / T0014 | 2026-11-17 |
+| [D0079](D0079-two-grammar-layers.md) | The grammar has a lexical layer and a syntactic layer, told apart by naming, with explicit tokens and trivia | Accepted | M02 / T0014 | 2026-11-17 |
+| [D0080](D0080-staged-grammar-checker.md) | The grammar is checked in three stages: structure, a reference lexer, and conflicts | Accepted | M02 / T0014 | 2026-11-17 |
+| [D0081](D0081-ocaml-grammar-checker.md) | The grammar checker is an OCaml program in tools/grammar/, independent of both implementations | Accepted | M02 / T0014 | 2026-11-17 |
+| [D0082](D0082-grammar-rejection-rules.md) | Lexical failures have named rules with a fallback, and parse failures share one rule | Accepted | M02 / T0014 | 2026-11-17 |

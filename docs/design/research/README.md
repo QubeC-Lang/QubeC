@@ -17,3 +17,4 @@ Verified (with a source) or Recalled.
 | [R0009](R0009-runtime-and-lifecycle-pilots.md) | Runtime and program lifecycle: exit statuses, broken pipes, and stack depth pilots | M01 / T0011 | D0057–D0059, D0061, D0062, OQ-012 |
 | [R0010](R0010-compile-time-evaluation-prior-art-and-pilots.md) | Compile-time evaluation: prior art, step limits, and an evaluator throughput pilot | M01 / T0012 | D0064, D0066, D0067, D0069, D0070, OQ-015 |
 | [R0011](R0011-units-reproducibility-and-source-names.md) | Units, reproducibility, and source names: prior art and pilots | M01 / T0013 | D0072–D0077 |
+| [R0012](R0012-grammar-notation-and-checking.md) | Grammar notations and grammar checking: prior art and pilots | M02 / T0014 | D0078–D0082 |

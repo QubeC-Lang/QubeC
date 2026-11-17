@@ -83,7 +83,7 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | --- | --- |
 | **Easy start:** `qubec run file.qbc` with no project setup, a one-line hello world, and a REPL early. | [D0013](decisions/D0013-easy-start.md) |
 
-## How QubeC is specified (T0004, T0005)
+## How QubeC is specified (T0004, T0005, T0014)
 
 | Commitment | Record |
 | --- | --- |
@@ -97,6 +97,7 @@ A single language's coinage, or a truncation the reader must decode, is spelled 
 | **Typed elaboration:** surface legality rules translate programs into an explicitly typed core, over which the dynamics are defined. | [D0022](decisions/D0022-typed-elaboration-into-core.md) |
 | **Claimed theorems:** type soundness, elaboration soundness, purity with a frame property, the tail-call space bound, determinism, decidable checking. | [D0023](decisions/D0023-claimed-meta-properties.md) |
 | **The core is mechanized in Lean 4,** which governs the core rules, and it runs as a verified reference evaluator and checker. Elaboration proofs are on paper. The mechanization starts in M03. | [D0024](decisions/D0024-mechanize-the-core.md)–[D0028](decisions/D0028-mechanization-starts-in-m03.md) |
+| **One grammar file in W3C EBNF,** with a lexical layer over characters and a syntactic layer over tokens, checked by an independent tool that also runs the lexical grammar on text; each lexical failure has its own rule ID, and every parse failure is `R-syntax`. | [D0078](decisions/D0078-w3c-ebnf-notation.md)–[D0082](decisions/D0082-grammar-rejection-rules.md) |
 
 ## How QubeC is implemented (T0006)
 

@@ -536,16 +536,64 @@ only when, they appear in all capitals, as shown here. [D0001]
 
 ### 1.3.6 Grammar notation
 
-The grammar of QubeC is the file [`grammar/qubec.ebnf`](grammar/qubec.ebnf). Productions shown in this
-specification are quoted from it verbatim; where a quotation and the file differ, the file governs. [D0001]
+1. The grammar of QubeC is the file [`grammar/qubec.ebnf`](grammar/qubec.ebnf). Productions shown in this
+   specification are quoted from it verbatim; where a quotation and the file differ, the file governs. [D0001]
+2. The grammar is written in the EBNF notation of XML 1.0 (Fifth Edition), section 6
+   ([W3C](https://www.w3.org/TR/xml/#sec-notation)), without its `[ wfc: … ]` and `[ vc: … ]` annotations. A
+   difference `A - B` that is one item of a longer sequence is written in parentheses. [D0078]
+3. The grammar has two layers. [D0079]
+   - The **lexical grammar** consists of the productions whose names are in `UPPER_SNAKE_CASE`. They match characters
+     of the source text, with nothing implicit between their parts, and never refer to a syntactic production. They
+     may be recursive.
+   - The **syntactic grammar** consists of the productions whose names are in `UpperCamelCase`. They match sequences
+     of tokens. Trivia may appear between any two tokens and is not part of the token sequence.
+4. The lexical production `TOKEN` has one alternative for each kind of **token**, and the lexical production `TRIVIA`
+   one for each kind of **trivia**. Every other lexical production is a **helper production**, used only inside other
+   lexical productions. A syntactic production refers to no helper production. [D0079]
+5. A quoted string in a syntactic production denotes the one token whose text is that string; the string is exactly
+   one token. [D0079]
+6. The operator `-` appears only in lexical productions, and its right operand matches only finitely many strings.
+   [D0078]
+7. The **start symbol** of the syntactic grammar is `SourceFile`. [D0079]
+8. Every production carries a trailing comment that names the decisions it implements, such as `/* [D0078] */`.
+   [D0078]
 
-> **Note (non-normative).** Until M02 fixes the notation, the grammar is written in W3C-style EBNF (XML 1.0, Fifth
-> Edition, section 6).
+How source text is divided into tokens and trivia is specified in the lexical chapter (§2).
+
+> **Note (non-normative).** The grammar file is checked by the grammar checker in
+> [`tools/grammar/`](../../tools/grammar/README.md): its structure and the rules above (stage 1), its lexical grammar
+> run on text by a reference lexer (stage 2), and from M03 the syntactic grammar's freedom from conflicts (stage 3).
+> [D0080, D0081]
 
 ### 1.3.7 Spelling
 
 This specification uses US English spelling, except in proper names, titles of external works, and verbatim
 quotations. [D0020]
+
+### 1.3.8 Rejection by the grammar
+
+A source file **tokenizes** when its text can be divided into tokens and trivia as the lexical chapter (§2)
+specifies. Its **token sequence** is then the sequence of its tokens, without its trivia.
+
+1. [R-token-invalid] Every source file MUST tokenize. [D0082]
+2. Each lexical failure that the lexical chapter names has its own rejection rule there. Where tokenization fails at a
+   position at which such a rule applies, the file violates that rule, and not `R-token-invalid`. [D0082]
+3. [R-syntax] The token sequence of every source file MUST be derivable from the start symbol `SourceFile` (§1.3.6). A
+   file that does not tokenize has no token sequence and does not violate this rule. [D0079, D0082]
+4. A later chapter MAY add a syntactic rejection rule for a particular mistake. Such a rule states exactly which token
+   sequences it covers; a file whose token sequence it covers violates that rule, and not `R-syntax`. [D0082]
+
+> **Note (non-normative).** A parse failure has one rule ID because where a parser notices a mistake depends on how it
+> parses; the diagnostic's message can still say what was expected. Lexical failures are found at the same position
+> by every correct lexer, so they are named one by one.
+
+> **Example (non-normative).** With illustrative lexical rules (the literal forms are decided in later tasks):
+>
+> ```
+> let a = 1__0;     // R-number-malformed, a named lexical rule
+> let b = 1 ¤ 2;    // R-token-invalid: '¤' begins no token
+> let = 1;          // R-syntax: the file tokenizes, but no name follows 'let'
+> ```
 
 **Grammar.** None.
 

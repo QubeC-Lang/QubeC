@@ -18,6 +18,12 @@ all of its own files and the interfaces of the units it depends on, so the rules
 graph, stated in prose in [spec §1.2.9](../01-introduction.md#129-units-builds-and-source-names); the form of a unit's
 interface is fixed in M09.
 
+Elaboration rules range over parsed source files: a file that does not tokenize, or whose token sequence does not
+derive from `SourceFile`, is rejected by `R-token-invalid`, a named lexical rule, or `R-syntax` before any rule here
+applies. These grammar rules are stated in prose and in the grammar file
+([spec §1.3.8](../01-introduction.md#138-rejection-by-the-grammar),
+[D0082](../../design/decisions/D0082-grammar-rejection-rules.md)); lexing and parsing have no formal rules here.
+
 ## Judgment forms
 
 | Judgment | Reading |
