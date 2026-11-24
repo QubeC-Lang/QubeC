@@ -21,6 +21,27 @@ comes with M03.
 - It exits with status 0 when every check passes, and 1 otherwise, after listing every failure with its file and
   line.
 
+## Self-tests
+
+The checker has its own tests in `test.ml`. Run them from the repository root:
+
+```sh
+ocaml tools/grammar/test.ml
+```
+
+The script loads `check.ml` with `#use`, so it can call every function of the checker directly, and runs two kinds
+of test:
+
+- **Unit tests** call one function on a small input and compare the result with the exact value it must return.
+- **Fixture tests** run the whole checker on a small repository. Every folder in `tests/` is one: it holds only the
+  files its case needs, plus an `expected` file listing the failures the checker must report there, one per line,
+  as `file:line: code`, or `file: code` for a failure about a whole file. Blank lines and lines starting with `#` are
+  ignored, and messages are never compared, so rewording a message breaks no test. A fixture passes when the
+  checker reports exactly those lines, in any order. Adding a case means adding a folder; no code changes.
+
+It prints one `[OK]` or `[FAIL]` line per test, with the missing and unexpected lines under a failed fixture, then
+`N passed, M failed`. It exits with status 0 only when every test passes.
+
 ## Stage 1: structure
 
 1. **Notation.** The file parses as the EBNF of XML 1.0 (Fifth Edition), section 6

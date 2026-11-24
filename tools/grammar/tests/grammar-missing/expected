@@ -1,0 +1,2 @@
+# Without the grammar file, the checker reports it as a whole-file failure.
+docs/spec/grammar/qubec.ebnf: grammar-missing
